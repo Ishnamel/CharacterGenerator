@@ -1,106 +1,106 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Status Screen Editor</title>
     <style>
-        body { 
+        body {
             font-family: 'Trajan Pro', serif; /* Classical font for stone-like text */
             background-color: #3b2f28; /* Dark stone background */
             color: #e0d5c1; /* Light sandstone color for text */
             margin: 0;
             padding: 0;
+            font-size: clamp(14px, 2vw + 1rem, 18px); /* Fluid font scaling between 14px and 18px */
         }
-        label { 
-            display: inline-block; 
-            width: 75px; 
-            margin: 10px 0;
-            font-size: 16px;
-            text-shadow: 1px 1px 1px #2b211a; /* Adds depth to mimic engraving */
+
+        label, input[type="text"], input[type="number"], select, button {
+            font-size: clamp(12px, 1.5vw + 1rem, 16px); /* Dynamically adjusting font size for other elements */
         }
-        input[type="text"], input[type="number"], select { 
-            background-color: #4a3d34; /* Stone-like input field background */
-            color: #e0d5c1; 
-            border: 2px solid #6d5c4b; /* Stone carving border effect */
-            padding: 15px;
-            font-size: 16px;
-            border-radius: 4px;
-            min-width: 100px;
-            display: inline-block;
-            width: auto;
-            text-shadow: 1px 1px 0 #2b211a; /* Engraved appearance */
-            box-shadow: inset 2px 2px 4px #2b211a, inset -2px -2px 4px #6d5c4b; /* Engraved look */
-        }
-        .section { 
-            margin: 20px 0; 
+
+        .section {
+            margin: 20px 0;
             padding: 15px;
             background-color: #4a3d34; /* Slightly lighter stone background */
             border-radius: 4px;
             border: 2px solid #6d5c4b; /* Outline for the stone section */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle drop shadow */
         }
-        #statusDisplay { 
-            white-space: pre; 
-            background-color: #4a3d34; 
-            padding: 15px; 
+
+        #statusDisplay {
+            white-space: pre;
+            background-color: #4a3d34;
+            padding: 15px;
             border: 2px solid #6d5c4b;
-            overflow-x: auto; 
+            overflow-x: auto;
             font-family: 'Courier New', Courier, monospace;
-            font-size: 18px;
+            font-size: clamp(16px, 2vw + 1rem, 18px); /* Adjust font size for status display */
             text-shadow: 1px 1px 0 #2b211a; /* Engraving effect for the display text */
             box-shadow: inset 2px 2px 4px #2b211a, inset -2px -2px 4px #6d5c4b; /* Engraved display */
         }
-        button { 
+
+        button {
             background-color: #5a4c42; /* Stone button background */
-            color: #e0d5c1; 
-            border: 2px solid #6d5c4b; 
+            color: #e0d5c1;
+            border: 2px solid #6d5c4b;
             padding: 8px 15px;
-            font-size: 18px;
+            font-size: clamp(14px, 2vw + 1rem, 18px); /* Dynamically adjusting font size for buttons */
             cursor: pointer;
             border-radius: 5px;
             text-shadow: 1px 1px 0 #2b211a; /* Stone-like engraving effect */
             font-family: 'Trajan Pro', serif;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Stone button shadow */
         }
+
         button:hover {
             background-color: #7a665b; /* Lighter stone on hover */
             border-color: #9d8872; /* Polished stone border */
         }
-        h1, h2 { 
-            text-align: center; 
-            font-family: 'Trajan Pro', serif; 
+
+        h1, h2 {
+            text-align: center;
+            font-family: 'Trajan Pro', serif;
             color: #d8c7a7; /* Carved stone effect for headers */
             text-shadow: 2px 2px 4px #2b211a; /* Depth for headers */
         }
-        
-        /* Hidden span used for measuring text width */
-        .input-measurement {
-            visibility: hidden;
-            white-space: pre;
-            position: absolute;
-            font-family: 'Trajan Pro', serif; 
-            font-size: 16px; 
-            padding: 15px;
-        }
-        
+
         .status-side-section {
-    position: absolute; /* or 'fixed' if you want it to stay on scroll */
-    top: 100px; /* Adjust as needed */
-    right: 20px; /* Push to the right side */
-    width: auto; /* Adjust width */
-    height: auto;
-    background-color: #4a3d34; /* Stone-like background */
-    border: 2px solid #6d5c4b; /* Carved border effect */
-    color: #e0d5c1; /* Sandstone text color */
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 16px;
-    padding: 15px;
-    box-shadow: inset 2px 2px 4px #2b211a, inset -2px -2px 4px #6d5c4b; /* Carved effect */
-    border-radius: 5px; /* Smooth stone edges */
-    text-shadow: 1px 1px 1px #2b211a; /* Carved text appearance */
-    overflow-y: auto; /* Allow scrolling if content exceeds height */
-}
+            position: absolute; /* or 'fixed' if you want it to stay on scroll */
+            top: 50px; /* Adjust as needed */
+            right: 20px; /* Push to the right side */
+            width: auto; /* Adjust width */
+            height: auto;
+            background-color: #4a3d34; /* Stone-like background */
+            border: 2px solid #6d5c4b; /* Carved border effect */
+            color: #e0d5c1; /* Sandstone text color */
+            font-family: 'Courier New', Courier, monospace;
+            font-size: clamp(12px, 1.5vw + 1rem, 16px); /* Dynamic font size */
+            padding: 15px;
+            box-shadow: inset 2px 2px 4px #2b211a, inset -2px -2px 4px #6d5c4b; /* Carved effect */
+            border-radius: 5px; /* Smooth stone edges */
+            text-shadow: 1px 1px 1px #2b211a; /* Carved text appearance */
+            overflow-y: auto; /* Allow scrolling if content exceeds height */
+        }
+
+        /* Button to toggle sideStatus visibility */
+        #toggleSideStatus {
+            background-color: #5a4c42;
+            color: #e0d5c1;
+            border: 2px solid #6d5c4b;
+            padding: 8px 15px;
+            font-size: clamp(14px, 2vw + 1rem, 18px); /* Dynamically adjusting font size */
+            cursor: pointer;
+            border-radius: 5px;
+            text-shadow: 1px 1px 0 #2b211a;
+            font-family: 'Trajan Pro', serif;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            display: inline-block;
+        }
+
+        #toggleSideStatus:hover {
+            background-color: #7a665b;
+            border-color: #9d8872;
+        }
     </style>
 </head>
 <body>
@@ -108,7 +108,7 @@
 	<!-- Add a button to toggle the side status visibility -->
 <button id="toggleSideStatus" onclick="toggleSideStatusVisibility()">Show Status</button>
 <div id="sideStatus" class="status-side-section" style="display: none;"></div>
-<h1>Character Generator</h1>
+<h1>CHARACTER GENERATOR</h1>
 
 <button onclick="randomizeAndUpdate()">Generate</button>
 <button onclick="generateNarrative()">Generate Narrative</button>
