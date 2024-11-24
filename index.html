@@ -86,9 +86,9 @@
         
         .status-side-section {
     position: absolute; /* or 'fixed' if you want it to stay on scroll */
-    top: 50px; /* Adjust as needed */
+    top: 100px; /* Adjust as needed */
     right: 20px; /* Push to the right side */
-    width: 300px; /* Adjust width */
+    width: auto; /* Adjust width */
     height: auto;
     background-color: #4a3d34; /* Stone-like background */
     border: 2px solid #6d5c4b; /* Carved border effect */
@@ -105,17 +105,19 @@
 </head>
 <body>
 	<div id="sideStatus" class="status-side-section"></div>
-<h1>Status Screen Editor</h1>
-<div>
-    <label for="retrieveSeed">Seed:</label>
-    <input type="text" id="retrieveSeed" placeholder="Enter Seed ID">
-    <!-- Add a visible area to display the generated seed -->
-    <p id="seedDisplay" style="font-weight: bold; color: #007BFF;">Generated Seed: None</p>
-    <button onclick="retrieveAndUpdateStatus()">Generate From Seed</button>
-</div>
+	<!-- Add a button to toggle the side status visibility -->
+<button id="toggleSideStatus" onclick="toggleSideStatusVisibility()">Show Status</button>
+<div id="sideStatus" class="status-side-section" style="display: none;"></div>
+<h1>Character Generator</h1>
+
 <button onclick="randomizeAndUpdate()">Generate</button>
 <button onclick="generateNarrative()">Generate Narrative</button>
-
+<div class="section">
+    <h2>Seed</h2>
+    <label for="retrieveSeed">Enter Seed:</label>
+    <input type="text" id="retrieveSeed" placeholder="Enter Seed">
+    <button onclick="retrieveAndUpdateStatus()">Generate From Seed</button>
+</div>
 <div class="section">
     <h2>Character Info</h2>
     <label for="firstName">First Name:</label><input type="text" id="firstName" oninput="resizeInput(this)"><button onclick="toggleLock('firstName')">Lock</button><br>
@@ -183,12 +185,6 @@
     <button onclick="toggleLock('combatTechnique')">Lock</button><br>
 </div>
 
-<div class="section">
-    <h2>Seed</h2>
-    <label for="retrieveSeed">Enter Seed:</label>
-    <input type="text" id="retrieveSeed" placeholder="Enter Seed">
-    <button onclick="retrieveAndUpdateStatus()">Generate From Seed</button>
-</div>
 <button onclick="randomizeAndUpdate()">Generate</button>
 <button onclick="exportStatus()">Export Status</button>
 <button onclick="generateNarrative()">Generate Narrative</button>
@@ -269,6 +265,26 @@ function parseStatusText(statusText) {
     return parsedData;
 }
 
+// Function to toggle the side status visibility
+function toggleSideStatusVisibility() {
+    const sideStatusElement = document.getElementById('sideStatus');
+    const toggleButton = document.getElementById('toggleSideStatus');
+
+    // Check if the sideStatus is currently visible
+    const isVisible = sideStatusElement.style.display !== "none";
+
+    if (isVisible) {
+        // If visible, collapse it
+        sideStatusElement.style.display = "none";
+        toggleButton.innerText = "Show Status"; // Change button text
+    } else {
+        // If not visible, expand it
+        sideStatusElement.style.display = "block";
+        toggleButton.innerText = "Hide Status"; // Change button text
+    }
+}
+
+
 // Function to update status and store grid
 function updateStatus() {
     const fields = ['strength', 'constitution', 'dexterity', 'intelligence', 'resolve', 'perception'];
@@ -294,6 +310,7 @@ function updateStatus() {
 
     // Generate the status text
     const statusText = `
+    Seed:  ${(randomId)}
     ${document.getElementById('firstName').value || 'Unknown'} ${document.getElementById('lastName').value || 'Hero'}
 
     Potential: ${document.getElementById('potentialDisplay').innerText}
@@ -320,6 +337,9 @@ function updateStatus() {
 
        // Save the status text in localStorage under the generated random ID
     localStorage.setItem(randomId, statusText);
+        // Update the seed input placeholder with the random ID
+    document.getElementById('retrieveSeed').placeholder = randomId;
+    
 
     // Generate the color grid and store its color array
     const grid = generateColorGrid(randomId); // This returns the array of colors
@@ -355,7 +375,12 @@ function updateStatus() {
     const sideStatusText = document.createElement('pre');
     sideStatusText.innerText = statusText;
     sideStatusElement.appendChild(sideStatusText);
+        // Display a "Show Status" button initially and then toggle
+    const toggleButton = document.getElementById('toggleSideStatus');
+    toggleButton.style.display = "inline-block";
+    toggleButton.innerText = "Show Status";
 }
+
 
 // Function to generate the 16x16 color grid
 function generateColorGrid(randomId) {
