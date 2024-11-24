@@ -106,12 +106,7 @@
 <body>
 	<div id="sideStatus" class="status-side-section"></div>
 <h1>Status Screen Editor</h1>
-<div class="section">
-    <h2>Seed</h2>
-    <label for="retrieveSeed">Enter Seed:</label>
-    <input type="text" id="retrieveSeed" placeholder="Enter Seed">
-    <button onclick="retrieveStatus()">Generate From Seed</button>
-</div>
+
 <button onclick="randomizeAndUpdate()">Generate</button>
 <button onclick="randomizeStatus()">Randomize Status</button>
 <button onclick="updateStatus()">Update Status</button>
@@ -184,6 +179,13 @@
     <button onclick="toggleLock('combatTechnique')">Lock</button><br>
 </div>
 
+<div class="section">
+    <h2>Seed</h2>
+    <label for="retrieveSeed">Enter Seed:</label>
+    <input type="text" id="retrieveSeed" placeholder="Enter Seed">
+    <button onclick="retrieveAndUpdateStatus()">Generate From Seed</button>
+</div>
+<button onclick="retrieveAndUpdateStatus()">Generate From Seed</button>
 <button onclick="randomizeAndUpdate()">Generate</button>
 <button onclick="updateStatus()">Update Status</button>
 <button onclick="exportStatus()">Export Status</button>
@@ -217,6 +219,11 @@ function resizeAllInputs() {
     const inputs = document.querySelectorAll('input[type="text"], input[type="number"]');
     inputs.forEach(resizeInput);
 }
+function retrieveAndUpdateStatus() {
+    retrieveStatus(); // First retrieve the status and update the inputs
+    updateStatus();   // Then update the status display
+}
+
 // Helper function to parse statusText into key-value pairs
 function parseStatusText(statusText) {
     const parsedData = {};
@@ -310,12 +317,12 @@ function updateStatus() {
     Main Hand: ${document.getElementById('wieldLHand').value}   Offhand: ${document.getElementById('wieldRHand').value}
     `;
 
-    // Save the status text and grid in localStorage under the generated random ID
+       // Save the status text in localStorage under the generated random ID
     localStorage.setItem(randomId, statusText);
 
-    // Generate the color grid and store it
-    const grid = generateColorGrid(randomId);
-    localStorage.setItem(`grid_${randomId}`, JSON.stringify(grid));  // Store the grid as a JSON string
+    // Generate the color grid and store its color array
+    const grid = generateColorGrid(randomId); // This returns the array of colors
+    localStorage.setItem(`grid_${randomId}`, JSON.stringify(grid)); // Save the array as a JSON string
 
     // Update the main status display
     const statusDisplay = document.getElementById('statusDisplay');
@@ -325,22 +332,24 @@ function updateStatus() {
     nameElement.innerText = `${document.getElementById('firstName').value || 'Unknown'} ${document.getElementById('lastName').value || 'Hero'}`;
     statusDisplay.appendChild(nameElement);
 
-    statusDisplay.appendChild(grid.gridContainer);
+    // Create a DOM grid from the color array and append it
+    const gridContainer = createGridFromColors(grid);
+    statusDisplay.appendChild(gridContainer);
 
     const statusTextElement = document.createElement('pre');
     statusTextElement.innerText = statusText;
     statusDisplay.appendChild(statusTextElement);
 
-    // Update the side status with the same grid
+    // Update the side status
     const sideStatusElement = document.getElementById('sideStatus');
     sideStatusElement.innerHTML = ""; // Clear previous content
 
-    const sideGrid = generateColorGrid(randomId); // Generate the color grid again
     const assignedIdText = document.createElement('p');
     assignedIdText.innerText = `Assigned Number: ${randomId}`;
     sideStatusElement.appendChild(assignedIdText);
 
-    sideStatusElement.appendChild(sideGrid.gridContainer);
+    const sideGridContainer = createGridFromColors(grid); // Create another grid for the side status
+    sideStatusElement.appendChild(sideGridContainer);
 
     const sideStatusText = document.createElement('pre');
     sideStatusText.innerText = statusText;
@@ -349,12 +358,7 @@ function updateStatus() {
 
 // Function to generate the 16x16 color grid
 function generateColorGrid(randomId) {
-    const gridContainer = document.createElement('div');
-    gridContainer.style.display = 'grid';
-    gridContainer.style.gridTemplateColumns = 'repeat(16, 10px)';
-    gridContainer.style.gridTemplateRows = 'repeat(16, 10px)';
-    gridContainer.style.gap = '1px';
-    gridContainer.style.marginTop = '10px';
+    const colorGrid = []; // Array to hold grid colors
 
     // Pseudo-random number generator
     const pseudoRandom = (seed) => {
@@ -365,26 +369,35 @@ function generateColorGrid(randomId) {
 
     const rng = pseudoRandom(randomId);
 
-    const colorGrid = [];  // Array to hold grid colors
-
+    // Generate a 16x16 grid of colors
     for (let i = 0; i < 256; i++) {
         const red = Math.floor(rng() * 256);
         const green = Math.floor(rng() * 256);
         const blue = Math.floor(rng() * 256);
         const color = `rgb(${red}, ${green}, ${blue})`;
+        colorGrid.push(color); // Add color to the array
+    }
 
+    return colorGrid; // Return only the color data
+}
+function createGridFromColors(colorGrid) {
+    const gridContainer = document.createElement('div');
+    gridContainer.style.display = 'grid';
+    gridContainer.style.gridTemplateColumns = 'repeat(16, 10px)';
+    gridContainer.style.gridTemplateRows = 'repeat(16, 10px)';
+    gridContainer.style.gap = '1px';
+    gridContainer.style.marginTop = '10px';
+
+    colorGrid.forEach((color) => {
         const cell = document.createElement('div');
         cell.style.width = '10px';
         cell.style.height = '10px';
         cell.style.backgroundColor = color;
-
         gridContainer.appendChild(cell);
-        colorGrid.push(color);  // Add color to array
-    }
+    });
 
-    return { gridContainer, colorGrid };  // Return both container and color array
+    return gridContainer;
 }
-
 // Function to retrieve status and grid from localStorage
 function retrieveStatus() {
     const seed = document.getElementById("retrieveSeed").value; // Get the seed ID input
@@ -408,14 +421,14 @@ function retrieveStatus() {
         const sideStatusElement = document.getElementById("sideStatus");
         sideStatusElement.innerHTML = `Retrieved Status for Number: ${seed}\n\n${storedStatus}`;
 
-        // Retrieve and parse the stored grid (from JSON string)
-        const gridData = JSON.parse(storedGrid);
-        const gridContainer = gridData.gridContainer;
+                // Regenerate the grid using the stored color data
+        const colorGrid = JSON.parse(storedGrid); // Parse the grid's color data
+        const gridContainer = createGridFromColors(colorGrid); // Create the grid DOM structure
 
         // Append the grid to the status display
         const statusDisplay = document.getElementById('statusDisplay');
-        statusDisplay.innerHTML = "";  // Clear previous content
-        statusDisplay.appendChild(gridContainer);  // Add the grid back to the display
+        statusDisplay.innerHTML = ""; // Clear previous content
+        statusDisplay.appendChild(gridContainer); // Add the grid back to the display
     } else {
         alert("No status found for the given number!");
     }
