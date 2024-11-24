@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status Screen Editor</title>
+    <style>
+        body { 
+            font-family: 'Trajan Pro', serif; /* Classical font for stone-like text */
+            background-color: #3b2f28; /* Dark stone background */
+            color: #e0d5c1; /* Light sandstone color for text */
+            margin: 0;
+            padding: 0;
+        }
+        label { 
+            display: inline-block; 
+            width: 75px; 
+            margin: 10px 0;
+            font-size: 16px;
+            text-shadow: 1px 1px 1px #2b211a; /* Adds depth to mimic engraving */
+        }
+        input[type="text"], input[type="number"], select { 
+            background-color: #4a3d34; /* Stone-like input field background */
+            color: #e0d5c1; 
+            border: 2px solid #6d5c4b; /* Stone carving border effect */
+            padding: 15px;
+            font-size: 16px;
+            border-radius: 4px;
+            min-width: 100px;
+            display: inline-block;
+            width: auto;
+            text-shadow: 1px 1px 0 #2b211a; /* Engraved appearance */
+            box-shadow: inset 2px 2px 4px #2b211a, inset -2px -2px 4px #6d5c4b; /* Engraved look */
+        }
+        .section { 
+            margin: 20px 0; 
+            padding: 15px;
+            background-color: #4a3d34; /* Slightly lighter stone background */
+            border-radius: 4px;
+            border: 2px solid #6d5c4b; /* Outline for the stone section */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle drop shadow */
+        }
+        #statusDisplay { 
+            white-space: pre; 
+            background-color: #4a3d34; 
+            padding: 15px; 
+            border: 2px solid #6d5c4b;
+            overflow-x: auto; 
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 18px;
+            text-shadow: 1px 1px 0 #2b211a; /* Engraving effect for the display text */
+            box-shadow: inset 2px 2px 4px #2b211a, inset -2px -2px 4px #6d5c4b; /* Engraved display */
+        }
+        button { 
+            background-color: #5a4c42; /* Stone button background */
+            color: #e0d5c1; 
+            border: 2px solid #6d5c4b; 
+            padding: 8px 15px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            text-shadow: 1px 1px 0 #2b211a; /* Stone-like engraving effect */
+            font-family: 'Trajan Pro', serif;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Stone button shadow */
+        }
+        button:hover {
+            background-color: #7a665b; /* Lighter stone on hover */
+            border-color: #9d8872; /* Polished stone border */
+        }
+        h1, h2 { 
+            text-align: center; 
+            font-family: 'Trajan Pro', serif; 
+            color: #d8c7a7; /* Carved stone effect for headers */
+            text-shadow: 2px 2px 4px #2b211a; /* Depth for headers */
+        }
+        
+        /* Hidden span used for measuring text width */
+        .input-measurement {
+            visibility: hidden;
+            white-space: pre;
+            position: absolute;
+            font-family: 'Trajan Pro', serif; 
+            font-size: 16px; 
+            padding: 15px;
+        }
+        
+        .status-side-section {
+    position: absolute; /* or 'fixed' if you want it to stay on scroll */
+    top: 50px; /* Adjust as needed */
+    right: 20px; /* Push to the right side */
+    width: 300px; /* Adjust width */
+    height: auto;
+    background-color: #4a3d34; /* Stone-like background */
+    border: 2px solid #6d5c4b; /* Carved border effect */
+    color: #e0d5c1; /* Sandstone text color */
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 16px;
+    padding: 15px;
+    box-shadow: inset 2px 2px 4px #2b211a, inset -2px -2px 4px #6d5c4b; /* Carved effect */
+    border-radius: 5px; /* Smooth stone edges */
+    text-shadow: 1px 1px 1px #2b211a; /* Carved text appearance */
+    overflow-y: auto; /* Allow scrolling if content exceeds height */
+}
+    </style>
+</head>
+<body>
+	<div id="sideStatus" class="status-side-section"></div>
+<h1>Status Screen Editor</h1>
+<div class="section">
+    <h2>Seed</h2>
+    <label for="retrieveSeed">Enter Seed:</label>
+    <input type="text" id="retrieveSeed" placeholder="Enter Seed">
+    <button onclick="retrieveStatus()">Generate From Seed</button>
+</div>
+<button onclick="randomizeAndUpdate()">Generate</button>
+<button onclick="randomizeStatus()">Randomize Status</button>
+<button onclick="updateStatus()">Update Status</button>
+<button onclick="generateNarrative()">Generate Narrative</button>
+
+<div class="section">
+    <h2>Character Info</h2>
+    <label for="firstName">First Name:</label><input type="text" id="firstName" oninput="resizeInput(this)"><button onclick="toggleLock('firstName')">Lock</button><br>
+    <label for="lastName">Last Name:</label><input type="text" id="lastName" oninput="resizeInput(this)"><button onclick="toggleLock('lastName')">Lock</button><br>
+</div>
+
+<div class="section">
+    <h2>General Status</h2>
+    <p><strong>Potential:</strong> <span id="potentialDisplay">Total: 40 (F)</span></p>
+</div>
+
+<label for="strength">Strength:</label>
+<input type="number" id="strength" value="8" oninput="resizeInput(this)"><button onclick="toggleLock('strength')">Lock</button><span id="strengthRating">F</span><br>
+
+<label for="constitution">Constitution:</label>
+<input type="number" id="constitution" value="10" oninput="resizeInput(this)"><button onclick="toggleLock('constitution')">Lock</button><span id="constitutionRating">F</span><br>
+
+<label for="dexterity">Dexterity:</label>
+<input type="number" id="dexterity" value="10" oninput="resizeInput(this)"><button onclick="toggleLock('dexterity')">Lock</button><span id="dexterityRating">F</span><br>
+
+<label for="intelligence">Intelligence:</label>
+<input type="number" id="intelligence" value="7" oninput="resizeInput(this)"><button onclick="toggleLock('intelligence')">Lock</button><span id="intelligenceRating">F</span><br>
+
+<label for="resolve">Resolve:</label>
+<input type="number" id="resolve" value="10" oninput="resizeInput(this)"><button onclick="toggleLock('resolve')">Lock</button><span id="resolveRating">F</span><br>
+
+<label for="perception">Perception:</label>
+<input type="number" id="perception" value="10" oninput="resizeInput(this)"><button onclick="toggleLock('perception')">Lock</button><span id="perceptionRating">F</span><br>
+	
+	<div class="section">
+    <h2>Conditions</h2>
+    <label for="pain">Pain:</label><input type="text" id="pain" value="0" oninput="resizeInput(this)"><button onclick="toggleLock('pain')">Lock</button><br>
+    <label for="thirst">Thirst:</label><input type="text" id="thirst" value="nothing" oninput="resizeInput(this)"><button onclick="toggleLock('thirst')">Lock</button><br>
+    <label for="rest">Rest:</label><input type="text" id="rest" value="nothing" oninput="resizeInput(this)"><button onclick="toggleLock('rest')">Lock</button><br>
+    <label for="hunger">Hunger:</label><input type="text" id="hunger" value="nothing" oninput="resizeInput(this)"><button onclick="toggleLock('hunger')">Lock</button><br>
+    <label for="heat">Heat:</label><input type="text" id="heat" value="Comfortable" oninput="resizeInput(this)"><button onclick="toggleLock('heat')">Lock</button><br>
+</div>
+
+<div class="section">
+    <h2>Environment</h2>
+    <label for="place">Place:</label><input type="text" id="place" value="evac shelter" oninput="resizeInput(this)"><button onclick="toggleLock('place')">Lock</button><br>
+    <label for="lighting">Lighting:</label><input type="text" id="lighting" value="bright" oninput="resizeInput(this)"><button onclick="toggleLock('lighting')">Lock</button><br>
+    <label for="weather">Weather:</label><input type="text" id="weather" value="Clear" oninput="resizeInput(this)"><button onclick="toggleLock('weather')">Lock</button><br>
+    <label for="moon">Moon:</label><input type="text" id="moon" value="New moon" oninput="resizeInput(this)"><button onclick="toggleLock('moon')">Lock</button><br>
+    <label for="date">Date:</label><input type="text" id="date" value="Spring, day 61" oninput="resizeInput(this)"><button onclick="toggleLock('date')">Lock</button><br>
+    <label for="time">Time:</label><input type="text" id="time" value="8:00:36 AM" oninput="resizeInput(this)"><button onclick="toggleLock('time')">Lock</button><br>
+    <label for="wind">Wind:</label><input type="text" id="wind" value="Calm" oninput="resizeInput(this)"><button onclick="toggleLock('wind')">Lock</button><br>
+    <label for="temperature">Temperature:</label><input type="text" id="temperature" value="C-41 F" oninput="resizeInput(this)"><button onclick="toggleLock('temperature')">Lock</button><br>
+</div>
+
+<div class="section">
+    <h2>Combat</h2>
+    <label for="wieldLHand">Main Hand:</label><input type="text" id="wieldLHand" value="fists" oninput="resizeInput(this)"><button onclick="toggleLock('wieldLHand')">Lock</button><br>
+    <label for="wieldRHand">OffHand:</label><input type="text" id="wieldRHand" value="fists" oninput="resizeInput(this)"><button onclick="toggleLock('wieldRHand')">Lock</button><br>
+    <label for="combatClass">Combat Class:</label>
+    <input type="text" id="combatClass" value="nothing" disabled oninput="resizeInput(this)">
+    <button onclick="toggleLock('combatClass')">Lock</button><br>
+
+    <label for="combatStyle">Combat Style:</label>
+    <input type="text" id="combatStyle" value="No style" oninput="resizeInput(this)">
+    <button onclick="toggleLock('combatStyle')">Lock</button><br>
+
+    <label for="combatTechnique">Combat Technique:</label>
+    <input type="text" id="combatTechnique" value="nothing" disabled oninput="resizeInput(this)">
+    <button onclick="toggleLock('combatTechnique')">Lock</button><br>
+</div>
+
+<button onclick="randomizeAndUpdate()">Generate</button>
+<button onclick="updateStatus()">Update Status</button>
+<button onclick="exportStatus()">Export Status</button>
+<button onclick="randomizeStatus()">Randomize Status</button>
+<button onclick="generateNarrative()">Generate Narrative</button>
+<div id="statusDisplay"></div>
+
+<!-- Hidden Span for measuring text width -->
+<span id="measurementSpan" class="input-measurement"></span>
+<script>
+// Function to resize input based on content length
+function resizeInput(input) {
+    const measurementSpan = document.getElementById('measurementSpan');
+    
+    // Set the span text to match the input's current value
+    measurementSpan.textContent = input.value;
+
+    // Get the styles of the input field to include padding and borders
+    const inputStyles = window.getComputedStyle(input);
+    const paddingLeft = parseInt(inputStyles.paddingLeft, 10);
+    const paddingRight = parseInt(inputStyles.paddingRight, 10);
+    const borderLeft = parseInt(inputStyles.borderLeftWidth, 10);
+    const borderRight = parseInt(inputStyles.borderRightWidth, 10);
+
+    // Set the width of the input box to match the width of the span + padding and borders
+    input.style.width = `${measurementSpan.offsetWidth + paddingLeft + paddingRight + borderLeft + borderRight + 20}px`; // Adding extra space for padding
+}
+
+// Function to resize all inputs
+function resizeAllInputs() {
+    const inputs = document.querySelectorAll('input[type="text"], input[type="number"]');
+    inputs.forEach(resizeInput);
+}
+// Helper function to parse statusText into key-value pairs
+function parseStatusText(statusText) {
+    const parsedData = {};
+    const regexPatterns = {
+        firstName: /^([^\s]+)\s/, // Captures first word as first name
+        lastName: /^[^\s]+\s(.+)\n/, // Captures everything after the first word until newline
+        potentialDisplay: /Potential:\s(.*?)\n/,
+        strength: /Strength:\s(\d+)/,
+        constitution: /Constitution:\s(\d+)/,
+        dexterity: /Dexterity:\s(\d+)/,
+        intelligence: /Intelligence:\s(\d+)/,
+        resolve: /Resolve:\s(\d+)/,
+        perception: /Perception:\s(\d+)/,
+        pain: /Pain\s*:\s*(.*?)\s/,
+        thirst: /Thirst\s*:\s*(.*?)\n/,
+        rest: /Rest\s*:\s*(.*?)\s/,
+        hunger: /Hunger\s*:\s*(.*?)\n/,
+        heat: /Heat\s*:\s*(.*?)\n/,
+        place: /Place\s*:\s*(.*?)\s+Lighting/, // Captures text until "Lighting"
+        lighting: /Lighting\s*:\s*(.*?)\n/,
+        weather: /Weather\s*:\s*(.*?)\s+Moon/, // Captures text until "Moon"
+        moon: /Moon\s*:\s*(.*?)\n/,
+        date: /Date\s*:\s*(.*?)\s+Time/, // Captures text until "Time"
+        time: /Time\s*:\s*(.*?)\n/,
+        wind: /Wind\s*:\s*(.*?)\s+Temperature/, // Captures text until "Temperature"
+        temperature: /Temperature\s*:\s*(.*?)\n/,
+        wieldLHand: /Main Hand:\s(.*?)\s+Offhand/, // Captures text until "Offhand"
+        wieldRHand: /Offhand:\s(.*?)\n/,
+        combatClass: /Combat Class\s*:\s*(.*?)\s+Combat Technique/, // Captures text until "Combat Technique"
+        combatStyle: /Combat Style\s*:\s*(.*?)\n/,
+        combatTechnique: /Combat Technique\s*:\s*(.*?)\s+Main Hand/ // Captures text until "Main Hand"
+    };
+
+    // Apply regex to extract data for each key
+    for (const [key, regex] of Object.entries(regexPatterns)) {
+        const match = statusText.match(regex);
+        if (match) {
+            parsedData[key] = match[1].trim(); // Ensure values are stripped of extra spaces
+        }
+    }
+
+    return parsedData;
+}
+
+// Function to update status and store grid
+function updateStatus() {
+    const fields = ['strength', 'constitution', 'dexterity', 'intelligence', 'resolve', 'perception'];
+
+    // Get the values and their corresponding ratings
+    const ratings = fields.map(field => {
+        const fieldValue = document.getElementById(field).value;
+        let fieldRating = "F";
+
+        if (fieldValue >= 21) fieldRating = "S";
+        else if (fieldValue >= 20) fieldRating = "A";
+        else if (fieldValue >= 18) fieldRating = "B";
+        else if (fieldValue >= 16) fieldRating = "C";
+        else if (fieldValue >= 14) fieldRating = "D";
+        else if (fieldValue >= 10) fieldRating = "E";
+        else if (fieldValue <= 8) fieldRating = "F";
+
+        return { value: fieldValue, rating: fieldRating };
+    });
+
+    // Generate a random ID for status
+    const randomId = Math.floor(Math.random() * 1e6);
+
+    // Generate the status text
+    const statusText = `
+    ${document.getElementById('firstName').value || 'Unknown'} ${document.getElementById('lastName').value || 'Hero'}
+
+    Potential: ${document.getElementById('potentialDisplay').innerText}
+
+    Strength: ${ratings[0].value} (${ratings[0].rating})   
+    Constitution: ${ratings[1].value} (${ratings[1].rating})   
+    Dexterity: ${ratings[2].value} (${ratings[2].rating})   
+    Intelligence: ${ratings[3].value} (${ratings[3].rating}) 
+    Resolve: ${ratings[4].value} (${ratings[4].rating}) 
+    Perception: ${ratings[5].value} (${ratings[5].rating})   
+
+    Pain        : ${document.getElementById('pain').value}        Thirst : ${document.getElementById('thirst').value}
+    Rest        : ${document.getElementById('rest').value}        Hunger : ${document.getElementById('hunger').value}
+    Heat        : ${document.getElementById('heat').value}        
+    Place       : ${document.getElementById('place').value}       Lighting : ${document.getElementById('lighting').value}
+    Weather     : ${document.getElementById('weather').value}     Moon : ${document.getElementById('moon').value}
+    Date        : ${document.getElementById('date').value}        Time : ${document.getElementById('time').value}
+    Wind        : ${document.getElementById('wind').value}        Temperature : ${document.getElementById('temperature').value}
+
+    Combat Style  : ${document.getElementById('combatStyle').value}
+    Combat Class  : ${document.getElementById('combatClass').value}      Combat Technique: ${document.getElementById('combatTechnique').value}
+    Main Hand: ${document.getElementById('wieldLHand').value}   Offhand: ${document.getElementById('wieldRHand').value}
+    `;
+
+    // Save the status text and grid in localStorage under the generated random ID
+    localStorage.setItem(randomId, statusText);
+
+    // Generate the color grid and store it
+    const grid = generateColorGrid(randomId);
+    localStorage.setItem(`grid_${randomId}`, JSON.stringify(grid));  // Store the grid as a JSON string
+
+    // Update the main status display
+    const statusDisplay = document.getElementById('statusDisplay');
+    statusDisplay.innerHTML = ""; // Clear previous content
+
+    const nameElement = document.createElement('p');
+    nameElement.innerText = `${document.getElementById('firstName').value || 'Unknown'} ${document.getElementById('lastName').value || 'Hero'}`;
+    statusDisplay.appendChild(nameElement);
+
+    statusDisplay.appendChild(grid.gridContainer);
+
+    const statusTextElement = document.createElement('pre');
+    statusTextElement.innerText = statusText;
+    statusDisplay.appendChild(statusTextElement);
+
+    // Update the side status with the same grid
+    const sideStatusElement = document.getElementById('sideStatus');
+    sideStatusElement.innerHTML = ""; // Clear previous content
+
+    const sideGrid = generateColorGrid(randomId); // Generate the color grid again
+    const assignedIdText = document.createElement('p');
+    assignedIdText.innerText = `Assigned Number: ${randomId}`;
+    sideStatusElement.appendChild(assignedIdText);
+
+    sideStatusElement.appendChild(sideGrid.gridContainer);
+
+    const sideStatusText = document.createElement('pre');
+    sideStatusText.innerText = statusText;
+    sideStatusElement.appendChild(sideStatusText);
+}
+
+// Function to generate the 16x16 color grid
+function generateColorGrid(randomId) {
+    const gridContainer = document.createElement('div');
+    gridContainer.style.display = 'grid';
+    gridContainer.style.gridTemplateColumns = 'repeat(16, 10px)';
+    gridContainer.style.gridTemplateRows = 'repeat(16, 10px)';
+    gridContainer.style.gap = '1px';
+    gridContainer.style.marginTop = '10px';
+
+    // Pseudo-random number generator
+    const pseudoRandom = (seed) => {
+        let value = seed % 2147483647;
+        if (value <= 0) value += 2147483646;
+        return () => (value = (value * 16807) % 2147483647) / 2147483647;
+    };
+
+    const rng = pseudoRandom(randomId);
+
+    const colorGrid = [];  // Array to hold grid colors
+
+    for (let i = 0; i < 256; i++) {
+        const red = Math.floor(rng() * 256);
+        const green = Math.floor(rng() * 256);
+        const blue = Math.floor(rng() * 256);
+        const color = `rgb(${red}, ${green}, ${blue})`;
+
+        const cell = document.createElement('div');
+        cell.style.width = '10px';
+        cell.style.height = '10px';
+        cell.style.backgroundColor = color;
+
+        gridContainer.appendChild(cell);
+        colorGrid.push(color);  // Add color to array
+    }
+
+    return { gridContainer, colorGrid };  // Return both container and color array
+}
+
+// Function to retrieve status and grid from localStorage
+function retrieveStatus() {
+    const seed = document.getElementById("retrieveSeed").value; // Get the seed ID input
+    const storedStatus = localStorage.getItem(seed); // Retrieve the stored status text
+    const storedGrid = localStorage.getItem(`grid_${seed}`); // Retrieve the stored grid
+
+    if (storedStatus && storedGrid) {
+        // Parse the status text and update inputs
+        const parsedStatus = parseStatusText(storedStatus);
+
+        // Update all input fields based on parsed data
+        for (const [key, value] of Object.entries(parsedStatus)) {
+            const inputElement = document.getElementById(key);
+            if (inputElement) {
+                inputElement.value = value;
+                resizeInput(inputElement); // Resize input if necessary
+            }
+        }
+
+        // Display the updated status in the sideStatus section
+        const sideStatusElement = document.getElementById("sideStatus");
+        sideStatusElement.innerHTML = `Retrieved Status for Number: ${seed}\n\n${storedStatus}`;
+
+        // Retrieve and parse the stored grid (from JSON string)
+        const gridData = JSON.parse(storedGrid);
+        const gridContainer = gridData.gridContainer;
+
+        // Append the grid to the status display
+        const statusDisplay = document.getElementById('statusDisplay');
+        statusDisplay.innerHTML = "";  // Clear previous content
+        statusDisplay.appendChild(gridContainer);  // Add the grid back to the display
+    } else {
+        alert("No status found for the given number!");
+    }
+}
+
+function generateNarrative() {
+    const firstName = document.getElementById('firstName').value || "Unknown";
+    const lastName = document.getElementById('lastName').value || "Hero";
+    const place = document.getElementById('place').value || "an unknown location";
+    const weather = document.getElementById('weather').value || "clear skies";
+    const date = document.getElementById('date').value || "an undefined date";
+    const time = document.getElementById('time').value || "an unknown time";
+    const combatClass = document.getElementById('combatClass').value || "no combat class";
+    const wieldLHand = document.getElementById('wieldLHand').value || "empty hands";
+    const wieldRHand = document.getElementById('wieldRHand').value || "empty hands";
+
+    // Stats
+    const stats = [
+        { name: "strength", value: parseInt(document.getElementById('strength').value) || 0 },
+        { name: "dexterity", value: parseInt(document.getElementById('dexterity').value) || 0 },
+        { name: "intelligence", value: parseInt(document.getElementById('intelligence').value) || 0 },
+        { name: "resolve", value: parseInt(document.getElementById('resolve').value) || 0 },
+        { name: "perception", value: parseInt(document.getElementById('perception').value) || 0 },
+        { name: "constitution", value: parseInt(document.getElementById('constitution').value) || 0 }
+    ];
+
+    // Find highest and second-highest stats
+    stats.sort((a, b) => b.value - a.value);
+    const highestStat = stats[0];
+    const secondHighestStat = stats[1];
+
+    // Literary descriptions for stats
+    const statDescriptions = {
+        strength: "unparalleled physical prowess",
+        dexterity: "agility and nimbleness",
+        intelligence: "keen intellect",
+        resolve: "unwavering determination",
+        perception: "sharp awareness",
+        constitution: "endurance and resilience"
+    };
+
+    // Narrative templates
+    const templates = [
+        `
+On ${date} at ${time}, ${firstName} ${lastName} was found at ${place}, where the weather was marked by ${weather}.
+With ${wieldLHand} in their main hand and ${wieldRHand} in their offhand, ${firstName} stood out as a ${combatClass}, 
+known for their ${statDescriptions[highestStat.name]} and ${statDescriptions[secondHighestStat.name]}.
+
+Their journey is just beginning, and the challenges ahead will test their remarkable qualities.
+        `,
+        `
+In the midst of ${weather} at ${place}, ${firstName} ${lastName} stood with ${wieldLHand} in hand.
+The day was ${date}, and the time ticked past ${time}. Known far and wide as a ${combatClass}, ${firstName} impressed all with their 
+${statDescriptions[highestStat.name]} and ${statDescriptions[secondHighestStat.name]}.
+
+What trials lie ahead remain a mystery, but ${firstName}'s resolve is unshakable.
+        `,
+        `
+The tale begins on ${date}, under ${weather} conditions in ${place}. ${firstName} ${lastName}, a renowned ${combatClass}, 
+was seen wielding ${wieldLHand} and ${wieldRHand}. Their reputation was built on their ${statDescriptions[highestStat.name]} 
+and ${statDescriptions[secondHighestStat.name]}.
+
+Destiny awaits ${firstName} as their legend unfolds.
+        `,
+        `
+On a day like ${date}, at the stroke of ${time}, ${firstName} ${lastName} arrived at ${place}. Despite the ${weather}, 
+they bore ${wieldLHand} in one hand and ${wieldRHand} in the other. People spoke of ${firstName}'s extraordinary 
+${statDescriptions[highestStat.name]} and ${statDescriptions[secondHighestStat.name]}.
+
+The world held its breath, waiting for their next move.
+        `
+    ];
+
+    // Select a random template
+    const selectedTemplate = templates[Math.floor(Math.random() * templates.length)];
+
+    // Display the narrative in the status display area
+    document.getElementById('statusDisplay').innerText = selectedTemplate.trim();
+}
+
+
+let lockedInputs = {};  // Object to track locked inputs
+
+// Function to toggle lock on inputs
+function toggleLock(inputId) {
+    const input = document.getElementById(inputId);
+    const button = input.nextElementSibling;
+
+    // Toggle the locked state
+    if (lockedInputs[inputId]) {
+        // If locked, unlock it
+        input.disabled = false;
+        lockedInputs[inputId] = false;
+        button.textContent = "Lock";
+    } else {
+        // If not locked, lock it
+        input.disabled = true;
+        lockedInputs[inputId] = true;
+        button.textContent = "Unlock";
+    }
+}
+
+// Function to check if an input is locked
+function isLocked(inputId) {
+    return lockedInputs[inputId] === true;
+}
+
+// Randomize Combat Technique for a Combat Class
+function getRandomCombatTechnique(combatClass) {
+    const combatTechniques = {
+                Juggernaut: [
+            "Immovable Stance", "Iron Fist Discipline", "Relentless Might Form",
+            "Titan’s Resolve Stance", "Mountain Breaker Art", "Unstoppable Force Form",
+            "Ironclad Discipline", "Battleborn Stance", "Endless Endurance Art",
+            "Colossal Rampage Form"
+        ],
+        BladeDancer: [
+            "Gale Slash Art", "Silver Mirage Dance", "Quicksteel Form",
+            "Blade Wraith Stance", "Shadowstrike Discipline", "Storm Reaver Dance",
+            "Crimson Edge Art", "Flashstep Discipline", "Wind Cutter Stance",
+            "Swiftstrike Form"
+        ],
+        Chieftain: [
+            "Arcane Fury Stance", "Battlecraft Discipline", "Runehammer Form",
+            "Stormcaller Art", "Arcane Onslaught Stance", "Elemental Reaver Discipline",
+            "Runeblade Form", "Inferno Wave Art", "Mystic Siege Stance",
+            "Celestial Wrath Form"
+        ],
+        IronWill: [
+            "Unbreakable Stance", "Endurance Discipline", "Resolute Fury Art",
+            "Steelheart Form", "Unyielding Resolve Stance", "Indomitable Spirit Art",
+            "Ironclad Tenacity Discipline", "Fortress Stance", "Fearless Defiance Form",
+            "Will of the Titans Art"
+        ],
+        Berserker: [
+            "Frenzied Rampage Stance", "Wild Fury Discipline", "Bloodraged Form",
+            "Savage Fury Stance", "Berserker’s Eye Art", "Predatory Onslaught Form",
+            "Reckless Charge Discipline", "Howling Fury Art", "Apex Predator Stance",
+            "Crimson Madness Form"
+        ],
+        Titan: [
+            "Earthshaker Art", "Colossus Discipline", "Titan’s Fury Stance",
+            "Mountainheart Form", "Immovable Giant Art", "Earthborn Stance",
+            "Stonebreaker Discipline", "Immense Power Form", "Unstoppable Titan Stance",
+            "Tremor Strike Form"
+        ],
+        StalwartDefender: [
+            "Unyielding Wall Stance", "Shieldbearer Discipline", "Last Stand Form",
+            "Ironclad Protector Art", "Defender’s Resolve Stance", "Stonewall Discipline",
+            "Shield of the Fallen Art", "Fortress Resolve Form", "Immovable Guardian Stance",
+            "Bastion of Hope Art"
+        ],
+        survivor: [
+            "Agile Endurance Art", "Escape Artist Stance", "Wilderness Form",
+            "Survivalist Discipline", "Elusive Guardian Stance", "Nimble Resilience Art",
+            "Wild Runner Discipline", "Serpent’s Grace Stance", "Tenacious Pursuit Form",
+            "Enduring Predator Discipline"
+        ],
+        hexblade: [
+            "Shadowcaster Form", "Eldritch Edge Stance", "Mindshard Discipline",
+            "Hexblade Art", "Arcane Fang Stance", "Runeweaver Form",
+            "Phantomstrike Discipline", "Mystic Slash Art", "Mindbreaker Stance",
+            "Spectral Piercer Discipline"
+        ],
+        spellthief: [
+            "Phantom Theft Form", "Silent Steal Discipline", "Arcane Pilfer Art",
+            "Voidstep Stance", "Shadow Trick Discipline", "Energy Drain Form",
+            "Thief’s Resolve Stance", "Quick Hex Form", "Ethereal Heist Art",
+            "Silent Swipe Stance"
+        ],
+        bulwark: [
+            "Perceptive Wall Stance", "Fortress Vigilance Discipline", "Watchful Guardian Form",
+            "Ironwatch Art", "Sentinel’s Resolve Stance", "Perceptive Shield Form",
+            "Bulwark of the Mind Art", "Ironclad Watch Stance", "Titanwatch Discipline",
+            "Unseen Protector Form"
+        ],
+        savageAcrobat: [
+            "Cat’s Leap Form", "Savage Dance Discipline", "Stormspin Stance",
+            "Agile Pounce Art", "Quickstrike Acrobatics", "Momentum Dance Form",
+            "Panther’s Precision Stance", "Skyblaze Discipline", "Feral Twirl Art",
+            "Raging Flip Form"
+        ],
+        swiftblade: [
+            "Razorwind Form", "Swiftsurge Stance", "Fleetstrike Discipline",
+            "Viper’s Swiftness Art", "Quickdraw Discipline", "Bladewind Form",
+            "Enduring Flash Art", "Silent Cut Stance", "Steelswift Discipline",
+            "Lightning Speed Form"
+        ],
+        phantomBlade: [
+            "Spectral Slash Stance", "Ethereal Strike Discipline", "Ghostblade Form",
+            "Shade Step Art", "Veil of Shadows Discipline", "Phantom Piercer Stance",
+            "Haunting Blow Discipline", "Ghostwalker Stance", "Silent Assassin Art",
+            "Shadowstrike Form"
+        ],
+        assassin: [
+            "Silent Fang Form", "Lethal Precision Discipline", "Shadowstrike Stance",
+            "Deadly Silence Art", "Nightstalker Discipline", "Critical Eye Form",
+            "Deathblow Stance", "Serpent’s Strike Discipline", "Veiled Hunter Art",
+            "Swift Killer Form"
+        ],
+        combatGenius: [
+            "Tactical Fury Form", "Strategist’s Strike Art", "Mind over Might Discipline",
+            "Commanding Assault Stance", "Battle Planner Form", "Quick Wit Strike Discipline",
+            "Strategist’s Fury Art", "Battlefield Brain Form", "Tactical Mastery Stance",
+            "Genius Strike Discipline"
+        ],
+        colossus: [
+            "Behemoth’s Wrath Form", "Titan’s Might Discipline", "Colossal Strike Stance",
+            "Earthshaker Art", "Thunderous Impact Discipline", "Mountain Mover Stance",
+            "Immense Power Form", "Gigantic Fury Art", "Crushing Strength Stance",
+            "Leviathan’s Rage Discipline"
+        ],
+        unyieldingTitan: [
+            "Stubborn Resolve Art", "Unyielding Wall Form", "Enduring Titan Stance",
+            "Immovable Might Discipline", "Stalwart Defender Art", "Eternal Strength Form",
+            "Stonebreaker Stance", "Tireless Titan Discipline", "Indomitable Form",
+            "Resolute Wall Stance"
+        ],
+        bladedTempest: [
+            "Cyclone Strike Form", "Tempest Dance Stance", "Windblade Art",
+            "Razorstorm Discipline", "Stormblaze Form", "Whirlwind Slash Stance",
+            "Gale Fury Discipline", "Cyclone Piercer Form", "Skybound Slash Art",
+            "Tempest Fury Stance"
+        ],
+        arcaneWarrior: [
+            "Arcane Strike Stance", "Mystic Combat Art", "Elemental Fury Discipline",
+            "Mystic Blade Form", "Arcane Knight Stance", "Runebound Art",
+            "Spellbound Assault Form", "Mystic Slash Discipline", "Thunderstrike Form",
+            "Arcane Wrath Art"
+        ],
+        mysticShield: [
+            "Shield of Aegis Stance", "Unbreakable Ward Form", "Eternal Protector Art",
+            "Arcane Shield Discipline", "Stalwart Shield Stance", "Mystical Bastion Form",
+            "Sacred Defense Art", "Shieldbearer’s Resolve Discipline", "Mystic Barrier Stance",
+            "Fortified Will Form"
+        ],
+              // Ranged CombatClass Techniques
+        deadeye: ["Eagle’s Focus Stance", "Pinpoint Precision Art", "Sharpshot Discipline", "Hawk’s Vision Form", "Silent Arrow Stance", "Longshot Precision Discipline", "True Sight Form", "Hunter’s Mark Art", "Bullseye Strike Stance", "Silent Strike Discipline"],
+        sniper: ["Silent Observer Art", "Longshot Discipline", "Pinpoint Focus Stance", "Phantom Shot Form", "One Shot Art", "Deadly Aim Discipline", "Steady Hands Stance", "Hidden Killer Form", "Eagle’s Eye Art", "Focused Strike Discipline"],
+        scout: ["Silent Sentinel Stance", "Swift Tracker Discipline", "Hunter’s Vigil Art", "Pathfinder Form", "Stealth Watch Stance", "Tracking Precision Discipline", "Unseen Stalker Form", "Survivalist’s Eye Art", "Scout’s Focus Stance", "Watchful Pursuit Discipline"],
+        trickshot: ["Arcane Trick Discipline", "Bouncing Shot Form", "Quickthinker’s Precision Art", "Trickster’s Aim Stance", "Clever Ricochet Discipline", "Illusory Arrow Art", "Trapshot Form", "Swift Redirect Stance", "Mindful Shot Discipline", "Trickster’s Focus Art"],
+        sharpshooter: ["Heavy Shot Form", "Power Focus Stance", "Bullseye Strike Discipline", "Knockback Arrow Art", "Piercing Shot Stance", "Mighty Range Discipline", "Strengthened Focus Form", "Titan’s Shot Art", "Musclecraft Discipline", "Long-range Fury Stance"],
+        vanguard: ["Steady Deflection Form", "Ironclad Focus Stance", "Enduring Vigil Discipline", "Shielding Arrow Art", "Guardian’s Shot Form", "Watchful Defender Stance", "Sturdy Hunter Discipline", "Tactical Barrage Art", "Guardian’s Focus Stance", "Resilient Shot Form"],
+        arcaneArcher: ["Mystic Arrow Stance", "Arcane Shot Discipline", "Eldritch Precision Art", "Runebound Focus Form", "Elemental Arrow Discipline", "Enchanted Barrage Stance", "Arcane Piercer Art", "Mystic Bowmaster Form", "Runic Precision Stance", "Eldritch Barrage Discipline"],
+        godsEye: ["Omniscient Shot Art", "Divine Focus Discipline", "Clairvoyant Barrage Stance", "Ultimate Sight Form", "Vision of Truth Stance", "Unerring Arrow Art", "Celestial Aim Discipline", "Precision Strike Stance", "Fate’s Eye Form", "Unseen Vision Discipline"],
+
+        // Magic CombatClass Techniques
+        sorcerer: ["Arcane Fury Stance", "Mystical Empowerment Art", "Sorcerer’s Wrath Discipline", "Ethereal Pulse Form", "Firebrand Focus Stance", "Mana Surge Discipline", "Arcane Infusion Form", "Soulfire Art", "Spellwoven Might Stance", "Bloodspell Discipline"],
+        spiritAdept: ["Soul Weaver Art", "Phantom Sense Discipline", "Spirit Channel Form", "Ghost Whisper Stance", "Spirit Surge Art", "Ethereal Sight Discipline", "Wraithcall Stance", "Astral Hand Form", "Spectral Presence Art", "Spiritwalk Discipline"],
+        mage: ["Mystic Empowerment Form", "Arcane Mastery Stance", "Energy Channel Discipline", "Eldritch Burst Art", "Mystic Surge Form", "Unbreakable Focus Stance", "Mana Flow Discipline", "Enchanted Strength Art", "Runeflare Discipline", "Elemental Mastery Form"],
+        diviner: ["Foresight Discipline", "Clairvoyant Focus Art", "Mystic Vision Stance", "Augury Strike Form", "Precognitive Magic Discipline", "Divination’s Reach Art", "Future Sight Form", "Oracle’s Sight Stance", "Fatebinding Discipline", "Prophetic Strike Art"],
+        archmage: ["Supreme Arcana Stance", "Infinite Knowledge Art", "Ultimate Power Discipline", "Archmage’s Fury Form", "Celestial Summons Stance", "Master of Elements Art", "Cosmic Arcana Discipline", "Omnipotent Surge Form", "Endless Wisdom Stance", "Grand Sorcery Art"],
+        mentalFortress: ["Ironclad Will Art", "Psychic Barrier Discipline", "Mindshield Stance", "Mental Fortitude Form", "Unbreakable Focus Art", "Soul Deflection Discipline", "Steelmind Form", "Mental Bastion Stance", "Resilient Mind Discipline", "Unyielding Thought Form"],
+        battlePriest: ["Divine Smite Form", "Sacred Healing Stance", "Celestial Wrath Discipline", "Holy Resilience Art", "God’s Blessing Form", "Faithfire Stance", "Blessed Strike Discipline", "Guardian’s Prayer Art", "Devotion’s Might Form", "Divine Fury Stance"]
+        
+    };
+
+    if (combatTechniques[combatClass]) {
+        const techniques = combatTechniques[combatClass];
+        return techniques[Math.floor(Math.random() * techniques.length)];
+    }
+    return "No Technique";
+}
+
+// Randomize Combat Details
+function randomizeCombatDetails() {
+    const fields = ['strength', 'constitution', 'dexterity', 'intelligence', 'resolve', 'perception'];
+    const stats = fields.map(field => ({
+        name: field,
+        value: parseInt(document.getElementById(field)?.value || 0, 10)
+    })).sort((a, b) => b.value - a.value);
+
+    const highestStat = stats[0].name;
+    const secondHighestStat = stats[1].name;
+
+    const combatClassMapping = {
+Juggernaut: { core: 'strength', sub: 'constitution' },
+    BladeDancer: { core: 'strength', sub: 'dexterity' },
+    Chieftain: { core: 'strength', sub: 'intelligence' },
+    IronWill: { core: 'strength', sub: 'resolve' },
+    Berserker: { core: 'strength', sub: 'perception' },
+    Titan: { core: 'constitution', sub: 'strength' },
+    StalwartDefender: { core: 'constitution', sub: 'resolve' },
+    survivor: { core: 'constitution', sub: 'dexterity' },
+    hexblade: { core: 'dexterity', sub: 'intelligence' },
+    spellthief: { core: 'dexterity', sub: 'resolve' },
+    bulwark: { core: 'constitution', sub: 'perception' },
+    savageAcrobat: { core: 'dexterity', sub: 'strength' },
+    swiftblade: { core: 'dexterity', sub: 'constitution' },
+    phantomBlade: { core: 'dexterity', sub: 'resolve' },
+    assassin: { core: 'dexterity', sub: 'perception' },
+    combatGenius: { core: 'intelligence', sub: 'strength' },
+    colossus: { core: 'strength', sub: 'strength' },
+    unyieldingTitan: { core: 'constitution', sub: 'constitution' },
+    bladedTempest: { core: 'dexterity', sub: 'dexterity' },
+    arcaneWarrior: { core: 'strength', sub: 'intelligence' },
+    mysticShield: { core: 'resolve', sub: 'constitution' },
+    deadeye: { core: 'dexterity', sub: 'perception' },
+    sniper: { core: 'perception', sub: 'dexterity' },
+    scout: { core: 'perception', sub: 'resolve' },
+    trickshot: { core: 'perception', sub: 'intelligence' },
+    sharpshooter: { core: 'perception', sub: 'strength' },
+    vanguard: { core: 'perception', sub: 'constitution' },
+    arcaneArcher: { core: 'intelligence', sub: 'dexterity' },
+    godsEye: { core: 'perception', sub: 'perception' },
+    sorcerer: { core: 'resolve', sub: 'intelligence' },
+    spiritAdept: { core: 'resolve', sub: 'perception' },
+    mage: { core: 'intelligence', sub: 'resolve' },
+    diviner: { core: 'intelligence', sub: 'perception' },
+    archmage: { core: 'intelligence', sub: 'intelligence' },
+    mentalFortress: { core: 'resolve', sub: 'resolve' },
+    battlePriest: { core: 'constitution', sub: 'intelligence' }
+    };
+
+    let combatClass = document.getElementById('combatClass').value;
+    let combatStyle = document.getElementById('combatStyle').value;
+    let combatTechnique = document.getElementById('combatTechnique').value;
+
+    if (!isLocked('combatClass')) {
+        combatClass = "nothing";
+        for (const [className, { core, sub }] of Object.entries(combatClassMapping)) {
+            if ((core === highestStat && sub === secondHighestStat) || 
+                (core === secondHighestStat && sub === highestStat)) {
+                combatClass = className;
+                break;
+            }
+        }
+        document.getElementById('combatClass').value = combatClass;
+    }
+
+    if (!isLocked('combatStyle')) {
+        if (["Juggernaut", "BladeDancer", "Chieftay", "IronWill", "Berserker", "Titan", "StalwartDefender", "survivor", "hexblade", "spellthief", "bulwark", "savageAcrobat", "swiftblade", "phantomBlade", "assassin", "combatGenius", "colossus", "unyieldingTitan", "bladedTempest", "arcaneWarrior", "mysticShield"].includes(combatClass)) {
+    combatStyle = "Melee";
+} else if (["deadeye", "sniper", "scout", "trickshot", "sharpshooter", "vanguard", "arcaneArcher", "godsEye"].includes(combatClass)) {
+    combatStyle = "Ranged";
+} else if (["sorcerer", "spiritAdept", "mage", "diviner", "archmage", "mentalFortress", "battlePriest"].includes(combatClass)) {
+    combatStyle = "Magic";
+}
+        document.getElementById('combatStyle').value = combatStyle;
+    }
+
+    if (!isLocked('combatTechnique')) {
+        combatTechnique = getRandomCombatTechnique(combatClass);
+        document.getElementById('combatTechnique').value = combatTechnique;
+    }
+}
+
+// Function to randomize inputs, skipping locked ones
+function randomizeStatus() {	
+    const fields = ['strength', 'constitution', 'dexterity', 'intelligence', 'resolve', 'perception'];
+    const thirstyOptions = ['Mild', 'Very thirsty', 'Dehydrated', 'Parched', 'Refreshed', 'Hydrated', 'Fully Quneched'];
+    const restOptions = ["nothing", "Rested", "Sleepy", "Awake", "Fatigued"];
+    const painOptions = ['0', 'Light', 'Moderate', 'Severe', 'Intense'];
+    const hungerOptions = ['Hungry', 'Starving', 'Ravenous', 'Famished', 'Satiated', 'Full'];
+    const heatOptions = ['Comfortable', 'Warm', 'Hot', 'Sweltering', 'Unbearable'];
+    const lightingOptions = ['Bright', 'Dim', 'Flickering', 'Dark', 'Shadowy'];
+    const weatherOptions = ['Clear', 'Rainy', 'Foggy', 'Windy', 'Stormy'];
+    const moonOptions = ['New moon', 'Crescent', 'Half moon', 'Full moon', 'Waning'];
+    const windOptions = ['Calm', 'Breezy', 'Windy', 'Gale', 'Storm'];
+    const temperatureOptions = ['C-41 F', 'C-32 F', 'C-22 F', 'C-50 F', 'C-60 F'];
+    const placeOptions = [
+  'Evac shelter', 'Forest clearing', 'Cave', 'Ruins', 'Battlefield', 'Village center', 
+  'Mountain top', 'Underground hideout', 'Cemetery', 'Abandoned castle', 'Merchant square', 
+  'Windmill', 'Waterfall base', 'Desert oasis', 'Swamp hut', 'Spiritual shrine', 'Ironhold Keep', 
+  'Stormwatch Fortress', 'Eldergrove Sanctuary', 'Blackthorn Citadel', 'Frostpeak Mountains', 
+  'Shadowfen Marsh', 'Dragonspire Peaks', 'Silvermoon Vale', 'Cinderfall Fortress', 'Ravenspire Tower', 
+  'Dawnfall Abbey', 'Sunfire Bastion', 'Frosthelm Keep', 'Starfall Spire', 'Nightfall Glade', 
+  'Stormreach Castle', 'The Darkenwood', 'Emberstone Citadel', 'Thornhelm Bastion', 'Skyforge Hold', 
+  'Crystalbrook Village', 'Ashen Hollow', 'Ironstone Pass', 'Hollowbrook Hollow', 'The Witchwood', 
+  'Brightharbor Port', 'Wildheart Plains', 'Dawnridge Hill', 'The Ironvault', 'Shadowmire Cavern', 
+  'Goldendale Mines', 'Wolfsbane Keep', 'Ironclad Shore', 'The Shattered Spire', 'Emberwatch Tower', 
+  'Blackstone Mountain', 'Stormwind Plains', 'The Silent Vale', 'Moonshadow Ruins', 'Coldridge Vale', 
+  'Grim Hollow Citadel', 'Thornforge Castle', 'The Silver Depths', 'Frostwind City', 'Highgard Summit', 
+  'Blackthorn Marsh', 'The Eternal Grove', 'Wyrmsfall Fortress', 'The Darkened Vale', 'Mistwood Keep', 
+  'Jade Dragon Temple', 'The Crimson Lotus Garden', 'Shimmering Bamboo Grove', 'The Moonlit Pagoda', 
+  'Black Serpent Monastery', 'The Forbidden City of Onyx', 'The Silver Lotus Lake', 'Windwalker Mountain', 
+  'Lotus Blossom Sanctuary', 'The Sunken Kingdom of Tashira', 'Crimson Cloud Ridge', 'Celestial Crane Tower', 
+  'The Jade Emperor\'s Palace', 'The Whispering Winds Temple', 'Pearl Lotus Lagoon', 'The Temple of Thousand Lanterns', 
+  'The Silk Road Caravanserai', 'The Skyfall Monastery', 'Imperial Jade Fortress', 'The Golden Palace of Kessho', 
+  'Mount Hoshiko', 'The Hidden City of Takara', 'The Cloud Veil Mountain', 'Dragon’s Breath Valley', 'Firefly Haven', 
+  'The Great Cherry Blossom Citadel', 'The Moonstone Temple', 'The Eternal Bamboo Forest', 'The Mystic Plains of Akimoto', 
+  'The Serpent’s Fang Castle', 'The Black Lotus Citadel', 'Sunblade Peak', 'The Floating Pagodas of Ten’yo', 
+  'The Sacred Lotus Shrine', 'The Tiger’s Fang Monastery', 'The Whispering Bamboo Temple', 'The Temple of the Fallen Sun', 
+  'The Golden Pagoda of Suzuka', 'The Crystal Caverns of Yume', 'Silverwind Village', 'The Imperial Gardens of Kyoshi', 
+  'The Twin Moon Temple', 'The Forbidden Palace of Kuroda', 'The Celestial Garden of Shura', 'The Shrine of the White Crane', 
+  'The Valley of Eternal Blossoms', 'The Black Wolf Clan Fortress', 'The Radiant Moon Valley', 'The Sacred Stone Temple', 
+  'The Dragon’s Eye Citadel', 'The Wailing Crypts', 'Blackthorn Keep', 'The Hollowed Abyss', 'The Bloodmoon Castle', 
+  'The Cursed Marshlands', 'The Silent Tombs', 'The Forsaken City', 'The Nightshade Fortress', 'The Shadowed Vale', 
+  'The Forgotten Hollow', 'The Tomb of Eternal Night', 'Ashen Hall', 'The Weeping Wasteland', 'The Abyssal Chasm', 
+  'The Demon’s Maw', 'The Darkened Sanctuary', 'The Necropolis of Souls', 'The Sunken Chapel', 'The Grimspire', 
+  'The Stygian Pits', 'The Haunted Forest of Lost Souls', 'The Blackened Citadel', 'The Witch\'s Lair', 'The Veil of Sorrow', 
+  'The Ruins of Despair', 'The Blighted Lands', 'The Bleeding Hills', 'The Scorched Keep', 'The Veins of the Dead', 
+  'The Abyssal River', 'The Thorns of Ashen Hollow', 'The Realm of Shattered Dreams', 'The Plagued Hollow', 
+  'The Crumbling Castle of the Damned', 'The Rotted Citadel', 'The Silent City', 'The Tomb of Forgotten Kings', 
+  'The Blackthorn Abbey', 'The Darkened Spire', 'The Blood-soaked Battlefield', 'The Desolate Chapel', 'The Fiend’s Den', 
+  'The Cursed Isle', 'The Iron Graveyard', 'The Black Mirror Lake', 'The Valley of Lost Echoes', 'The Hollowing Fields', 
+  'The Withered Forest', 'The Dark Fortress of Despair', 'The Last Altar of the Forsaken',
+  
+  // New place names added:
+  'Whispering Pines Village', 'Elderglen Farmstead', 'Oakwood Hollow', 'Moonlit Meadows', 
+  'Windwhistle Farms', 'The Greenvale Village', 'Mistbrook Crossing', 'Summerwind Glade', 
+  'Thistlewood Hamlet', 'Briarhill Cottage', 'Riverstone Hollow', 'The Faerywood Glade', 
+  'Meadowbrook Vale', 'Tanglebrook Farm', 'Willowmere Village', 'Stonemount Hollow', 'Briarpatch Homestead', 
+  'Chestnut Grove', 'Dappled Hollow Farm', 'Quiet Glenstead', 'Ravenshade Orchard', 'Thornridge Village', 
+  'Frostwell Homestead', 'The Sweetbriar Farms', 'Silvermist Village', 'Harvestfall Hollow', 'Everwood Cottage', 
+  'Woodlands Edge', 'Pinehill Farm', 'Oakspire Valley', 'Autumnbrook', 'The Old Wilds Estate', 'Gossamer Meadows', 
+  'Morningsun Village', 'Greenhill Homestead', 'Windmill Glen', 'Autumnblossom Village', 'Stonebrook Farm', 
+  'Glimmerfield Vale', 'Sunbloom Homestead', 'Hallowoak Hollow', 'Redleaf Meadows', 'Goldenbough Orchard', 
+  'Frostbranch Village', 'Ivyfield Homestead', 'Whitewood Grove', 'Starfall Ridge', 'Rollinghill Farmstead', 
+  'The Quiet Orchard', 'Thornhill Village'
+];
+    const firstNames = ['John', 'Jane', 'Alex', 'Chris', 'Taylor', 'Jordan', 'Morgan', 'Jamie', 'Casey', 'Riley', 'Li', 'Wang', 'Zhang', 'Liu', 'Chen', 'Yang', 'Huang', 'Zhao', 'Xu', 'Zhou', 'Sun', 'He', 'Gao', 'Lin', 'Wu', 'Zhou', 'Deng', 'Yu', 'Tang', 'Xu',
+'James', 'Mary', 'John', 'Jennifer', 'Michael', 'Jessica', 'William', 'Linda', 'David', 'Susan', 'Robert', 'Sarah', 'Joseph', 'Karen', 'Daniel', 'Nancy', 'Thomas', 'Lisa', 'Mark', 'Kimberly',
+'Oliver', 'Amelia', 'Harry', 'Emily', 'George', 'Sophie', 'Jack', 'Lily', 'Jacob', 'Charlotte', 'Noah', 'Olivia', 'William', 'Ava', 'Thomas', 'Isabella', 'Henry', 'Mia', 'James', 'Grace',
+'Ivan', 'Anastasia', 'Dmitry', 'Maria', 'Alexei', 'Yulia', 'Sergey', 'Elena', 'Pavel', 'Tatiana', 'Andrei', 'Natalia', 'Viktor', 'Olga', 'Mikhail', 'Irina', 'Kirill', 'Vera', 'Roman', 'Daria',
+'Alejandro', 'Maria', 'Carlos', 'Carmen', 'Juan', 'Laura', 'Antonio', 'Isabel', 'Javier', 'Marta', 'Francisco', 'Patricia', 'Miguel', 'Elena', 'Luis', 'Teresa', 'Pablo', 'Sofia', 'Manuel', 'Ana',
+'Maximilian', 'Anna', 'Lukas', 'Emma', 'Paul', 'Mia', 'Leon', 'Sophia', 'Elias', 'Lina', 'Felix', 'Clara', 'Moritz', 'Laura', 'Jonas', 'Hannah', 'Tim', 'Charlotte', 'Noah', 'Emilia',
+'Mohammed', 'Fatimah', 'Ahmed', 'Aisha', 'Ali', 'Noor', 'Abdullah', 'Yasmin', 'Ibrahim', 'Reem', 'Khalid', 'Sara', 'Faisal', 'Layla', 'Saad', 'Maha', 'Ranya', 'Nasser', 'Samira', 'Zain',
+'Muhammad', 'Putri', 'Ahmad', 'Siti', 'Budi', 'Dewi', 'Agus', 'Rina', 'Joko', 'Ani', 'Bayu', 'Siti', 'Yanti', 'Eko', 'Nia', 'Hadi', 'Maya', 'Indah', 'Taufik', 'Rizki',
+'Aarav', 'Priya', 'Rahul', 'Neha', 'Amit', 'Aisha', 'Raj', 'Sneha', 'Ananya', 'Vijay', 'Deepika', 'Karan', 'Pooja', 'Rohit', 'Riya', 'Sohan', 'Isha', 'Arjun', 'Simran', 'Kartik', 'Tanvi',
+'Timur', 'Amina', 'Yerzhan', 'Kamila', 'Alik', 'Ayan', 'Nursultan', 'Gulnara', 'Dauren', 'Assem', 'Ruslan', 'Saltanat', 'Bauyrzhan', 'Diana', 'Meruyert', 'Marat', 'Zhanar', 'Madina', 'Azamat', 'Saniya',
+'Chinedu', 'Ngozi', 'Olumide', 'Adebayo', 'Chioma', 'Kemi', 'Emeka', 'Ifeoma', 'Oluwaseun', 'Amara', 'Bola', 'Ireti', 'Durojaiye', 'Tolu', 'Adesola', 'Funke', 'Uche', 'Ngozi', 'Chika', 'Ayotunde',
+'Jiho', 'Jiwon', 'Minji', 'Seojin', 'Jisoo', 'Yuna', 'Jihoon', 'Nari', 'Minseok', 'Soojung', 'Taeyang', 'Hana', 'Seungmin', 'Jiwon', 'Sunwoo', 'Kyung', 'Eunjoo', 'Changmin', 'Nari', 'Haebin',
+'Hiroshi', 'Yuki', 'Sakura', 'Haruto', 'Yui', 'Takumi', 'Mei', 'Taro', 'Aoi', 'Haruka', 'Satoshi', 'Riko', 'Kaito', 'Ayumi', 'Shinji', 'Kana', 'Kenta', 'Nanami', 'Ren', 'Makoto', 'Natsuki',
+'David', 'Miriam', 'Yaara', 'Yitzhak', 'Talia', 'Eli', 'Shira', 'Natan', 'Yael', 'Erez', 'Oren', 'Tamar', 'Reuven', 'Sarah', 'Daniel', 'Or', 'Hila', 'Lior', 'Yaakov', 'Dafna', 'Noa'];
+    const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Miller', 'Davis', 'Garcia', 'Martinez', 'Hernandez', 'Li', 'Wang', 'Zhang', 'Liu', 'Chen', 'Yang', 'Huang', 'Zhao', 'Xu', 'Zhou', 'Sun', 'He', 'Gao', 'Lin', 'Wu', 'Deng', 'Yu', 'Tang', 'Xu',
+'Smith', 'Johnson', 'Williams', 'Jones', 'Brown', 'Davis', 'Miller', 'Wilson', 'Moore', 'Taylor', 'Anderson', 'Thomas', 'Jackson', 'White', 'Harris', 'Martin', 'Thompson', 'Garcia', 'Martinez', 'Roberts',
+'Brown', 'Jones', 'Taylor', 'Williams', 'Davies', 'Wilson', 'Evans', 'Thomas', 'Johnson', 'Roberts', 'Lewis', 'Walker', 'Wright', 'Green', 'Harris', 'Clarke', 'King', 'Scott', 'Baker', 'Adams',
+'Ivanov', 'Petrov', 'Sidorov', 'Smirnov', 'Kuznetsov', 'Popov', 'Vasilyev', 'Mikhailov', 'Morozov', 'Fedorov', 'Solovyev', 'Novikov', 'Borisov', 'Karpov', 'Lebedev', 'Romanov', 'Tikhonov', 'Gusev', 'Kozlov', 'Shishkin',
+'Gomez', 'Lopez', 'Martinez', 'Sanchez', 'Perez', 'Rodriguez', 'Garcia', 'Fernandez', 'Ruiz', 'Diaz', 'Hernandez', 'Garcia', 'Jimenez', 'Molina', 'Alvarez', 'Moreno', 'Jimenez', 'Vazquez', 'Castro', 'Mendez',
+'Schmidt', 'Müller', 'Schneider', 'Fischer', 'Weber', 'Wagner', 'Becker', 'Hoffmann', 'Schulz', 'Zimmermann', 'Koch', 'Bauer', 'Richter', 'Schröder', 'Neumann', 'Schmitt', 'Hartmann', 'Werner', 'Lange', 'Krause',
+'Al-Saud', 'Al-Faisal', 'Al-Harbi', 'Al-Dosari', 'Al-Omari', 'Al-Jabri', 'Al-Mohammed', 'Al-Shammari', 'Al-Qasim', 'Al-Zahrani', 'Al-Mansour', 'Al-Mutairi', 'Al-Khalid', 'Al-Shehri', 'Al-Rashid', 'Al-Salem', 'Al-Hassan', 'Al-Mutlaq', 'Al-Turki',
+'Setiawan', 'Suharto', 'Prabowo', 'Putra', 'Wijaya', 'Gunawan', 'Kurniawan', 'Santoso', 'Harsono', 'Budi', 'Sutanto', 'Adi', 'Saputra', 'Hidayat', 'Alamsyah', 'Purnama', 'Rachman', 'Marsono', 'Kusuma', 'Sitorus',
+'Patel', 'Sharma', 'Singh', 'Reddy', 'Iyer', 'Kumar', 'Gupta', 'Verma', 'Joshi', 'Mehta', 'Bose', 'Banerjee', 'Choudhury', 'Malhotra', 'Kaur', 'Arora', 'Kapoor', 'Desai', 'Yadav', 'Bhat',
+'Zhumabekov', 'Suleimenov', 'Akimbekov', 'Bekturov', 'Zharaskhanov', 'Tengizbayev', 'Nurtazin', 'Dzhumadilov', 'Muratbekov', 'Dauletov', 'Kazbekov', 'Mukhambetov', 'Baymukhanov', 'Mynbayev', 'Kenzhebayev', 'Samalbekov', 'Khamzinov', 'Shalabayeva', 'Toktarov',
+'Okeke', 'Adebayo', 'Ogunleye', 'Akinwale', 'Eze', 'Onyekachi', 'Oluwaseun', 'Chukwuemeka', 'Olaoye', 'Ayodele', 'Ajayi', 'Nwankwo', 'Abiola', 'Olawale', 'Obi', 'Ifedayo', 'Ogunbiyi', 'Olatunji', 'Amadi', 'Chibuzo',
+'Kim', 'Lee', 'Park', 'Choi', 'Cho', 'Jung', 'Kang', 'Im', 'Han', 'Yoon', 'Lim', 'Seo', 'Shin', 'Oh', 'Ryu', 'Hwang', 'Kwon', 'Nam', 'Song', 'Jeong',
+'Tanaka', 'Yamamoto', 'Kobayashi', 'Sato', 'Watanabe', 'Takahashi', 'Yamada', 'Matsumoto', 'Inoue', 'Ishikawa', 'Fujita', 'Yamaguchi', 'Kuroda', 'Hasegawa', 'Iida', 'Sakai', 'Hashimoto', 'Murakami', 'Nakajima', 'Fujimoto',
+'Levi', 'Cohen', 'Mizrahi', 'Shalev', 'Dahan', 'Rosenberg', 'Ben-David', 'Zohar', 'Shalom', 'Erez', 'Ben-Ami', 'Nissim', 'Baruch', 'Tzukrel', 'Farkash', 'Yeger', 'Yona', 'Klein', 'Shani', 'Golan'];
+    
+    const meleeItems = ['Fists', 'Sword', 'Axe', 'Dagger', 'Spear', 'Mace', 'Hammer', 'Flail', 'Katana', 'Scythe', 'Whip', 'Claws', 'Club', 'Halberd', 'Greatsword', 'Battleaxe', 'Shortsword', 'Trident', 'Javelin', 'Saber', 'Pike', 'Rapier', 'Morningstar', 'Falchion', 'Gladius', 'Bastard Sword', 'Claymore', 'Runic Greatsword', 'Dragonbone Sword', 'Stormbreaker Axe', 'Wyrmsbane Pike', 'Thunderstrike Mace', 'Grim Reaper Scythe', 'Basic Wood Sword', 'Sturdy Wood Sword', 'Well-Made Wood Sword', 'Masterwork Wood Sword', 'Exquisite Wood Sword', 'Runed Wood Sword', 'Enchanted Wood Sword', 'Arcane-Infused Wood Sword', 'Divine Wood Sword', 'Mythic Wood Sword',
+'Basic Iron Sword', 'Sturdy Iron Sword', 'Well-Made Iron Sword', 'Masterwork Iron Sword', 'Exquisite Iron Sword', 'Runed Iron Sword', 'Enchanted Iron Sword', 'Arcane-Infused Iron Sword', 'Divine Iron Sword', 'Mythic Iron Sword',
+'Basic Steel Sword', 'Sturdy Steel Sword', 'Well-Made Steel Sword', 'Masterwork Steel Sword', 'Exquisite Steel Sword', 'Runed Steel Sword', 'Enchanted Steel Sword', 'Arcane-Infused Steel Sword', 'Divine Steel Sword', 'Mythic Steel Sword',
+'Basic Bronze Sword', 'Sturdy Bronze Sword', 'Well-Made Bronze Sword', 'Masterwork Bronze Sword', 'Exquisite Bronze Sword', 'Runed Bronze Sword', 'Enchanted Bronze Sword', 'Arcane-Infused Bronze Sword', 'Divine Bronze Sword', 'Mythic Bronze Sword',
+'Basic Silver Sword', 'Sturdy Silver Sword', 'Well-Made Silver Sword', 'Masterwork Silver Sword', 'Exquisite Silver Sword', 'Runed Silver Sword', 'Enchanted Silver Sword', 'Arcane-Infused Silver Sword', 'Divine Silver Sword', 'Mythic Silver Sword',
+'Basic Mithril Sword', 'Sturdy Mithril Sword', 'Well-Made Mithril Sword', 'Masterwork Mithril Sword', 'Exquisite Mithril Sword', 'Runed Mithril Sword', 'Enchanted Mithril Sword', 'Arcane-Infused Mithril Sword', 'Divine Mithril Sword', 'Mythic Mithril Sword',
+'Basic Adamantium Sword', 'Sturdy Adamantium Sword', 'Well-Made Adamantium Sword', 'Masterwork Adamantium Sword', 'Exquisite Adamantium Sword', 'Runed Adamantium Sword', 'Enchanted Adamantium Sword', 'Arcane-Infused Adamantium Sword', 'Divine Adamantium Sword', 'Mythic Adamantium Sword',
+'Basic Dragonbone Sword', 'Sturdy Dragonbone Sword', 'Well-Made Dragonbone Sword', 'Masterwork Dragonbone Sword', 'Exquisite Dragonbone Sword', 'Runed Dragonbone Sword', 'Enchanted Dragonbone Sword', 'Arcane-Infused Dragonbone Sword', 'Divine Dragonbone Sword', 'Mythic Dragonbone Sword',
+'Basic Celestial Ore Sword', 'Sturdy Celestial Ore Sword', 'Well-Made Celestial Ore Sword', 'Masterwork Celestial Ore Sword', 'Exquisite Celestial Ore Sword', 'Runed Celestial Ore Sword', 'Enchanted Celestial Ore Sword', 'Arcane-Infused Celestial Ore Sword', 'Divine Celestial Ore Sword', 'Mythic Celestial Ore Sword',
+'Basic Orichalcum Sword', 'Sturdy Orichalcum Sword', 'Well-Made Orichalcum Sword', 'Masterwork Orichalcum Sword', 'Exquisite Orichalcum Sword', 'Runed Orichalcum Sword', 'Enchanted Orichalcum Sword', 'Arcane-Infused Orichalcum Sword', 'Divine Orichalcum Sword', 'Mythic Orichalcum Sword', 'Basic Wood Axe', 'Sturdy Wood Axe', 'Well-Made Wood Axe', 'Masterwork Wood Axe', 'Exquisite Wood Axe', 'Runed Wood Axe', 'Enchanted Wood Axe', 'Arcane-Infused Wood Axe', 'Divine Wood Axe', 'Mythic Wood Axe',
+'Basic Iron Axe', 'Sturdy Iron Axe', 'Well-Made Iron Axe', 'Masterwork Iron Axe', 'Exquisite Iron Axe', 'Runed Iron Axe', 'Enchanted Iron Axe', 'Arcane-Infused Iron Axe', 'Divine Iron Axe', 'Mythic Iron Axe',
+'Basic Steel Axe', 'Sturdy Steel Axe', 'Well-Made Steel Axe', 'Masterwork Steel Axe', 'Exquisite Steel Axe', 'Runed Steel Axe', 'Enchanted Steel Axe', 'Arcane-Infused Steel Axe', 'Divine Steel Axe', 'Mythic Steel Axe',
+'Basic Bronze Axe', 'Sturdy Bronze Axe', 'Well-Made Bronze Axe', 'Masterwork Bronze Axe', 'Exquisite Bronze Axe', 'Runed Bronze Axe', 'Enchanted Bronze Axe', 'Arcane-Infused Bronze Axe', 'Divine Bronze Axe', 'Mythic Bronze Axe',
+'Basic Silver Axe', 'Sturdy Silver Axe', 'Well-Made Silver Axe', 'Masterwork Silver Axe', 'Exquisite Silver Axe', 'Runed Silver Axe', 'Enchanted Silver Axe', 'Arcane-Infused Silver Axe', 'Divine Silver Axe', 'Mythic Silver Axe',
+'Basic Mithril Axe', 'Sturdy Mithril Axe', 'Well-Made Mithril Axe', 'Masterwork Mithril Axe', 'Exquisite Mithril Axe', 'Runed Mithril Axe', 'Enchanted Mithril Axe', 'Arcane-Infused Mithril Axe', 'Divine Mithril Axe', 'Mythic Mithril Axe',
+'Basic Adamantium Axe', 'Sturdy Adamantium Axe', 'Well-Made Adamantium Axe', 'Masterwork Adamantium Axe', 'Exquisite Adamantium Axe', 'Runed Adamantium Axe', 'Enchanted Adamantium Axe', 'Arcane-Infused Adamantium Axe', 'Divine Adamantium Axe', 'Mythic Adamantium Axe',
+'Basic Dragonbone Axe', 'Sturdy Dragonbone Axe', 'Well-Made Dragonbone Axe', 'Masterwork Dragonbone Axe', 'Exquisite Dragonbone Axe', 'Runed Dragonbone Axe', 'Enchanted Dragonbone Axe', 'Arcane-Infused Dragonbone Axe', 'Divine Dragonbone Axe', 'Mythic Dragonbone Axe',
+'Basic Celestial Ore Axe', 'Sturdy Celestial Ore Axe', 'Well-Made Celestial Ore Axe', 'Masterwork Celestial Ore Axe', 'Exquisite Celestial Ore Axe', 'Runed Celestial Ore Axe', 'Enchanted Celestial Ore Axe', 'Arcane-Infused Celestial Ore Axe', 'Divine Celestial Ore Axe', 'Mythic Celestial Ore Axe',
+'Basic Orichalcum Axe', 'Sturdy Orichalcum Axe', 'Well-Made Orichalcum Axe', 'Masterwork Orichalcum Axe', 'Exquisite Orichalcum Axe', 'Runed Orichalcum Axe', 'Enchanted Orichalcum Axe', 'Arcane-Infused Orichalcum Axe', 'Divine Orichalcum Axe', 'Mythic Orichalcum Axe', 'Basic Wood Mace', 'Sturdy Wood Mace', 'Well-Made Wood Mace', 'Masterwork Wood Mace', 'Exquisite Wood Mace', 'Runed Wood Mace', 'Enchanted Wood Mace', 'Arcane-Infused Wood Mace', 'Divine Wood Mace', 'Mythic Wood Mace',
+'Basic Iron Mace', 'Sturdy Iron Mace', 'Well-Made Iron Mace', 'Masterwork Iron Mace', 'Exquisite Iron Mace', 'Runed Iron Mace', 'Enchanted Iron Mace', 'Arcane-Infused Iron Mace', 'Divine Iron Mace', 'Mythic Iron Mace',
+'Basic Steel Mace', 'Sturdy Steel Mace', 'Well-Made Steel Mace', 'Masterwork Steel Mace', 'Exquisite Steel Mace', 'Runed Steel Mace', 'Enchanted Steel Mace', 'Arcane-Infused Steel Mace', 'Divine Steel Mace', 'Mythic Steel Mace', 'Basic Bronze Mace', 'Sturdy Bronze Mace', 'Well-Made Bronze Mace', 'Masterwork Bronze Mace', 'Exquisite Bronze Mace', 'Runed Bronze Mace', 'Enchanted Bronze Mace', 'Arcane-Infused Bronze Mace', 'Divine Bronze Mace', 'Mythic Bronze Mace', 'Basic Silver Mace', 'Sturdy Silver Mace', 'Well-Made Silver Mace', 'Masterwork Silver Mace', 'Exquisite Silver Mace', 'Runed Silver Mace', 'Enchanted Silver Mace', 'Arcane-Infused Silver Mace', 'Divine Silver Mace', 'Mythic Silver Mace', 'Basic Mithril Mace', 'Sturdy Mithril Mace', 'Well-Made Mithril Mace', 'Masterwork Mithril Mace', 'Exquisite Mithril Mace', 'Runed Mithril Mace', 'Enchanted Mithril Mace', 'Arcane-Infused Mithril Mace', 'Divine Mithril Mace', 'Mythic Mithril Mace', 'Basic Adamantium Mace', 'Sturdy Adamantium Mace', 'Well-Made Adamantium Mace', 'Masterwork Adamantium Mace', 'Exquisite Adamantium Mace', 'Runed Adamantium Mace', 'Enchanted Adamantium Mace', 'Arcane-Infused Adamantium Mace', 'Divine Adamantium Mace', 'Mythic Adamantium Mace',
+'Basic Dragonbone Mace', 'Sturdy Dragonbone Mace', 'Well-Made Dragonbone Mace', 'Masterwork Dragonbone Mace', 'Exquisite Dragonbone Mace', 'Runed Dragonbone Mace', 'Enchanted Dragonbone Mace', 'Arcane-Infused Dragonbone Mace', 'Divine Dragonbone Mace', 'Mythic Dragonbone Mace',
+'Basic Celestial Ore Mace', 'Sturdy Celestial Ore Mace', 'Well-Made Celestial Ore Mace', 'Masterwork Celestial Ore Mace', 'Exquisite Celestial Ore Mace', 'Runed Celestial Ore Mace', 'Enchanted Celestial Ore Mace', 'Arcane-Infused Celestial Ore Mace', 'Divine Celestial Ore Mace', 'Mythic Celestial Ore Mace', 'Basic Orichalcum Mace', 'Sturdy Orichalcum Mace', 'Well-Made Orichalcum Mace', 'Masterwork Orichalcum Mace', 'Exquisite Orichalcum Mace', 'Runed Orichalcum Mace', 'Enchanted Orichalcum Mace', 'Arcane-Infused Orichalcum Mace', 'Divine Orichalcum Mace', 'Mythic Orichalcum Mace', 'Basic Wood Longsword', 'Sturdy Wood Longsword', 'Well-Made Wood Longsword', 'Masterwork Wood Longsword', 'Exquisite Wood Longsword', 'Runed Wood Longsword', 'Enchanted Wood Longsword', 'Arcane-Infused Wood Longsword', 'Divine Wood Longsword', 'Mythic Wood Longsword', 'Basic Iron Longsword', 'Sturdy Iron Longsword', 'Well-Made Iron Longsword', 'Masterwork Iron Longsword', 'Exquisite Iron Longsword', 'Runed Iron Longsword', 'Enchanted Iron Longsword', 'Arcane-Infused Iron Longsword', 'Divine Iron Longsword', 'Mythic Iron Longsword', 'Basic Steel Longsword', 'Sturdy Steel Longsword', 'Well-Made Steel Longsword', 'Masterwork Steel Longsword', 'Exquisite Steel Longsword', 'Runed Steel Longsword', 'Enchanted Steel Longsword', 'Arcane-Infused Steel Longsword', 'Divine Steel Longsword', 'Mythic Steel Longsword',
+'Basic Bronze Longsword', 'Sturdy Bronze Longsword', 'Well-Made Bronze Longsword', 'Masterwork Bronze Longsword', 'Exquisite Bronze Longsword', 'Runed Bronze Longsword', 'Enchanted Bronze Longsword', 'Arcane-Infused Bronze Longsword', 'Divine Bronze Longsword', 'Mythic Bronze Longsword', 'Basic Silver Longsword', 'Sturdy Silver Longsword', 'Well-Made Silver Longsword', 'Masterwork Silver Longsword', 'Exquisite Silver Longsword', 'Runed Silver Longsword', 'Enchanted Silver Longsword', 'Arcane-Infused Silver Longsword', 'Divine Silver Longsword', 'Mythic Silver Longsword',
+'Basic Mithril Longsword', 'Sturdy Mithril Longsword', 'Well-Made Mithril Longsword', 'Masterwork Mithril Longsword', 'Exquisite Mithril Longsword', 'Runed Mithril Longsword', 'Enchanted Mithril Longsword', 'Arcane-Infused Mithril Longsword', 'Divine Mithril Longsword', 'Mythic Mithril Longsword', 'Basic Adamantium Longsword', 'Sturdy Adamantium Longsword', 'Well-Made Adamantium Longsword', 'Masterwork Adamantium Longsword', 'Exquisite Adamantium Longsword', 'Runed Adamantium Longsword', 'Enchanted Adamantium Longsword', 'Arcane-Infused Adamantium Longsword', 'Divine Adamantium Longsword', 'Mythic Adamantium Longsword', 'Basic Dragonbone Longsword', 'Sturdy Dragonbone Longsword', 'Well-Made Dragonbone Longsword', 'Masterwork Dragonbone Longsword', 'Exquisite Dragonbone Longsword', 'Runed Dragonbone Longsword', 'Enchanted Dragonbone Longsword', 'Arcane-Infused Dragonbone Longsword', 'Divine Dragonbone Longsword', 'Mythic Dragonbone Longsword', 'Basic Celestial Ore Longsword', 'Sturdy Celestial Ore Longsword', 'Well-Made Celestial Ore Longsword', 'Masterwork Celestial Ore Longsword', 'Exquisite Celestial Ore Longsword', 'Runed Celestial Ore Longsword', 'Enchanted Celestial Ore Longsword', 'Arcane-Infused Celestial Ore Longsword', 'Divine Celestial Ore Longsword', 'Mythic Celestial Ore Longsword', 'Basic Orichalcum Longsword', 'Sturdy Orichalcum Longsword', 'Well-Made Orichalcum Longsword', 'Masterwork Orichalcum Longsword', 'Exquisite Orichalcum Longsword', 'Runed Orichalcum Longsword', 'Enchanted Orichalcum Longsword', 'Arcane-Infused Orichalcum Longsword', 'Divine Orichalcum Longsword', 'Mythic Orichalcum Longsword'];
+    const rangedItems = ['Bow', 'Longbow', 'Crossbow', 'Sling', 'Throwing Knives', 'Chakram', 'Phoenix Feather Bow', 'Eternal Bow', 'Dragonfire Bow', 'Moonlit Precision Bow', 'Starfall Arrows'];
+    const magicItems = ['Wand', 'Staff of Fire', 'Flame Tongue Lasso', 'Arcane Staff', 'Doomsday Staff', 'Vortex Orb', 'Soulbind Lasso', 'Celestial Tear', 'Arcane Stone', 'Lightbringer Staff', 'Elemental Convergence Staff', 'Frozen Flame Ritual Staff', 'Frostveil Grimoire', 'Void Staff', 'Sunstone Orb', 'Spectral Shield'];
+    const shields = ['Wooden Shield', 'Iron Shield', 'Tower Shield', 'Dragonbone Shield', 'Kite Shield', 'Round Shield'];
+    const randomValue = Math.random();
+    let totalTarget;
+
+    // Rare case logic for total target
+if (randomValue < 0.00002) {  // 1 in 50,000 for total 90-100
+    totalTarget = Math.floor(Math.random() * 11 + 90);  // 90-100 range
+} else if (randomValue < 0.001) {  // 1 in 1,000 for total 81-90
+    totalTarget = Math.floor(Math.random() * 10 + 81);  // 81-90 range
+} else if (randomValue < 0.07) {  // 1 in 14.3 for total 71-80
+    totalTarget = Math.floor(Math.random() * 10 + 71);  // 71-80 range
+} else {  // Common range 60-70
+    totalTarget = Math.floor(Math.random() * 11 + 60);  // 60-70 range
+}
+
+    let remaining = totalTarget;
+
+    // Subtract locked field values from the total
+    const lockedValues = fields.map((field) => {
+        if (isLocked(field)) {
+            const value = parseInt(document.getElementById(field).value, 10) || 0;
+            remaining -= value; // Deduct locked field values from remaining total
+            return value;
+        }
+        return 0;
+    });
+
+    const unlockedFields = fields.filter((field, index) => !isLocked(field));
+    let values = [];
+
+// Decide whether to use the new allocation logic or the "close to 10" logic
+const useNewLogic = Math.random() < 0.5; // 50% chance
+
+// Distribute remaining total among unlocked fields
+for (let i = 0; i < unlockedFields.length; i++) {
+    let allocation;
+
+    if (useNewLogic) {
+        // New logic: allocate at least 3 points to each field
+        allocation = 
+            i === unlockedFields.length - 1
+                ? remaining // Assign the rest to the last field
+                : Math.max(3, Math.floor(Math.random() * (remaining / (unlockedFields.length - i))));
+
+    } else {
+        // Old logic: keep values close to 10
+        allocation = 
+            i === unlockedFields.length - 1
+                ? remaining // Assign the rest to the last field
+                : Math.min(10 + Math.floor(Math.random() * 3 - 1), remaining - (unlockedFields.length - i - 1) * (Math.random() < 1 / 10 ? 0 : 8));
+    }
+
+    values.push(allocation);
+    remaining -= allocation;
+}
+
+    // Shuffle values for randomness
+    values = values.sort(() => Math.random() - 0.5);
+
+    // Assign values to unlocked fields
+    unlockedFields.forEach((field, index) => {
+        document.getElementById(field).value = values[index];
+    });
+
+    // Calculate total including locked fields
+const total = lockedValues.reduce((sum, val) => sum + val, 0) + values.reduce((sum, val) => sum + val, 0);
+let rating = "F";
+if (total >= 95) rating = "SS";
+else if (total >= 90) rating = "S";
+else if (total >= 85) rating = "A";
+else if (total >= 80) rating = "B";
+else if (total >= 75) rating = "C";
+else if (total >= 70) rating = "D";
+else if (total >= 65) rating = "E";
+else rating = "F";
+
+    document.getElementById("potentialDisplay").innerText = `${total} (${rating})`;
+
+    // Update ratings for each field
+    fields.forEach((field) => {
+        const fieldValue = parseInt(document.getElementById(field).value, 10) || 0;
+        let fieldRating = "F";
+        if (fieldValue >= 22) fieldRating = "S";
+        else if (fieldValue >= 20) fieldRating = "A";
+        else if (fieldValue >= 18) fieldRating = "B";
+        else if (fieldValue >= 16) fieldRating = "C";
+        else if (fieldValue >= 14) fieldRating = "D";
+        else if (fieldValue >= 10) fieldRating = "E";
+
+        document.getElementById(`${field}Rating`).innerText = `${fieldRating}`;
+    });
+    // Randomize specific options for fields
+    if (!isLocked('thirst')) document.getElementById('thirst').value = thirstyOptions[Math.floor(Math.random() * thirstyOptions.length)];
+    if (!isLocked('rest')) document.getElementById('rest').value = restOptions[Math.floor(Math.random() * restOptions.length)];
+    if (!isLocked('pain')) document.getElementById('pain').value = painOptions[Math.floor(Math.random() * painOptions.length)];
+    if (!isLocked('hunger')) document.getElementById('hunger').value = hungerOptions[Math.floor(Math.random() * hungerOptions.length)];
+    if (!isLocked('heat')) document.getElementById('heat').value = heatOptions[Math.floor(Math.random() * heatOptions.length)];
+    if (!isLocked('lighting')) document.getElementById('lighting').value = lightingOptions[Math.floor(Math.random() * lightingOptions.length)];
+    if (!isLocked('weather')) document.getElementById('weather').value = weatherOptions[Math.floor(Math.random() * weatherOptions.length)];
+    if (!isLocked('moon')) document.getElementById('moon').value = moonOptions[Math.floor(Math.random() * moonOptions.length)];
+    if (!isLocked('wind')) document.getElementById('wind').value = windOptions[Math.floor(Math.random() * windOptions.length)];
+    if (!isLocked('temperature')) document.getElementById('temperature').value = temperatureOptions[Math.floor(Math.random() * temperatureOptions.length)];
+    // Randomize date and time separately (checking lock)
+    if (!isLocked('date')) {
+        const months = ['Winter', 'Spring', 'Summer', 'Fall'];
+        const days = Math.floor(Math.random() * 365) + 1;
+        document.getElementById('date').value = `${months[Math.floor(Math.random() * 4)]}, day ${days}`;
+    }
+
+    if (!isLocked('time')) {
+        const hours = Math.floor(Math.random() * 24);
+        const minutes = Math.floor(Math.random() * 60);
+        const seconds = Math.floor(Math.random() * 60);
+        document.getElementById('time').value = `${hours}:${minutes}:${seconds}`;
+    }
+
+    // Randomize place, first name, and last name, if unlocked
+    if (!isLocked('place')) document.getElementById('place').value = placeOptions[Math.floor(Math.random() * placeOptions.length)];
+    if (!isLocked('firstName')) document.getElementById('firstName').value = firstNames[Math.floor(Math.random() * firstNames.length)];
+    if (!isLocked('lastName')) document.getElementById('lastName').value = lastNames[Math.floor(Math.random() * lastNames.length)];
+  
+  // Randomize combat details
+    randomizeCombatDetails();
+  
+if (!isLocked('wieldLHand') && !isLocked('wieldRHand')) {
+    const noOffhandChance = Math.random(); // 90% chance for no offhand
+
+    if (document.getElementById('combatStyle').value === "Melee") {
+        const mainHandWeapon = meleeItems[Math.floor(Math.random() * meleeItems.length)];
+        document.getElementById('wieldLHand').value = mainHandWeapon;
+
+        // Check if weapon name includes "longsword" or similar
+        if (mainHandWeapon.toLowerCase().includes('longsword')) {
+            // No shield if it's a longsword
+            document.getElementById('wieldRHand').value = "nothing";
+        } else {
+            // 40% chance for having an offhand equipped
+            if (Math.random() < 0.4) {
+                const offhandTypeChance = Math.random();
+
+                if (offhandTypeChance < 0.7) {
+                    // 70% chance for a shield
+                    document.getElementById('wieldRHand').value = shields[Math.floor(Math.random() * shields.length)];
+                } else if (offhandTypeChance < 0.9) {
+                    // 20% chance for a melee item
+                    document.getElementById('wieldRHand').value = meleeItems[Math.floor(Math.random() * meleeItems.length)];
+                } else {
+                    // 10% chance for no offhand
+                    document.getElementById('wieldRHand').value = "nothing";
+                }
+            } else {
+                // 60% chance for no offhand
+                document.getElementById('wieldRHand').value = "nothing";
+            }
+        }
+    } else if (document.getElementById('combatStyle').value === "Ranged") {
+        document.getElementById('wieldLHand').value = rangedItems[Math.floor(Math.random() * rangedItems.length)];
+        document.getElementById('wieldRHand').value = noOffhandChance < 0.9 ? "nothing" : rangedItems[Math.floor(Math.random() * rangedItems.length)];
+    } else if (document.getElementById('combatStyle').value === "Magic") {
+        document.getElementById('wieldLHand').value = magicItems[Math.floor(Math.random() * magicItems.length)];
+        document.getElementById('wieldRHand').value = magicItems[Math.floor(Math.random() * magicItems.length)];
+    }
+} else if (isLocked('wieldLHand') && isLocked('wieldRHand')) {
+    // Adjust combat style to match locked weapons
+    const wieldLHand = document.getElementById('wieldLHand').value.toLowerCase();
+    const wieldRHand = document.getElementById('wieldRHand').value.toLowerCase();
+
+    if (meleeItems.some(item => wieldLHand.includes(item.toLowerCase())) &&
+        meleeItems.some(item => wieldRHand.includes(item.toLowerCase()))) {
+        document.getElementById('combatStyle').value = "Melee";
+    } else if (rangedItems.some(item => wieldLHand.includes(item.toLowerCase())) &&
+        rangedItems.some(item => wieldRHand.includes(item.toLowerCase()))) {
+        document.getElementById('combatStyle').value = "Ranged";
+    } else if (magicItems.some(item => wieldLHand.includes(item.toLowerCase())) &&
+        magicItems.some(item => wieldRHand.includes(item.toLowerCase()))) {
+        document.getElementById('combatStyle').value = "Magic";
+    }
+} else if (!isLocked('wieldLHand')) {
+    // If only the left hand is unlocked, randomize based on combat style
+    if (document.getElementById('combatStyle').value === "Melee") {
+        document.getElementById('wieldLHand').value = meleeItems[Math.floor(Math.random() * meleeItems.length)];
+    } else if (document.getElementById('combatStyle').value === "Ranged") {
+        document.getElementById('wieldLHand').value = rangedItems[Math.floor(Math.random() * rangedItems.length)];
+    } else if (document.getElementById('combatStyle').value === "Magic") {
+        document.getElementById('wieldLHand').value = magicItems[Math.floor(Math.random() * magicItems.length)];
+    }
+} else if (!isLocked('wieldRHand')) {
+    // If only the right hand is unlocked, randomize based on combat style
+    if (document.getElementById('combatStyle').value === "Melee") {
+        document.getElementById('wieldRHand').value = meleeItems[Math.floor(Math.random() * meleeItems.length)];
+    } else if (document.getElementById('combatStyle').value === "Ranged") {
+        document.getElementById('wieldRHand').value = rangedItems[Math.floor(Math.random() * rangedItems.length)];
+    } else if (document.getElementById('combatStyle').value === "Magic") {
+        document.getElementById('wieldRHand').value = magicItems[Math.floor(Math.random() * magicItems.length)];
+    }
+    
+    // Resize all inputs after randomization
+    resizeAllInputs();
+
+
+// Attach resizeInput to all inputs for manual changes
+document.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => {
+    input.addEventListener('input', () => resizeInput(input));
+});
+
+// Call resizeInput after updating each field programmatically in randomizeStatus or other functions
+resizeAllInputs();
+
+
+    // Trigger a reflow to make sure the value is rendered
+            input.offsetHeight; // This forces a reflow
+
+            resizeInput(input); // Resize input after randomization
+        ;
+ 
+   
+}
+}
+function randomizeAndUpdate() {
+    randomizeStatus(); // Calls the randomizeStatus function
+    updateStatus();    // Then calls the updateStatus function
+}
+function exportStatus() {
+    const statusText = document.getElementById('statusDisplay').innerText;
+    const firstName = document.getElementById('firstName').value;
+    const lastName = document.getElementById('lastName').value;
+    const fileName = `${firstName}_${lastName}_status.txt`; // Combine first and last name for the filename
+
+    const blob = new Blob([statusText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName; // Set the filename dynamically
+    a.click();
+    URL.revokeObjectURL(url);
+}
+</script>
+
+</body>
+</html>
