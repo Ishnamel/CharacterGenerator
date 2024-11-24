@@ -106,10 +106,13 @@
 <body>
 	<div id="sideStatus" class="status-side-section"></div>
 <h1>Status Screen Editor</h1>
-
+<div class="section">
+    <h2>Seed</h2>
+    <label for="retrieveSeed">Enter Seed:</label>
+    <input type="text" id="retrieveSeed" placeholder="Enter Seed">
+    <button onclick="retrieveAndUpdateStatus()">Generate From Seed</button>
+</div>
 <button onclick="randomizeAndUpdate()">Generate</button>
-<button onclick="randomizeStatus()">Randomize Status</button>
-<button onclick="updateStatus()">Update Status</button>
 <button onclick="generateNarrative()">Generate Narrative</button>
 
 <div class="section">
@@ -185,11 +188,8 @@
     <input type="text" id="retrieveSeed" placeholder="Enter Seed">
     <button onclick="retrieveAndUpdateStatus()">Generate From Seed</button>
 </div>
-<button onclick="retrieveAndUpdateStatus()">Generate From Seed</button>
 <button onclick="randomizeAndUpdate()">Generate</button>
-<button onclick="updateStatus()">Update Status</button>
 <button onclick="exportStatus()">Export Status</button>
-<button onclick="randomizeStatus()">Randomize Status</button>
 <button onclick="generateNarrative()">Generate Narrative</button>
 <div id="statusDisplay"></div>
 
