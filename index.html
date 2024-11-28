@@ -160,12 +160,10 @@ input[type="text"], input[type="number"], select {
 </div>
 <div class="left-panel">
 <h1>Character Generator</h1>
-<button onclick="toggleSideStatus()">Show/Hide Side Status</button>
+<button onclick="toggleSideStatus()">Show/Hide Side Status Display</button>
 <button onclick="randomizeAndUpdate()">Generate</button>
 <button onclick="generateNarrative()">Generate Narrative</button>
-<button onclick="exportStatus()">Export Status</button>
-<button onclick="generateNarrative()">Generate Narrative</button>
-
+<button onclick="exportStatus()">Download</button>
     <h2>Character Info</h2>
     <label for="firstName">First Name:</label><input type="text" id="firstName" disabled oninput="resizeInput(this)"><button onclick="toggleLock('firstName')">Lock</button><br>
     <label for="lastName">Last Name:</label><input type="text" id="lastName" disabled oninput="resizeInput(this)"><button onclick="toggleLock('lastName')">Lock</button><br>
@@ -192,6 +190,46 @@ input[type="text"], input[type="number"], select {
 <label for="perception">Perception:</label>
 <input type="number" id="perception" value="10" disabled oninput="resizeInput(this)"><button onclick="toggleLock('perception')">Lock</button><span id="perceptionRating">F</span><br>
 	
+	<h2>Appearance</h2>
+	<label for="bloodType">Blood Type:</label>
+<input type="text" id="bloodType" value="" disabled oninput>
+</select><button onclick="toggleLock('bloodType')">Lock</button><br>
+
+<label for="skinColor">Skin Color:</label>
+<input type="text" id="skinColor" value="Fair" disabled oninput>
+<button onclick="toggleLock('skinColor')">Lock</button><br>
+
+<label for="leftEyeColor">Left Eye Color:</label>
+<input type="text" id="leftEyeColor" value="Brown" disabled oninput>
+<button onclick="toggleLock('leftEyeColor')">Lock</button><br>
+
+<label for="rightEyeColor">Right Eye Color:</label>
+<input type="text" id="rightEyeColor" value="Brown" disabled oninput>
+<button onclick="toggleLock('rightEyeColor')">Lock</button><br>
+
+<label for="hairColor">Hair Color:</label>
+<input type="text" id="hairColor" value="Black" disabled oninput>
+<button onclick="toggleLock('hairColor')">Lock</button><br>
+
+<label for="hairStyle">Hair Style:</label>
+<input type="text" id="hairStyle" value="Short" disabled oninput>
+<button onclick="toggleLock('hairStyle')">Lock</button><br>
+<h2>Physical Characteristics</h2>
+
+<!-- Height (in feet and inches) -->
+<label for="height">Height:</label>
+<input type="text" id="height" disabled value="5 feet 5 inches" disabled oninput>
+<button onclick="randomizeHWBMI()">Randomize Height and Weight</button><br>
+
+<!-- Weight (in kg) -->
+<label for="weight">Weight:</label>
+<input type="text" id="weight" disabled value="68 kg" disabled oninput>
+
+<label for="bmi" id="bmi">BMI: </label><br>
+
+<!-- Body Build Label -->
+<label for="bodyBuild" id="bodyBuild">Body Build: </label><br>
+
 
     <h2>Conditions</h2>
     <label for="pain">Pain:</label><input type="text" id="pain" value="0" disabled oninput="resizeInput(this)"><button onclick="toggleLock('pain')">Lock</button><br>
@@ -392,7 +430,16 @@ const pixelSize = 16;
    
 function updateStatus() {
      const fields = ['strength', 'constitution', 'dexterity', 'intelligence', 'resolve', 'perception'];
-
+const bloodType = document.getElementById('bloodType').value;
+    const skinColor = document.getElementById('skinColor').value;
+    const leftEyeColor = document.getElementById('leftEyeColor').value;
+    const rightEyeColor = document.getElementById('rightEyeColor').value;
+    const hairColor = document.getElementById('hairColor').value;
+    const hairStyle = document.getElementById('hairStyle').value;
+	 const height = document.getElementById('height').value;
+    const weight = document.getElementById('weight').value;
+	const bmiText = document.getElementById('bmi').innerText;  // BMI: 23.45 (Normal weight)
+    const bodyBuildText = document.getElementById('bodyBuild').innerText;  // Body Build: Average
     // Get the values and their corresponding ratings
     const ratings = fields.map(field => {
         const fieldValue = document.getElementById(field).value;
@@ -414,28 +461,37 @@ function updateStatus() {
           
 
    const statusText = `
-   ${document.getElementById('firstName').value} ${document.getElementById('lastName').value}
+    ${document.getElementById('firstName').value} ${document.getElementById('lastName').value}
 
-Potential: ${document.getElementById('potentialDisplay').innerText}
-	Attributes
-Strength: ${ratings[0].value} (${ratings[0].rating})		Constitution: ${ratings[1].value} (${ratings[1].rating})		Dexterity: ${ratings[2].value} (${ratings[2].rating})		Intelligence: ${ratings[3].value} (${ratings[3].rating})		Resolve: ${ratings[4].value} (${ratings[4].rating})			Perception: ${ratings[5].value} (${ratings[5].rating})  
-    
-	Condition
-Pain: ${document.getElementById('pain').value}        Thirst: ${document.getElementById('thirst').value}
-Rest: ${document.getElementById('rest').value}        Hunger: ${document.getElementById('hunger').value}
-	
-	Environment
-Heat: ${document.getElementById('heat').value}        
-Place: ${document.getElementById('place').value}       Lighting: ${document.getElementById('lighting').value}
-Weather: ${document.getElementById('weather').value}     Moon: ${document.getElementById('moon').value}
-Date: ${document.getElementById('date').value}        Time: ${document.getElementById('time').value}
-Wind: ${document.getElementById('wind').value}        Temperature: ${document.getElementById('temperature').value}
+        Potential: ${document.getElementById('potentialDisplay').innerText}
+        Attributes
+        Strength: ${ratings[0].value} (${ratings[0].rating}) Constitution: ${ratings[1].value} (${ratings[1].rating}) Dexterity: ${ratings[2].value} (${ratings[2].rating}) Intelligence: ${ratings[3].value} (${ratings[3].rating}) Resolve: ${ratings[4].value} (${ratings[4].rating}) Perception: ${ratings[5].value} (${ratings[5].rating})
+        
+        Physical Appearance
+        Blood Type: ${bloodType}        Skin Color: ${skinColor}
+        Left Eye Color: ${leftEyeColor}        Right Eye Color: ${rightEyeColor}
+        Hair Color: ${hairColor}        Hair Style: ${hairStyle}
 
-	Combat
-Combat Class: ${document.getElementById('combatClass').value}     	 Combat Technique: ${document.getElementById('combatTechnique').value}
-Main Hand: ${document.getElementById('wieldLHand').value}  			 Offhand: ${document.getElementById('wieldRHand').value}
+		Physical Characteristics
+		Height: ${height}				Weight: ${weight} 
+		Body Build: ${bodyBuildText}
+        
+		
+        Condition
+        Pain: ${document.getElementById('pain').value}        Thirst: ${document.getElementById('thirst').value}
+        Rest: ${document.getElementById('rest').value}        Hunger: ${document.getElementById('hunger').value}
 
-`;
+        Environment
+        Heat: ${document.getElementById('heat').value}        
+        Place: ${document.getElementById('place').value}       Lighting: ${document.getElementById('lighting').value}
+        Weather: ${document.getElementById('weather').value}     Moon: ${document.getElementById('moon').value}
+        Date: ${document.getElementById('date').value}        Time: ${document.getElementById('time').value}
+        Wind: ${document.getElementById('wind').value}        Temperature: ${document.getElementById('temperature').value}
+
+        Combat
+        Combat Class: ${document.getElementById('combatClass').value}      Combat Technique: ${document.getElementById('combatTechnique').value}
+        Main Hand: ${document.getElementById('wieldLHand').value}           Offhand: ${document.getElementById('wieldRHand').value}
+    `;
 
     localStorage
     localStorage.setItem(randomId, statusText);
@@ -498,7 +554,7 @@ function generateNarrative() {
     const combatClass = document.getElementById('combatClass').value || "no combat class";
     const wieldLHand = document.getElementById('wieldLHand').value || "empty hands";
     const wieldRHand = document.getElementById('wieldRHand').value || "empty hands";
-
+	
     // Stats
     const stats = [
         { name: "strength", value: parseInt(document.getElementById('strength').value) || 0 },
@@ -1168,9 +1224,148 @@ resizeAllInputs();
    
 }
 }
+function randomizePhysicalAppearance() {
+    // Check if inputs are unlocked before randomizing
+    if (lockedInputs['bloodType'] && lockedInputs['skinColor'] && lockedInputs['leftEyeColor'] && lockedInputs['rightEyeColor'] && lockedInputs['hairColor'] && lockedInputs['hairStyle']) {
+        return; // If all inputs are locked, do nothing
+    }
+
+    const bloodTypes = ['A', 'B', 'AB', 'O'];
+    const skinColors = ['Fair', 'Tan', 'Dark', 'Olive', 'Pale'];
+    const eyeColors = ['Brown', 'Blue', 'Green', 'Hazel', 'Gray'];
+    const hairColors = ['Black', 'Brown', 'Blonde', 'Red', 'Gray'];
+    const hairStyles = ['Short', 'Medium', 'Long', 'Curly', 'Straight', 
+ 'Pixie Cut', 'Buzz Cut', 'Crew Cut', 'Undercut', 'Bob Cut', 
+ 'Caesar Cut', 'Lob (Long Bob)', 'Shag Cut', 'Layered Cut', 
+ 'Blunt Cut', 'Textured Waves', 'Straight and Sleek', 'Loose Curls', 
+ 'Boho Waves', 'Braids', 'High Ponytail', 'Half-Up, Half-Down', 
+ 'Afro', 'Curly Bob', 'Defined Curls', 'Bantu Knots', 'Wash and Go', 
+ 'Bun', 'Chignon', 'Fishtail Braid', 'Dutch Braid', 'French Twist', 
+ 'Colorful Hair', 'Two-Toned Hair', 'Space Buns', 'Mohawk', 'Mullet', 
+ 'Finger Waves', 'Flat Iron Waves', 'Afro Puffs', 'Pompadour', 
+ 'Bald Fade', 'Textured Mohawk Fade', 'Shaggy Wolf Cut', 'Disconnected Undercut', 
+ 'Flat Top', 'Reverse Highlights', 'Vintage Curls', 'Loose Waves with a Headband', 
+ 'Cascading Curls', 'Waterfall Braid', 'Halo Braid', 'Messy Bun', 'Low Ponytail', 
+ 'Half Braid, Half Down', 'Twist-Out', 'Sleek Low Bun'];
+
+    const randomBloodType = lockedInputs['bloodType'] ? document.getElementById('bloodType').value : bloodTypes[Math.floor(Math.random() * bloodTypes.length)];
+    const randomSkinColor = lockedInputs['skinColor'] ? document.getElementById('skinColor').value : skinColors[Math.floor(Math.random() * skinColors.length)];
+    const randomEyeColor = lockedInputs['leftEyeColor'] ? document.getElementById('leftEyeColor').value : eyeColors[Math.floor(Math.random() * eyeColors.length)];
+    
+    const shouldDifferEyes = Math.random() < 0.1;  // 10% chance for different eyes
+    const randomLeftEyeColor = lockedInputs['leftEyeColor'] ? document.getElementById('leftEyeColor').value : (shouldDifferEyes ? eyeColors[Math.floor(Math.random() * eyeColors.length)] : randomEyeColor);
+    const randomRightEyeColor = lockedInputs['rightEyeColor'] ? document.getElementById('rightEyeColor').value : (shouldDifferEyes ? eyeColors[Math.floor(Math.random() * eyeColors.length)] : randomEyeColor);
+
+    const randomHairColor = lockedInputs['hairColor'] ? document.getElementById('hairColor').value : hairColors[Math.floor(Math.random() * hairColors.length)];
+    const randomHairStyle = lockedInputs['hairStyle'] ? document.getElementById('hairStyle').value : hairStyles[Math.floor(Math.random() * hairStyles.length)];
+
+    // Update the UI with randomized values
+    document.getElementById('bloodType').value = randomBloodType;
+    document.getElementById('skinColor').value = randomSkinColor;
+    document.getElementById('leftEyeColor').value = randomLeftEyeColor;
+    document.getElementById('rightEyeColor').value = randomRightEyeColor;
+    document.getElementById('hairColor').value = randomHairColor;
+    document.getElementById('hairStyle').value = randomHairStyle;
+}
+
+function randomizeHeightAndWeight() {
+    // Randomize height (in inches) between 24 inches (2 feet) and 108 inches (9 feet)
+    // Most values should fall between 54 inches (4.5 feet) and 72 inches (6 feet)
+    
+    // Normal distribution parameters
+    const heightMean = 66;  // 5.5 feet or 66 inches
+    const heightStdDev = 6; // Standard deviation (range of most typical human height)
+    let heightInches = Math.round(randomGaussian(heightMean, heightStdDev));
+
+    // Ensure the height falls within the allowed range (24 inches to 108 inches)
+    heightInches = Math.max(24, Math.min(108, heightInches));
+    
+    // Convert height to feet and inches
+    const feet = Math.floor(heightInches / 12);
+    const inches = heightInches % 12;
+
+    // Randomize weight based on height
+    // Average weight for 5'5" (66 inches) is around 150 pounds (68 kg)
+    // We'll use a slightly wider range but weight will drop off slower than height
+    const weightMean = 68;  // 68 kg (150 lbs)
+    const weightStdDev = 15; // Standard deviation for weight
+    let weightKg = Math.round(randomGaussian(weightMean, weightStdDev));
+
+    // Ensure the weight is within a reasonable range (45 kg to 180 kg)
+    weightKg = Math.max(45, Math.min(180, weightKg));
+
+    // Update the DOM with the randomized height and weight
+    document.getElementById('height').value = `${feet} feet ${inches} inches`;
+    document.getElementById('weight').value = `${weightKg} kg`;
+}
+
+// Gaussian random number generator (for normal distribution)
+function randomGaussian(mean, stddev) {
+    let u1 = 1 - Math.random(); // Uniform(0,1) random doubles
+    let u2 = 1 - Math.random();
+    let z = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2); // Box-Muller transform
+    return mean + z * stddev; // Random number based on the Gaussian distribution
+}
+// Function to calculate BMI and assign body build based on the height and weight
+function calculateBMIAndAssignBodyBuild() {
+    // Get the height in feet and inches
+    const heightText = document.getElementById('height').value;
+    const weightKg = parseFloat(document.getElementById('weight').value);
+
+    // Parse the height in feet and inches (e.g., "5 feet 5 inches")
+    const heightMatch = heightText.match(/^(\d+)\s*feet\s*(\d+)\s*inches$/);
+    if (!heightMatch) {
+        console.error("Height format is incorrect. Expected format: X feet Y inches.");
+        return;
+    }
+    const feet = parseInt(heightMatch[1], 10);
+    const inches = parseInt(heightMatch[2], 10);
+
+    // Convert height to meters (1 foot = 0.3048 meters, 1 inch = 0.0254 meters)
+    const heightInMeters = (feet * 0.3048) + (inches * 0.0254);
+
+    // Calculate BMI
+    const bmi = weightKg / Math.pow(heightInMeters, 2);
+
+    // Classify BMI
+    let bmiCategory = "";
+    if (bmi < 18.5) {
+        bmiCategory = "Underweight";
+    } else if (bmi < 24.9) {
+        bmiCategory = "Normal weight";
+    } else if (bmi < 29.9) {
+        bmiCategory = "Overweight";
+    } else {
+        bmiCategory = "Obese";
+    }
+
+    // Assign body build based on BMI category
+    const bodyBuildOptions = {
+        "Underweight": ["Slim", "Lean"],
+        "Normal weight": ["Average", "Athletic", "Slim"],
+        "Overweight": ["Muscle-Fat", "Heavy", "Soft Fat"],
+        "Obese": ["Heavy", "Soft Fat", "Bulky"]
+    };
+
+    // Get random body build option from the appropriate pool
+    const bodyBuildPool = bodyBuildOptions[bmiCategory];
+    const randomBodyBuild = bodyBuildPool[Math.floor(Math.random() * bodyBuildPool.length)];
+
+    // Display the BMI and Body Build in the UI
+    document.getElementById('bmi').innerText = `BMI: ${bmi.toFixed(2)} (${bmiCategory})`;
+    document.getElementById('bodyBuild').innerText = `Body Build: ${randomBodyBuild}`;
+}
 function randomizeAndUpdate() {
     randomizeStatus(); // Calls the randomizeStatus function
+	randomizePhysicalAppearance();
+	randomizeHeightAndWeight();
+	calculateBMIAndAssignBodyBuild();
     updateStatus();    // Then calls the updateStatus function
+}
+function randomizeHWBMI() {
+	randomizeHeightAndWeight();
+	calculateBMIAndAssignBodyBuild();
+	updateStatus();  
 }
 function exportStatus() {
     const statusText = document.getElementById('statusDisplay').innerText.trim(); // Get the status text
@@ -1178,12 +1373,11 @@ function exportStatus() {
     const lastName = document.getElementById('lastName').value || "Hero";
     const characterName = `${firstName}_${lastName}`.replace(/\s+/g, '_'); // Replace spaces with underscores
 
-    // Generate pixel art as Base64
-    const seed = Math.floor(Math.random() * 1e6); // You might want to use the same seed as the status
-    const pixelArtDataURL = generateSymmetricalPixelArt(seed, 16, 16); // Ensure the same dimensions as before
+    // Get the already generated pixel art from the statusDisplay (you may need to store it earlier)
+    const pixelArtImage = document.querySelector('#statusDisplay img').src; // Assuming the pixel art image is in the <img> tag
 
     // Convert the Base64 image to Blob
-    fetch(pixelArtDataURL)
+    fetch(pixelArtImage)
         .then(res => res.blob())
         .then(pixelArtBlob => {
             const zip = new JSZip();
@@ -1204,6 +1398,7 @@ function exportStatus() {
         })
         .catch(err => console.error("Error exporting files: ", err));
 }
+
 </script>
 
 </body>
