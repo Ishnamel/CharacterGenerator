@@ -474,7 +474,7 @@ const bloodType = document.getElementById('bloodType').value;
 
 		Physical Characteristics
 		Height: ${height}				Weight: ${weight} 
-		Body Build: ${bodyBuildText}
+		${bodyBuildText}
         
 		
         Condition
@@ -1231,9 +1231,17 @@ function randomizePhysicalAppearance() {
     }
 
     const bloodTypes = ['A', 'B', 'AB', 'O'];
-    const skinColors = ['Fair', 'Tan', 'Dark', 'Olive', 'Pale'];
-    const eyeColors = ['Brown', 'Blue', 'Green', 'Hazel', 'Gray'];
-    const hairColors = ['Black', 'Brown', 'Blonde', 'Red', 'Gray'];
+    const skinColors = ['Fair', 'Light', 'Medium', 'Olive', 'Tan', 'Brown', 'Dark Brown', 
+ 'Ebony', 'Porcelain', 'Ivory', 'Beige', 'Caramel', 'Almond', 
+ 'Golden', 'Peach', 'Bronze', 'Chestnut', 'Mahogany', 'Cocoa'];
+    const eyeColors = ['Brown', 'Blue', 'Green', 'Hazel', 'Amber', 'Gray', 'Black', 
+ 'Dark Brown', 'Light Brown', 'Light Blue', 'Dark Blue', 'Teal', 
+ 'Turquoise', 'Olive Green', 'Golden Brown', 'Grayish Blue', 
+ 'Violet', 'Light Gray', 'Dark Green'];
+    const hairColors = ['Black', 'Brown', 'Blonde', 'Red', 'Auburn', 'Gray', 'Silver', 'White', 
+ 'Platinum Blonde', 'Dark Brown', 'Light Brown', 'Chestnut Brown', 'Caramel', 
+ 'Ash Blonde', 'Golden Blonde', 'Strawberry Blonde', 'Copper', 'Burgundy', 
+ 'Purple', 'Blue', 'Pink', 'Lavender', 'Teal', 'Pastel Colors', 'Ombre', 'Balayage'];
     const hairStyles = ['Short', 'Medium', 'Long', 'Curly', 'Straight', 
  'Pixie Cut', 'Buzz Cut', 'Crew Cut', 'Undercut', 'Bob Cut', 
  'Caesar Cut', 'Lob (Long Bob)', 'Shag Cut', 'Layered Cut', 
@@ -1341,10 +1349,10 @@ function calculateBMIAndAssignBodyBuild() {
 
     // Assign body build based on BMI category
     const bodyBuildOptions = {
-        "Underweight": ["Slim", "Lean"],
-        "Normal weight": ["Average", "Athletic", "Slim"],
-        "Overweight": ["Muscle-Fat", "Heavy", "Soft Fat"],
-        "Obese": ["Heavy", "Soft Fat", "Bulky"]
+        "Underweight": ["Slim", "Lean", "Petite", "Bony" ],
+"Normal weight": ["Average", "Athletic", "Slim", "Fit", "Toned", "Defined", "Balanced"],
+"Overweight": ["Muscle-Fat", "Heavy", "Soft Fat", "Round", "Pudgy", "Full-Figured", "Chubby"],
+"Obese": ["Heavy", "Soft Fat", "Bulky", "Stocky", "Full-bodied", "Large", "Big-Boned", "Overweight"]
     };
 
     // Get random body build option from the appropriate pool
