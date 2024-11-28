@@ -2,197 +2,255 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Status Screen Editor</title>
-    <style>
-        body { 
-            font-family: 'Trajan Pro', serif; /* Classical font for stone-like text */
-            background-color: #3b2f28; /* Dark stone background */
-            color: #e0d5c1; /* Light sandstone color for text */
-            margin: 0;
-            padding: 0;
-        }
-        label { 
-            display: inline-block; 
-            width: 75px; 
-            margin: 10px 0;
-            font-size: 16px;
-            text-shadow: 1px 1px 1px #2b211a; /* Adds depth to mimic engraving */
-        }
-        input[type="text"], input[type="number"], select { 
-            background-color: #4a3d34; /* Stone-like input field background */
-            color: #e0d5c1; 
-            border: 2px solid #6d5c4b; /* Stone carving border effect */
-            padding: 15px;
-            font-size: 16px;
-            border-radius: 4px;
-            min-width: 100px;
-            display: inline-block;
-            width: auto;
-            text-shadow: 1px 1px 0 #2b211a; /* Engraved appearance */
-            box-shadow: inset 2px 2px 4px #2b211a, inset -2px -2px 4px #6d5c4b; /* Engraved look */
-        }
-        .section { 
-            margin: 20px 0; 
-            padding: 15px;
-            background-color: #4a3d34; /* Slightly lighter stone background */
-            border-radius: 4px;
-            border: 2px solid #6d5c4b; /* Outline for the stone section */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle drop shadow */
-        }
-        #statusDisplay { 
-            white-space: pre; 
-            background-color: #4a3d34; 
-            padding: 15px; 
-            border: 2px solid #6d5c4b;
-            overflow-x: auto; 
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 18px;
-            text-shadow: 1px 1px 0 #2b211a; /* Engraving effect for the display text */
-            box-shadow: inset 2px 2px 4px #2b211a, inset -2px -2px 4px #6d5c4b; /* Engraved display */
-        }
-        button { 
-            background-color: #5a4c42; /* Stone button background */
-            color: #e0d5c1; 
-            border: 2px solid #6d5c4b; 
-            padding: 8px 15px;
-            font-size: 18px;
-            cursor: pointer;
-            border-radius: 5px;
-            text-shadow: 1px 1px 0 #2b211a; /* Stone-like engraving effect */
-            font-family: 'Trajan Pro', serif;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Stone button shadow */
-        }
-        button:hover {
-            background-color: #7a665b; /* Lighter stone on hover */
-            border-color: #9d8872; /* Polished stone border */
-        }
-        h1, h2 { 
-            text-align: center; 
-            font-family: 'Trajan Pro', serif; 
-            color: #d8c7a7; /* Carved stone effect for headers */
-            text-shadow: 2px 2px 4px #2b211a; /* Depth for headers */
-        }
+    <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=1.0, user-scalable=no">
+    <title>Character Generator</title>
+<style>
+    /* General styles */
+    html, body {
+        display: flex; /* Enable flex layout for vertical division */
+        margin: 0;
+        padding: 0;
+        height: 100vh; /* Full viewport height */
+        font-family: 'Trajan Pro', serif;
+        background-color: #3b2f28;
+        color: #e0d5c1;
+		text-align: center;
+        font-size: 36px; /* Increased base font size */
+		transform: scale(0.5); /* Scale down to 50% */
+            transform-origin: top left; /* Keep scaling from top-left corner */
+            width: 400%; /* Adjust width to prevent clipping */
+            height: 200%; /* Adjust height to prevent clipping */
+            overflow: hidden; /* Disable scrollbars */
         
-        /* Hidden span used for measuring text width */
-        .input-measurement {
-            visibility: hidden;
-            white-space: pre;
-            position: absolute;
-            font-family: 'Trajan Pro', serif; 
-            font-size: 16px; 
-            padding: 15px;
-        }
-        
-        .status-side-section {
-    position: absolute; /* or 'fixed' if you want it to stay on scroll */
-    top: 100px; /* Adjust as needed */
-    right: 20px; /* Push to the right side */
-    width: auto; /* Adjust width */
-    height: auto;
-    background-color: #4a3d34; /* Stone-like background */
-    border: 2px solid #6d5c4b; /* Carved border effect */
-    color: #e0d5c1; /* Sandstone text color */
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 16px;
-    padding: 15px;
-    box-shadow: inset 2px 2px 4px #2b211a, inset -2px -2px 4px #6d5c4b; /* Carved effect */
-    border-radius: 5px; /* Smooth stone edges */
-    text-shadow: 1px 1px 1px #2b211a; /* Carved text appearance */
-    overflow-y: auto; /* Allow scrolling if content exceeds height */
+    }
+
+    /* Panel styles */
+    .left-panel {
+        width: 25%; /* Reduced panel width */
+        overflow-y: auto; /* Allow scrolling if content exceeds height */
+        background-color: #3b2f28; /* Same as body background */
+        padding: 15px; /* Reduced padding */
+        box-sizing: border-box;
+    }
+
+    .right-panel {
+        width: 75%; /* Reduced panel width */
+        overflow-y: auto; /* Allow scrolling if content exceeds height */
+        background-color: #4a3d34; /* StatusDisplay background */
+        padding: 0px; /* Reduced padding */
+        box-sizing: border-box;
+    }
+
+    h1, h2 , h3{
+        text-align: center;
+        font-family: 'Old English Text MT', serif;
+        color: #d8c7a7;
+        text-shadow: 2px 2px 4px #2b211a;
+        font-size: 70px; /* Increased font size */
+    }
+
+    label {
+    display: block;
+    font-family: 'Bookman Old Style', serif;
+    margin: 12px 0; /* Adjusted margin */
+    font-size: 46px; /* Increased font size */
+    text-shadow: 1px 1px 1px #2b211a;
+    text-align: center;
+    width: 100%; /* Make the label width 100% */
+    word-wrap: break-word; /* Ensure text wraps within the label */
 }
-    </style>
+
+input[type="text"], input[type="number"], select {
+    background-color: #4a3d34;
+    color: #e0d5c1;
+    border: 2px solid #6d5c4b;
+    padding: 12px; /* Reduced padding */
+    font-size: 40px; /* Increased font size */
+    border-radius: 4px;
+    text-align: center;
+    text-shadow: 1px 1px 0 #2b211a;
+    box-shadow: inset 2px 2px 4px #2b211a, inset -2px -2px 4px #6d5c4b;
+    width: 100%; /* Ensure input takes up full width */
+    box-sizing: border-box; /* Prevent clipping of input content */
+}
+
+    button {
+        background-color: #5a4c42;
+        color: #e0d5c1;
+        border: 2px solid #6d5c4b;
+        padding: 10px 18px; /* Adjusted padding */
+        font-size: 44px; /* Increased font size */
+        cursor: pointer;
+        border-radius: 5px;
+        text-shadow: 1px 1px 0 #2b211a;
+        font-family: 'Bookman Old Style', serif;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    button:hover {
+        background-color: #7a665b;
+        border-color: #9d8872;
+    }
+
+    #statusDisplay {
+    white-space: pre;
+    background-color: #4a3d34;
+    padding: 0px;
+    border: 2px solid #6d5c4b;
+    overflow-x: auto;
+    font-family: 'Bookman Old Style', serif;
+    font-size: 50px; /* Increased font size */
+    text-shadow: 1px 1px 0 #2b211a;
+    box-shadow: inset 2px 2px 4px #2b211a, inset -2px -2px 4px #6d5c4b;
+    text-align: center;
+    line-height: 1.6;
+}
+
+#statusDisplay figure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0; /* Remove any margin around figure */
+}
+
+#statusDisplay figure img {
+    margin: 0; /* Remove space around the image */
+    padding: 0; /* Ensure no padding is applied */
+}
+
+#statusDisplay p {
+    margin-top: 0; /* Remove the margin above the paragraph */
+    padding-top: 0; /* Make sure there's no padding on the top */
+}
+
+
+    .section {
+        margin: 15px auto; /* Adjusted margin */
+        padding: 12px; /* Reduced padding */
+        background-color: #4a3d34;
+        border-radius: 4px;
+        border: 2px solid #6d5c4b;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        text-align: center;
+    }
+
+    .status-side-section {
+        position: absolute;
+        top: 50px;
+        right: 20px;
+        width: auto;
+        height: auto;
+        background-color: #4a3d34;
+        border: 2px solid #6d5c4b;
+        color: #e0d5c1;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 36px; /* Adjusted font size */
+        padding: 12px; /* Reduced padding */
+        box-shadow: inset 2px 2px 4px #2b211a, inset -2px -2px 4px #6d5c4b;
+        border-radius: 5px;
+        text-shadow: 1px 1px 1px #2b211a;
+        overflow-y: auto;
+    }
+</style>
+
 </head>
 <body>
-	<div id="sideStatus" class="status-side-section"></div>
-	<!-- Add a button to toggle the side status visibility -->
-<button id="toggleSideStatus" onclick="toggleSideStatusVisibility()">Show Status</button>
-<div id="sideStatus" class="status-side-section" style="display: none;"></div>
-<h1>Character Generator</h1>
+        
 
+</div>
+<div class="left-panel">
+<h1>Character Generator</h1>
+<button onclick="toggleSideStatus()">Show/Hide Side Status</button>
 <button onclick="randomizeAndUpdate()">Generate</button>
 <button onclick="generateNarrative()">Generate Narrative</button>
-<div class="section">
-    <h2>Seed</h2>
-    <label for="retrieveSeed">Enter Seed:</label>
-    <input type="text" id="retrieveSeed" placeholder="Enter Seed">
-    <button onclick="retrieveAndUpdateStatus()">Generate From Seed</button>
-</div>
-<div class="section">
+<button onclick="exportStatus()">Export Status</button>
+<button onclick="generateNarrative()">Generate Narrative</button>
+
     <h2>Character Info</h2>
-    <label for="firstName">First Name:</label><input type="text" id="firstName" oninput="resizeInput(this)"><button onclick="toggleLock('firstName')">Lock</button><br>
-    <label for="lastName">Last Name:</label><input type="text" id="lastName" oninput="resizeInput(this)"><button onclick="toggleLock('lastName')">Lock</button><br>
-</div>
+    <label for="firstName">First Name:</label><input type="text" id="firstName" disabled oninput="resizeInput(this)"><button onclick="toggleLock('firstName')">Lock</button><br>
+    <label for="lastName">Last Name:</label><input type="text" id="lastName" disabled oninput="resizeInput(this)"><button onclick="toggleLock('lastName')">Lock</button><br>
 
-<div class="section">
     <h2>General Status</h2>
-    <p><strong>Potential:</strong> <span id="potentialDisplay">Total: 40 (F)</span></p>
-</div>
-
+    
+<h3>Attributes</h3>
+<label><strong>Potential:</strong> <span id="potentialDisplay">Total: 40 (F)</span></label>
 <label for="strength">Strength:</label>
-<input type="number" id="strength" value="8" oninput="resizeInput(this)"><button onclick="toggleLock('strength')">Lock</button><span id="strengthRating">F</span><br>
+<input type="number" id="strength" value="8" disabled oninput="resizeInput(this)"><button onclick="toggleLock('strength')">Lock</button><span id="strengthRating">F</span><br>
 
 <label for="constitution">Constitution:</label>
-<input type="number" id="constitution" value="10" oninput="resizeInput(this)"><button onclick="toggleLock('constitution')">Lock</button><span id="constitutionRating">F</span><br>
+<input type="number" id="constitution" value="10" disabled oninput="resizeInput(this)"><button onclick="toggleLock('constitution')">Lock</button><span id="constitutionRating">F</span><br>
 
 <label for="dexterity">Dexterity:</label>
-<input type="number" id="dexterity" value="10" oninput="resizeInput(this)"><button onclick="toggleLock('dexterity')">Lock</button><span id="dexterityRating">F</span><br>
+<input type="number" id="dexterity" value="10" disabled oninput="resizeInput(this)"><button onclick="toggleLock('dexterity')">Lock</button><span id="dexterityRating">F</span><br>
 
 <label for="intelligence">Intelligence:</label>
-<input type="number" id="intelligence" value="7" oninput="resizeInput(this)"><button onclick="toggleLock('intelligence')">Lock</button><span id="intelligenceRating">F</span><br>
+<input type="number" id="intelligence" value="7" disabled oninput="resizeInput(this)"><button onclick="toggleLock('intelligence')">Lock</button><span id="intelligenceRating">F</span><br>
 
 <label for="resolve">Resolve:</label>
-<input type="number" id="resolve" value="10" oninput="resizeInput(this)"><button onclick="toggleLock('resolve')">Lock</button><span id="resolveRating">F</span><br>
+<input type="number" id="resolve" value="10" disabled oninput="resizeInput(this)"><button onclick="toggleLock('resolve')">Lock</button><span id="resolveRating">F</span><br>
 
 <label for="perception">Perception:</label>
-<input type="number" id="perception" value="10" oninput="resizeInput(this)"><button onclick="toggleLock('perception')">Lock</button><span id="perceptionRating">F</span><br>
+<input type="number" id="perception" value="10" disabled oninput="resizeInput(this)"><button onclick="toggleLock('perception')">Lock</button><span id="perceptionRating">F</span><br>
 	
-	<div class="section">
+
     <h2>Conditions</h2>
-    <label for="pain">Pain:</label><input type="text" id="pain" value="0" oninput="resizeInput(this)"><button onclick="toggleLock('pain')">Lock</button><br>
-    <label for="thirst">Thirst:</label><input type="text" id="thirst" value="nothing" oninput="resizeInput(this)"><button onclick="toggleLock('thirst')">Lock</button><br>
-    <label for="rest">Rest:</label><input type="text" id="rest" value="nothing" oninput="resizeInput(this)"><button onclick="toggleLock('rest')">Lock</button><br>
-    <label for="hunger">Hunger:</label><input type="text" id="hunger" value="nothing" oninput="resizeInput(this)"><button onclick="toggleLock('hunger')">Lock</button><br>
-    <label for="heat">Heat:</label><input type="text" id="heat" value="Comfortable" oninput="resizeInput(this)"><button onclick="toggleLock('heat')">Lock</button><br>
-</div>
+    <label for="pain">Pain:</label><input type="text" id="pain" value="0" disabled oninput="resizeInput(this)"><button onclick="toggleLock('pain')">Lock</button><br>
+    <label for="thirst">Thirst:</label><input type="text" id="thirst" value="nothing" disabled oninput="resizeInput(this)"><button onclick="toggleLock('thirst')">Lock</button><br>
+    <label for="rest">Rest:</label><input type="text" id="rest" value="nothing" disabled oninput="resizeInput(this)"><button onclick="toggleLock('rest')">Lock</button><br>
+    <label for="hunger">Hunger:</label><input type="text" id="hunger" value="nothing" disabled oninput="resizeInput(this)"><button onclick="toggleLock('hunger')">Lock</button><br>
+    <label for="heat">Heat:</label><input type="text" id="heat" value="Comfortable" disabled oninput="resizeInput(this)"><button onclick="toggleLock('heat')">Lock</button><br>
 
-<div class="section">
+
+
     <h2>Environment</h2>
-    <label for="place">Place:</label><input type="text" id="place" value="evac shelter" oninput="resizeInput(this)"><button onclick="toggleLock('place')">Lock</button><br>
-    <label for="lighting">Lighting:</label><input type="text" id="lighting" value="bright" oninput="resizeInput(this)"><button onclick="toggleLock('lighting')">Lock</button><br>
-    <label for="weather">Weather:</label><input type="text" id="weather" value="Clear" oninput="resizeInput(this)"><button onclick="toggleLock('weather')">Lock</button><br>
-    <label for="moon">Moon:</label><input type="text" id="moon" value="New moon" oninput="resizeInput(this)"><button onclick="toggleLock('moon')">Lock</button><br>
-    <label for="date">Date:</label><input type="text" id="date" value="Spring, day 61" oninput="resizeInput(this)"><button onclick="toggleLock('date')">Lock</button><br>
-    <label for="time">Time:</label><input type="text" id="time" value="8:00:36 AM" oninput="resizeInput(this)"><button onclick="toggleLock('time')">Lock</button><br>
-    <label for="wind">Wind:</label><input type="text" id="wind" value="Calm" oninput="resizeInput(this)"><button onclick="toggleLock('wind')">Lock</button><br>
-    <label for="temperature">Temperature:</label><input type="text" id="temperature" value="C-41 F" oninput="resizeInput(this)"><button onclick="toggleLock('temperature')">Lock</button><br>
-</div>
+    <label for="place">Place:</label><input type="text" id="place" value="evac shelter" disabled oninput="resizeInput(this)"><button onclick="toggleLock('place')">Lock</button><br>
+    <label for="lighting">Lighting:</label><input type="text" id="lighting" value="bright" disabled oninput="resizeInput(this)"><button onclick="toggleLock('lighting')">Lock</button><br>
+    <label for="weather">Weather:</label><input type="text" id="weather" value="Clear" disabled oninput="resizeInput(this)"><button onclick="toggleLock('weather')">Lock</button><br>
+    <label for="moon">Moon:</label><input type="text" id="moon" value="New moon" disabled oninput="resizeInput(this)"><button onclick="toggleLock('moon')">Lock</button><br>
+    <label for="date">Date:</label><input type="text" id="date" value="Spring, day 61" disabled oninput="resizeInput(this)"><button onclick="toggleLock('date')">Lock</button><br>
+    <label for="time">Time:</label><input type="text" id="time" value="8:00:36 AM" disabled oninput="resizeInput(this)"><button onclick="toggleLock('time')">Lock</button><br>
+    <label for="wind">Wind:</label><input type="text" id="wind" value="Calm" disabled oninput="resizeInput(this)"><button onclick="toggleLock('wind')">Lock</button><br>
+    <label for="temperature">Temperature:</label><input type="text" id="temperature" value="C-41 F" disabled oninput="resizeInput(this)"><button onclick="toggleLock('temperature')">Lock</button><br>
 
-<div class="section">
+
+
     <h2>Combat</h2>
-    <label for="wieldLHand">Main Hand:</label><input type="text" id="wieldLHand" value="fists" oninput="resizeInput(this)"><button onclick="toggleLock('wieldLHand')">Lock</button><br>
-    <label for="wieldRHand">OffHand:</label><input type="text" id="wieldRHand" value="fists" oninput="resizeInput(this)"><button onclick="toggleLock('wieldRHand')">Lock</button><br>
+    <label for="wieldLHand">Main Hand:</label><input type="text" id="wieldLHand" value="fists" disabled oninput="resizeInput(this)"><br>
+    <label for="wieldRHand">OffHand:</label><input type="text" id="wieldRHand" value="fists" disabled oninput="resizeInput(this)"><br>
     <label for="combatClass">Combat Class:</label>
-    <input type="text" id="combatClass" value="nothing" disabled oninput="resizeInput(this)">
+    <input type="text" id="combatClass" value="nothing" disabled disabled oninput="resizeInput(this)">
     <button onclick="toggleLock('combatClass')">Lock</button><br>
 
     <label for="combatStyle">Combat Style:</label>
-    <input type="text" id="combatStyle" value="No style" oninput="resizeInput(this)">
+    <input type="text" id="combatStyle" value="No style" disabled oninput="resizeInput(this)">
     <button onclick="toggleLock('combatStyle')">Lock</button><br>
 
     <label for="combatTechnique">Combat Technique:</label>
-    <input type="text" id="combatTechnique" value="nothing" disabled oninput="resizeInput(this)">
+    <input type="text" id="combatTechnique" value="nothing" disabled disabled oninput="resizeInput(this)">
     <button onclick="toggleLock('combatTechnique')">Lock</button><br>
 </div>
 
-<button onclick="randomizeAndUpdate()">Generate</button>
-<button onclick="exportStatus()">Export Status</button>
-<button onclick="generateNarrative()">Generate Narrative</button>
-<div id="statusDisplay"></div>
 
+<div id="sideStatus" class="status-side-section" style="display: none;"></div>
 <!-- Hidden Span for measuring text width -->
 <span id="measurementSpan" class="input-measurement"></span>
+<div class="right-panel">
+        <div id="statusDisplay"></div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+
 <script>
+// Listen for keydown events
+    document.addEventListener('keydown', function(event) {
+        // Check if the spacebar (keyCode 32) is pressed
+        if (event.code === 'Space') {
+            // Prevent the default behavior of the spacebar (scrolling)
+            event.preventDefault();
+            // Trigger the "Generate" button
+            document.querySelector('button[onclick="randomizeAndUpdate()"]').click();
+        }
+    });
 // Function to resize input based on content length
 function resizeInput(input) {
     const measurementSpan = document.getElementById('measurementSpan');
@@ -215,85 +273,131 @@ function resizeInput(input) {
 function resizeAllInputs() {
     const inputs = document.querySelectorAll('input[type="text"], input[type="number"]');
     inputs.forEach(resizeInput);
+    function toggleSideStatus() {
+    const sideStatusElement = document.getElementById('sideStatus');
+    if (sideStatusElement.style.display === 'none') {
+        sideStatusElement.style.display = 'block';
+    } else {
+        sideStatusElement.style.display = 'none';
+    }
 }
-function retrieveAndUpdateStatus() {
-    retrieveStatus(); // First retrieve the status and update the inputs
-    updateStatus();   // Then update the status display
 }
 
-// Helper function to parse statusText into key-value pairs
-function parseStatusText(statusText) {
-    const parsedData = {};
-    const regexPatterns = {
-        firstName: /^([^\s]+)\s/, // Captures first word as first name
-        lastName: /^[^\s]+\s(.+)\n/, // Captures everything after the first word until newline
-        potentialDisplay: /Potential:\s(.*?)\n/,
-        strength: /Strength:\s(\d+)/,
-        constitution: /Constitution:\s(\d+)/,
-        dexterity: /Dexterity:\s(\d+)/,
-        intelligence: /Intelligence:\s(\d+)/,
-        resolve: /Resolve:\s(\d+)/,
-        perception: /Perception:\s(\d+)/,
-        pain: /Pain\s*:\s*(.*?)\s/,
-        thirst: /Thirst\s*:\s*(.*?)\n/,
-        rest: /Rest\s*:\s*(.*?)\s/,
-        hunger: /Hunger\s*:\s*(.*?)\n/,
-        heat: /Heat\s*:\s*(.*?)\n/,
-        place: /Place\s*:\s*(.*?)\s+Lighting/, // Captures text until "Lighting"
-        lighting: /Lighting\s*:\s*(.*?)\n/,
-        weather: /Weather\s*:\s*(.*?)\s+Moon/, // Captures text until "Moon"
-        moon: /Moon\s*:\s*(.*?)\n/,
-        date: /Date\s*:\s*(.*?)\s+Time/, // Captures text until "Time"
-        time: /Time\s*:\s*(.*?)\n/,
-        wind: /Wind\s*:\s*(.*?)\s+Temperature/, // Captures text until "Temperature"
-        temperature: /Temperature\s*:\s*(.*?)\n/,
-        wieldLHand: /Main Hand:\s(.*?)\s+Offhand/, // Captures text until "Offhand"
-        wieldRHand: /Offhand:\s(.*?)\n/,
-        combatClass: /Combat Class\s*:\s*(.*?)\s+Combat Technique/, // Captures text until "Combat Technique"
-        combatStyle: /Combat Style\s*:\s*(.*?)\n/,
-        combatTechnique: /Combat Technique\s*:\s*(.*?)\s+Main Hand/ // Captures text until "Main Hand"
-    };
+function toggleSideStatus() {
+    const sideStatusElement = document.getElementById('sideStatus');
+    if (sideStatusElement.style.display === 'none') {
+        sideStatusElement.style.display = 'block';
+    } else {
+        sideStatusElement.style.display = 'none';
+    }
+}
+    // Seeded random number generator
+    function seededRandom(seed) {
+        let x = Math.sin(seed) * 10000;
+        return x - Math.floor(x);
+    }
 
-    // Apply regex to extract data for each key
-    for (const [key, regex] of Object.entries(regexPatterns)) {
-        const match = statusText.match(regex);
-        if (match) {
-            parsedData[key] = match[1].trim(); // Ensure values are stripped of extra spaces
+    // Generate random colors based on a seed
+    function getRandomColor(seed, index) {
+        const seededValue = seededRandom(seed + index);
+        return `#${Math.floor(seededValue * 16777215).toString(16).padStart(6, "0")}`;
+    }
+   
+const pixelSize = 16;
+    // Generate symmetrical random pixel art with a main color and two sub-colors
+    function generateSymmetricalPixelArt(seed, width, height, pixelSize) {
+    const canvas = document.createElement("canvas");
+    canvas.width = width*pixelSize;
+    canvas.height = height*pixelSize;
+    
+    const ctx = canvas.getContext("2d");
+
+    // Use the seed to generate consistent colors
+    const mainColor = getRandomColor(seed, 1);
+    const subColor1 = getRandomColor(seed, 2);
+    const subColor2 = getRandomColor(seed, 3);
+
+    // Random chance to mirror vertically (50% chance)
+    const shouldMirrorVertically = seededRandom(seed + height) > 0.5;
+
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width / 2; x++) {
+            // Use the seed to create a deterministic random pattern
+            const seededValue = seededRandom(seed + y * width + x);
+
+          // Calculate distance from the center of the canvas
+            const distFromCenterX = Math.abs((width / 2) - x);
+            const distFromCenterY = Math.abs((height / 2) - y);
+
+            // Randomly select a type of influence (0: Euclidean, 1: Exponential, 2: Linear, 3: Logarithmic)
+            const influenceType = Math.floor(seededRandom(seed + x + y) * 4);
+
+            let centerInfluence;
+
+            // Apply selected influence type
+            switch (influenceType) {
+                case 0: // Euclidean distance influence
+                    const distFromCenter = Math.sqrt(Math.pow(distFromCenterX, 2) + Math.pow(distFromCenterY, 2));
+                    const maxDist = Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
+                    centerInfluence = 1 - (distFromCenter / maxDist);
+                    break;
+
+                case 1: // Exponential decay influence
+                    const decayFactor = 0.1; // Controls how quickly the influence drops off
+                    centerInfluence = Math.exp(-Math.sqrt(Math.pow(distFromCenterX, 2) + Math.pow(distFromCenterY, 2)) * decayFactor);
+                    break;
+
+                case 2: // Linear decay influence
+                    centerInfluence = 1 - (distFromCenterX + distFromCenterY) / (Math.abs((width / 2) - 0) + Math.abs((height / 2) - 0));
+                    break;
+
+                case 3: // Logarithmic decay influence
+                    const maxDistLog = Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
+                    centerInfluence = 1 - Math.log(Math.sqrt(Math.pow(distFromCenterX, 2) + Math.pow(distFromCenterY, 2)) + 1) / Math.log(maxDistLog + 1);
+                    break;
+
+                default:
+                    centerInfluence = 1; // Default to no influence
+            }
+
+            // Adjust probability for the main color to flock toward the center
+            const adjustedSeedValue = seededValue + centerInfluence * 0.5; // Increase main color chance near the center
+            let color;
+            if (adjustedSeedValue < 0.6) {
+                color = mainColor; // Main color has a higher chance in the center
+            } else if (adjustedSeedValue < 0.8) {
+                color = subColor1; // First sub-color has a 20% chance
+            } else {
+                color = subColor2; // Second sub-color has a 20% chance
+            }
+
+            // Draw pixel for the left side of the image
+            ctx.fillStyle = color;
+            ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+
+            // Mirroring horizontally
+            ctx.fillRect((width - x - 1) * pixelSize, y * pixelSize, pixelSize, pixelSize);
+
+            // If vertical mirroring is enabled, mirror vertically
+            if (shouldMirrorVertically) {
+                ctx.fillRect(x * pixelSize, (height - y - 1) * pixelSize, pixelSize, pixelSize); // Vertical mirror
+                ctx.fillRect((width - x - 1) * pixelSize, (height - y - 1) * pixelSize, pixelSize, pixelSize); // Horizontal + vertical mirror
+            }
         }
     }
 
-    return parsedData;
+    return canvas.toDataURL(); // Get the base64 representation of the image
 }
-
-// Function to toggle the side status visibility
-function toggleSideStatusVisibility() {
-    const sideStatusElement = document.getElementById('sideStatus');
-    const toggleButton = document.getElementById('toggleSideStatus');
-
-    // Check if the sideStatus is currently visible
-    const isVisible = sideStatusElement.style.display !== "none";
-
-    if (isVisible) {
-        // If visible, collapse it
-        sideStatusElement.style.display = "none";
-        toggleButton.innerText = "Show Status"; // Change button text
-    } else {
-        // If not visible, expand it
-        sideStatusElement.style.display = "block";
-        toggleButton.innerText = "Hide Status"; // Change button text
-    }
-}
-
-
-// Function to update status and store grid
+   
+   
 function updateStatus() {
-    const fields = ['strength', 'constitution', 'dexterity', 'intelligence', 'resolve', 'perception'];
+     const fields = ['strength', 'constitution', 'dexterity', 'intelligence', 'resolve', 'perception'];
 
     // Get the values and their corresponding ratings
     const ratings = fields.map(field => {
         const fieldValue = document.getElementById(field).value;
         let fieldRating = "F";
-
+        
         if (fieldValue >= 21) fieldRating = "S";
         else if (fieldValue >= 20) fieldRating = "A";
         else if (fieldValue >= 18) fieldRating = "B";
@@ -304,161 +408,85 @@ function updateStatus() {
 
         return { value: fieldValue, rating: fieldRating };
     });
-
-    // Generate a random ID for status
+        // Generate a random ID (used as seed)
     const randomId = Math.floor(Math.random() * 1e6);
+          
+          
 
-    // Generate the status text
-    const statusText = `
-    Seed:  ${(randomId)}
-    ${document.getElementById('firstName').value || 'Unknown'} ${document.getElementById('lastName').value || 'Hero'}
+   const statusText = `
+   ${document.getElementById('firstName').value} ${document.getElementById('lastName').value}
 
-    Potential: ${document.getElementById('potentialDisplay').innerText}
-
-    Strength: ${ratings[0].value} (${ratings[0].rating})   
-    Constitution: ${ratings[1].value} (${ratings[1].rating})   
-    Dexterity: ${ratings[2].value} (${ratings[2].rating})   
-    Intelligence: ${ratings[3].value} (${ratings[3].rating}) 
-    Resolve: ${ratings[4].value} (${ratings[4].rating}) 
-    Perception: ${ratings[5].value} (${ratings[5].rating})   
-
-    Pain        : ${document.getElementById('pain').value}        Thirst : ${document.getElementById('thirst').value}
-    Rest        : ${document.getElementById('rest').value}        Hunger : ${document.getElementById('hunger').value}
-    Heat        : ${document.getElementById('heat').value}        
-    Place       : ${document.getElementById('place').value}       Lighting : ${document.getElementById('lighting').value}
-    Weather     : ${document.getElementById('weather').value}     Moon : ${document.getElementById('moon').value}
-    Date        : ${document.getElementById('date').value}        Time : ${document.getElementById('time').value}
-    Wind        : ${document.getElementById('wind').value}        Temperature : ${document.getElementById('temperature').value}
-
-    Combat Style  : ${document.getElementById('combatStyle').value}
-    Combat Class  : ${document.getElementById('combatClass').value}      Combat Technique: ${document.getElementById('combatTechnique').value}
-    Main Hand: ${document.getElementById('wieldLHand').value}   Offhand: ${document.getElementById('wieldRHand').value}
-    `;
-
-       // Save the status text in localStorage under the generated random ID
-    localStorage.setItem(randomId, statusText);
-        // Update the seed input placeholder with the random ID
-    document.getElementById('retrieveSeed').placeholder = randomId;
+Potential: ${document.getElementById('potentialDisplay').innerText}
+	Attributes
+Strength: ${ratings[0].value} (${ratings[0].rating})		Constitution: ${ratings[1].value} (${ratings[1].rating})		Dexterity: ${ratings[2].value} (${ratings[2].rating})		Intelligence: ${ratings[3].value} (${ratings[3].rating})		Resolve: ${ratings[4].value} (${ratings[4].rating})			Perception: ${ratings[5].value} (${ratings[5].rating})  
     
+	Condition
+Pain: ${document.getElementById('pain').value}        Thirst: ${document.getElementById('thirst').value}
+Rest: ${document.getElementById('rest').value}        Hunger: ${document.getElementById('hunger').value}
+	
+	Environment
+Heat: ${document.getElementById('heat').value}        
+Place: ${document.getElementById('place').value}       Lighting: ${document.getElementById('lighting').value}
+Weather: ${document.getElementById('weather').value}     Moon: ${document.getElementById('moon').value}
+Date: ${document.getElementById('date').value}        Time: ${document.getElementById('time').value}
+Wind: ${document.getElementById('wind').value}        Temperature: ${document.getElementById('temperature').value}
 
-    // Generate the color grid and store its color array
-    const grid = generateColorGrid(randomId); // This returns the array of colors
-    localStorage.setItem(`grid_${randomId}`, JSON.stringify(grid)); // Save the array as a JSON string
+	Combat
+Combat Class: ${document.getElementById('combatClass').value}     	 Combat Technique: ${document.getElementById('combatTechnique').value}
+Main Hand: ${document.getElementById('wieldLHand').value}  			 Offhand: ${document.getElementById('wieldRHand').value}
 
-    // Update the main status display
-    const statusDisplay = document.getElementById('statusDisplay');
-    statusDisplay.innerHTML = ""; // Clear previous content
+`;
 
-    const nameElement = document.createElement('p');
-    nameElement.innerText = `${document.getElementById('firstName').value || 'Unknown'} ${document.getElementById('lastName').value || 'Hero'}`;
-    statusDisplay.appendChild(nameElement);
+    localStorage
+    localStorage.setItem(randomId, statusText);
 
-    // Create a DOM grid from the color array and append it
-    const gridContainer = createGridFromColors(grid);
-    statusDisplay.appendChild(gridContainer);
+    // Generate pixel art using the randomId as the seed
+    const pixelArtImage = generateSymmetricalPixelArt(randomId, 20, 20, 20); // Generate 16x16 pixel art with 8px per square
 
-    const statusTextElement = document.createElement('pre');
-    statusTextElement.innerText = statusText;
-    statusDisplay.appendChild(statusTextElement);
+    // Update statusDisplay and sideStatus with both status and pixel art
+    document.getElementById('statusDisplay').innerHTML = `
+            <figure>
+                  <figure style="display: flex; flex-direction: column; align-items: center;">
+            <figcaption style="text-align: center; margin-bottom: 8px;">Emblem</figcaption>
+               <img src="${pixelArtImage}" alt="Pixel Art">
+        </figure>
+	<p>${statusText}</p>
 
-    // Update the side status
+    `;
+    
     const sideStatusElement = document.getElementById('sideStatus');
-    sideStatusElement.innerHTML = ""; // Clear previous content
-
-    const assignedIdText = document.createElement('p');
-    assignedIdText.innerText = `Assigned Number: ${randomId}`;
-    sideStatusElement.appendChild(assignedIdText);
-
-    const sideGridContainer = createGridFromColors(grid); // Create another grid for the side status
-    sideStatusElement.appendChild(sideGridContainer);
-
-    const sideStatusText = document.createElement('pre');
-    sideStatusText.innerText = statusText;
-    sideStatusElement.appendChild(sideStatusText);
-        // Display a "Show Status" button initially and then toggle
-    const toggleButton = document.getElementById('toggleSideStatus');
-    toggleButton.style.display = "inline-block";
-    toggleButton.innerText = "Show Status";
+   sideStatusElement.innerHTML = `
+    <figure>
+   <figure style="display: flex; flex-direction: column; align-items: center;">
+            <figcaption style="text-align: center; margin-bottom: 8px;">Emblem</figcaption>
+               <img src="${pixelArtImage}" alt="Pixel Art">
+        </figure> 
+        <pre>${statusText}</pre>
+       
+ `;
+ 
 }
 
 
-// Function to generate the 16x16 color grid
-function generateColorGrid(randomId) {
-    const colorGrid = []; // Array to hold grid colors
-
-    // Pseudo-random number generator
-    const pseudoRandom = (seed) => {
-        let value = seed % 2147483647;
-        if (value <= 0) value += 2147483646;
-        return () => (value = (value * 16807) % 2147483647) / 2147483647;
-    };
-
-    const rng = pseudoRandom(randomId);
-
-    // Generate a 16x16 grid of colors
-    for (let i = 0; i < 256; i++) {
-        const red = Math.floor(rng() * 256);
-        const green = Math.floor(rng() * 256);
-        const blue = Math.floor(rng() * 256);
-        const color = `rgb(${red}, ${green}, ${blue})`;
-        colorGrid.push(color); // Add color to the array
-    }
-
-    return colorGrid; // Return only the color data
-}
-function createGridFromColors(colorGrid) {
-    const gridContainer = document.createElement('div');
-    gridContainer.style.display = 'grid';
-    gridContainer.style.gridTemplateColumns = 'repeat(16, 10px)';
-    gridContainer.style.gridTemplateRows = 'repeat(16, 10px)';
-    gridContainer.style.gap = '1px';
-    gridContainer.style.marginTop = '10px';
-
-    colorGrid.forEach((color) => {
-        const cell = document.createElement('div');
-        cell.style.width = '10px';
-        cell.style.height = '10px';
-        cell.style.backgroundColor = color;
-        gridContainer.appendChild(cell);
-    });
-
-    return gridContainer;
-}
-// Function to retrieve status and grid from localStorage
 function retrieveStatus() {
-    const seed = document.getElementById("retrieveSeed").value; // Get the seed ID input
-    const storedStatus = localStorage.getItem(seed); // Retrieve the stored status text
-    const storedGrid = localStorage.getItem(`grid_${seed}`); // Retrieve the stored grid
+        const seed = document.getElementById("retrieveSeed").value;
+        const storedStatus = localStorage.getItem(seed);
 
-    if (storedStatus && storedGrid) {
-        // Parse the status text and update inputs
-        const parsedStatus = parseStatusText(storedStatus);
-
-        // Update all input fields based on parsed data
-        for (const [key, value] of Object.entries(parsedStatus)) {
-            const inputElement = document.getElementById(key);
-            if (inputElement) {
-                inputElement.value = value;
-                resizeInput(inputElement); // Resize input if necessary
-            }
+        if (storedStatus) {
+            const pixelArtImage = generateSymmetricalPixelArt(seed, 16, 16, 8);
+            const sideStatusElement = document.getElementById("sideStatus");
+            sideStatusElement.innerHTML = `
+                
+                <pre>${storedStatus}</pre>
+                <figure>
+                      <figcaption>Emblem</figcaption>
+               <img src="${pixelArtImage}" alt="Pixel Art">
+        </figure>
+    `;
+        } else {
+            alert("No status found for the given number!");
         }
-
-        // Display the updated status in the sideStatus section
-        const sideStatusElement = document.getElementById("sideStatus");
-        sideStatusElement.innerHTML = `Retrieved Status for Number: ${seed}\n\n${storedStatus}`;
-
-                // Regenerate the grid using the stored color data
-        const colorGrid = JSON.parse(storedGrid); // Parse the grid's color data
-        const gridContainer = createGridFromColors(colorGrid); // Create the grid DOM structure
-
-        // Append the grid to the status display
-        const statusDisplay = document.getElementById('statusDisplay');
-        statusDisplay.innerHTML = ""; // Clear previous content
-        statusDisplay.appendChild(gridContainer); // Add the grid back to the display
-    } else {
-        alert("No status found for the given number!");
     }
-}
 
 function generateNarrative() {
     const firstName = document.getElementById('firstName').value || "Unknown";
@@ -786,7 +814,7 @@ Juggernaut: { core: 'strength', sub: 'constitution' },
     }
 
     if (!isLocked('combatStyle')) {
-        if (["Juggernaut", "BladeDancer", "Chieftay", "IronWill", "Berserker", "Titan", "StalwartDefender", "survivor", "hexblade", "spellthief", "bulwark", "savageAcrobat", "swiftblade", "phantomBlade", "assassin", "combatGenius", "colossus", "unyieldingTitan", "bladedTempest", "arcaneWarrior", "mysticShield"].includes(combatClass)) {
+        if (["Juggernaut", "BladeDancer", "Chieftain", "IronWill", "Berserker", "Titan", "StalwartDefender", "survivor", "hexblade", "spellthief", "bulwark", "savageAcrobat", "swiftblade", "phantomBlade", "assassin", "combatGenius", "colossus", "unyieldingTitan", "bladedTempest", "arcaneWarrior", "mysticShield"].includes(combatClass)) {
     combatStyle = "Melee";
 } else if (["deadeye", "sniper", "scout", "trickshot", "sharpshooter", "vanguard", "arcaneArcher", "godsEye"].includes(combatClass)) {
     combatStyle = "Ranged";
@@ -1145,18 +1173,36 @@ function randomizeAndUpdate() {
     updateStatus();    // Then calls the updateStatus function
 }
 function exportStatus() {
-    const statusText = document.getElementById('statusDisplay').innerText;
-    const firstName = document.getElementById('firstName').value;
-    const lastName = document.getElementById('lastName').value;
-    const fileName = `${firstName}_${lastName}_status.txt`; // Combine first and last name for the filename
+    const statusText = document.getElementById('statusDisplay').innerText.trim(); // Get the status text
+    const firstName = document.getElementById('firstName').value || "Unknown";
+    const lastName = document.getElementById('lastName').value || "Hero";
+    const characterName = `${firstName}_${lastName}`.replace(/\s+/g, '_'); // Replace spaces with underscores
 
-    const blob = new Blob([statusText], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = fileName; // Set the filename dynamically
-    a.click();
-    URL.revokeObjectURL(url);
+    // Generate pixel art as Base64
+    const seed = Math.floor(Math.random() * 1e6); // You might want to use the same seed as the status
+    const pixelArtDataURL = generateSymmetricalPixelArt(seed, 16, 16); // Ensure the same dimensions as before
+
+    // Convert the Base64 image to Blob
+    fetch(pixelArtDataURL)
+        .then(res => res.blob())
+        .then(pixelArtBlob => {
+            const zip = new JSZip();
+
+            // Add statusText as a .txt file
+            zip.file(`${characterName}_Status.txt`, statusText);
+
+            // Add the pixel art as a .jpg file
+            zip.file(`${characterName}_PixelArt.jpg`, pixelArtBlob);
+
+            // Generate the zip and trigger download
+            zip.generateAsync({ type: 'blob' }).then(content => {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(content);
+                a.download = `${characterName}.zip`;
+                a.click();
+            });
+        })
+        .catch(err => console.error("Error exporting files: ", err));
 }
 </script>
 
