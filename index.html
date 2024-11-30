@@ -122,7 +122,15 @@ input[type="text"], input[type="number"], select {
     margin-top: 0; /* Remove the margin above the paragraph */
     padding-top: 0; /* Make sure there's no padding on the top */
 }
-
+#statusTop {
+    width: 100%;
+    height: 300px; /* This defines the top section height */
+  }
+  
+  #statusBottom {
+    width: 100%;
+    height: 300px; /* This defines the top section height */
+  }
 
     .section {
         margin: 15px auto; /* Adjusted margin */
@@ -273,9 +281,13 @@ input[type="text"], input[type="number"], select {
 <!-- Hidden Span for measuring text width -->
 <span id="measurementSpan" class="input-measurement"></span>
 <div class="right-panel">
+        <div id="statusTop"></div>
         <div id="statusDisplay"></div>
+  <div id="statusBottom"></div>
+  <button id="mobileButton" onclick="randomizeAndUpdate()">Generate</button>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 
 <script>
@@ -289,6 +301,20 @@ input[type="text"], input[type="number"], select {
             document.querySelector('button[onclick="randomizeAndUpdate()"]').click();
         }
     });
+    function isMobileDevice() {
+    return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent);
+  }
+
+  window.onload = function () {
+    const mobileButton = document.getElementById('mobileButton');
+    if (isMobileDevice()) {
+      mobileButton.style.display = 'block';
+      mobileButton.style.fontSize = '75px';       // Bigger text
+      mobileButton.style.padding = '15px 30px';   // More padding
+      mobileButton.style.width = '90%';           // Wide button
+      mobileButton.style.margin = '10px auto';    // Centered horizontally
+    }
+  };
 // Function to resize input based on content length
 function resizeInput(input) {
     const measurementSpan = document.getElementById('measurementSpan');
@@ -727,7 +753,7 @@ function getRandomCombatTechnique(combatClass) {
             "Enduring Flash Art", "Silent Cut Stance", "Steelswift Discipline",
             "Lightning Speed Form"
         ],
-        phantomBlade: [
+        PhantomBlade: [
             "Spectral Slash Stance", "Ethereal Strike Discipline", "Ghostblade Form",
             "Shade Step Art", "Veil of Shadows Discipline", "Phantom Piercer Stance",
             "Haunting Blow Discipline", "Ghostwalker Stance", "Silent Assassin Art",
@@ -763,11 +789,11 @@ function getRandomCombatTechnique(combatClass) {
             "Gale Fury Discipline", "Cyclone Piercer Form", "Skybound Slash Art",
             "Tempest Fury Stance"
         ],
-        arcaneWarrior: [
-            "Arcane Strike Stance", "Mystic Combat Art", "Elemental Fury Discipline",
-            "Mystic Blade Form", "Arcane Knight Stance", "Runebound Art",
-            "Spellbound Assault Form", "Mystic Slash Discipline", "Thunderstrike Form",
-            "Arcane Wrath Art"
+        AuraWarrior: [
+            "Aura Strike Stance", "Ki Flow Combat Art", "Aura Fury Discipline",
+            "Heavenly Blade Form", "Divine Lotus Stance", "Aurabound Art",
+            "Aura Assault Form", "One Slash Discipline", "Thunderki Form",
+            "Asura Wrath Art"
         ],
         mysticShield: [
             "Shield of Aegis Stance", "Unbreakable Ward Form", "Eternal Protector Art",
@@ -792,8 +818,11 @@ function getRandomCombatTechnique(combatClass) {
         diviner: ["Foresight Discipline", "Clairvoyant Focus Art", "Mystic Vision Stance", "Augury Strike Form", "Precognitive Magic Discipline", "Divination’s Reach Art", "Future Sight Form", "Oracle’s Sight Stance", "Fatebinding Discipline", "Prophetic Strike Art"],
         archmage: ["Supreme Arcana Stance", "Infinite Knowledge Art", "Ultimate Power Discipline", "Archmage’s Fury Form", "Celestial Summons Stance", "Master of Elements Art", "Cosmic Arcana Discipline", "Omnipotent Surge Form", "Endless Wisdom Stance", "Grand Sorcery Art"],
         mentalFortress: ["Ironclad Will Art", "Psychic Barrier Discipline", "Mindshield Stance", "Mental Fortitude Form", "Unbreakable Focus Art", "Soul Deflection Discipline", "Steelmind Form", "Mental Bastion Stance", "Resilient Mind Discipline", "Unyielding Thought Form"],
-        battlePriest: ["Divine Smite Form", "Sacred Healing Stance", "Celestial Wrath Discipline", "Holy Resilience Art", "God’s Blessing Form", "Faithfire Stance", "Blessed Strike Discipline", "Guardian’s Prayer Art", "Devotion’s Might Form", "Divine Fury Stance"]
-        
+        battlePriest: ["Divine Smite Form", "Sacred Healing Stance", "Celestial Wrath Discipline", "Holy Resilience Art", "God’s Blessing Form", "Faithfire Stance", "Blessed Strike Discipline", "Guardian’s Prayer Art", "Devotion’s Might Form", "Divine Fury Stance"],
+        Sage: ["Arcane Shield Discipline", "Mindflow Technique", "Vital Binding Art", "Ethereal Fortitude Form", "Runic Essence Way", "Spirit Ward Stance", "Mental Clarity Discipline", "Resonance Surge Art", "Celestial Barrier Form", "Inner Focus Way"]
+
+
+
     };
 
     if (combatTechniques[combatClass]) {
@@ -809,72 +838,114 @@ function randomizeCombatDetails() {
     const stats = fields.map(field => ({
         name: field,
         value: parseInt(document.getElementById(field)?.value || 0, 10)
-    })).sort((a, b) => b.value - a.value);
+    })).sort((a, b) => b.value - a.value);  // Sorting stats in descending order
 
-    const highestStat = stats[0].name;
-    const secondHighestStat = stats[1].name;
+    // Collect the highest and second-highest stats
+    let highestStat = stats[0].name;
+    let highestValue = stats[0].value;
+    
+    // Check if multiple stats share the highest value
+    let highestStats = stats.filter(stat => stat.value === highestValue);
 
-    const combatClassMapping = {
-Juggernaut: { core: 'strength', sub: 'constitution' },
-    BladeDancer: { core: 'strength', sub: 'dexterity' },
-    Chieftain: { core: 'strength', sub: 'intelligence' },
-    IronWill: { core: 'strength', sub: 'resolve' },
-    Berserker: { core: 'strength', sub: 'perception' },
-    Titan: { core: 'constitution', sub: 'strength' },
-    StalwartDefender: { core: 'constitution', sub: 'resolve' },
-    survivor: { core: 'constitution', sub: 'dexterity' },
-    hexblade: { core: 'dexterity', sub: 'intelligence' },
-    spellthief: { core: 'dexterity', sub: 'resolve' },
-    bulwark: { core: 'constitution', sub: 'perception' },
-    savageAcrobat: { core: 'dexterity', sub: 'strength' },
-    swiftblade: { core: 'dexterity', sub: 'constitution' },
-    phantomBlade: { core: 'dexterity', sub: 'resolve' },
-    assassin: { core: 'dexterity', sub: 'perception' },
-    combatGenius: { core: 'intelligence', sub: 'strength' },
-    colossus: { core: 'strength', sub: 'strength' },
-    unyieldingTitan: { core: 'constitution', sub: 'constitution' },
-    bladedTempest: { core: 'dexterity', sub: 'dexterity' },
-    arcaneWarrior: { core: 'strength', sub: 'intelligence' },
-    mysticShield: { core: 'resolve', sub: 'constitution' },
-    deadeye: { core: 'dexterity', sub: 'perception' },
-    sniper: { core: 'perception', sub: 'dexterity' },
-    scout: { core: 'perception', sub: 'resolve' },
-    trickshot: { core: 'perception', sub: 'intelligence' },
-    sharpshooter: { core: 'perception', sub: 'strength' },
-    vanguard: { core: 'perception', sub: 'constitution' },
-    arcaneArcher: { core: 'intelligence', sub: 'dexterity' },
-    godsEye: { core: 'perception', sub: 'perception' },
-    sorcerer: { core: 'resolve', sub: 'intelligence' },
-    spiritAdept: { core: 'resolve', sub: 'perception' },
-    mage: { core: 'intelligence', sub: 'resolve' },
-    diviner: { core: 'intelligence', sub: 'perception' },
-    archmage: { core: 'intelligence', sub: 'intelligence' },
-    mentalFortress: { core: 'resolve', sub: 'resolve' },
-    battlePriest: { core: 'constitution', sub: 'intelligence' }
-    };
+    if (highestStats.length > 1) {
+        // Randomly select the highest stat if there's a tie
+        highestStat = highestStats[Math.floor(Math.random() * highestStats.length)].name;
+    }
+
+    // Find the second highest value, excluding the highest stat
+    let secondHighestStats = stats.filter(stat => stat.name !== highestStat);
+    let secondHighestValue = secondHighestStats[0].value;
+
+    // Check if there are multiple second-highest stats
+    let secondHighestStatsFiltered = secondHighestStats.filter(stat => stat.value === secondHighestValue);
+
+    // If the gap between highest and second-highest is large enough, assign the highest to both
+    const gapThreshold = 20; // You can adjust this threshold
+    if (highestValue - secondHighestValue > gapThreshold) {
+        secondHighestStat = highestStat; // Assign the highest stat to the second as well
+    } else {
+        if (secondHighestStatsFiltered.length > 1) {
+            // Randomly select the second highest stat if there's a tie
+            secondHighestStat = secondHighestStatsFiltered[Math.floor(Math.random() * secondHighestStatsFiltered.length)].name;
+        } else {
+            secondHighestStat = secondHighestStats[0].name;
+        }
+    }
+
+    // Log the highest and second highest stats for debugging
+    console.log(`Highest Stat: ${highestStat}, Second Highest Stat: ${secondHighestStat}`);
+
+
+   // Dynamic combat class selection based on coreStat and subStat
+    const classNames = [
+        'Juggernaut', 'BladeDancer', 'Chieftain', 'IronWill', 'Berserker', 'Titan', 
+        'StalwartDefender', 'survivor', 'hexblade', 'spellthief', 'bulwark', 'savageAcrobat',
+        'swiftblade', 'AuraWarrior', 'assassin', 'combatGenius', 'colossus', 'unyieldingTitan',
+        'bladedTempest', 'arcaneWarrior', 'mysticShield', 'deadeye', 'sniper', 'scout', 'trickshot',
+        'sharpshooter', 'vanguard', 'arcaneArcher', 'godsEye', 'sorcerer', 'spiritAdept', 'mage',
+        'diviner', 'archmage', 'mentalFortress', 'battlePriest', 'PhantomBlade', 'Sage',
+    ];
+
+    // Find the matching combat class based on coreStat and subStat in strict order
+    let selectedClass = classNames.find(className => {
+        switch (className) {
+            case 'Juggernaut': return highestStat === 'strength' && secondHighestStat === 'constitution';
+            case 'BladeDancer': return highestStat === 'strength' && secondHighestStat === 'dexterity';
+            case 'Chieftain': return highestStat === 'strength' && secondHighestStat === 'intelligence';
+            case 'IronWill': return highestStat === 'strength' && secondHighestStat === 'resolve';
+            case 'Berserker': return highestStat === 'strength' && secondHighestStat === 'perception';
+            case 'Titan': return highestStat === 'constitution' && secondHighestStat === 'strength';  // Corrected mapping
+            case 'StalwartDefender': return highestStat === 'constitution' && secondHighestStat === 'resolve';
+            case 'survivor': return highestStat === 'constitution' && secondHighestStat === 'dexterity';
+            case 'hexblade': return highestStat === 'dexterity' && secondHighestStat === 'intelligence';
+            case 'spellthief': return highestStat === 'dexterity' && secondHighestStat === 'resolve';
+            case 'bulwark': return highestStat === 'constitution' && secondHighestStat === 'perception';
+            case 'savageAcrobat': return highestStat === 'dexterity' && secondHighestStat === 'strength';
+            case 'swiftblade': return highestStat === 'dexterity' && secondHighestStat === 'constitution';
+            case 'AuraWarrior': return highestStat === 'resolve' && secondHighestStat === 'strenght';
+            case 'assassin': return highestStat === 'dexterity' && secondHighestStat === 'perception';
+            case 'combatGenius': return highestStat === 'intelligence' && secondHighestStat === 'strength';
+            case 'colossus': return highestStat === 'strength' && secondHighestStat === 'strength';
+            case 'unyieldingTitan': return highestStat === 'constitution' && secondHighestStat === 'constitution';
+            case 'bladedTempest': return highestStat === 'dexterity' && secondHighestStat === 'dexterity';
+            case 'mysticShield': return highestStat === 'resolve' && secondHighestStat === 'constitution';
+            case 'PhantomBlade': return highestStat === 'resolve' && secondHighestStat === 'dexterity';
+            case 'sniper': return highestStat === 'perception' && secondHighestStat === 'dexterity';
+            case 'scout': return highestStat === 'perception' && secondHighestStat === 'resolve';
+            case 'trickshot': return highestStat === 'perception' && secondHighestStat === 'intelligence';
+            case 'sharpshooter': return highestStat === 'perception' && secondHighestStat === 'strength';
+            case 'vanguard': return highestStat === 'perception' && secondHighestStat === 'constitution';
+            case 'arcaneArcher': return highestStat === 'intelligence' && secondHighestStat === 'dexterity';
+            case 'godsEye': return highestStat === 'perception' && secondHighestStat === 'perception';
+            case 'sorcerer': return highestStat === 'resolve' && secondHighestStat === 'intelligence';
+            case 'spiritAdept': return highestStat === 'resolve' && secondHighestStat === 'perception';
+            case 'mage': return highestStat === 'intelligence' && secondHighestStat === 'resolve';
+            case 'diviner': return highestStat === 'intelligence' && secondHighestStat === 'perception';
+            case 'archmage': return highestStat === 'intelligence' && secondHighestStat === 'intelligence';
+            case 'mentalFortress': return highestStat === 'resolve' && secondHighestStat === 'resolve';
+            case 'battlePriest': return highestStat === 'constitution' && secondHighestStat === 'intelligence';
+            case 'Sage': return highestStat === 'intelligence' && secondHighestStat === 'constitution';
+            default: return false;
+        }
+    });
+
+    if (selectedClass) {
+        document.getElementById('combatClass').value = selectedClass;
+    } else {
+        document.getElementById('combatClass').value = "nothing";  // If no class matches
+    }
 
     let combatClass = document.getElementById('combatClass').value;
     let combatStyle = document.getElementById('combatStyle').value;
     let combatTechnique = document.getElementById('combatTechnique').value;
 
-    if (!isLocked('combatClass')) {
-        combatClass = "nothing";
-        for (const [className, { core, sub }] of Object.entries(combatClassMapping)) {
-            if ((core === highestStat && sub === secondHighestStat) || 
-                (core === secondHighestStat && sub === highestStat)) {
-                combatClass = className;
-                break;
-            }
-        }
-        document.getElementById('combatClass').value = combatClass;
-    }
 
     if (!isLocked('combatStyle')) {
-        if (["Juggernaut", "BladeDancer", "Chieftain", "IronWill", "Berserker", "Titan", "StalwartDefender", "survivor", "hexblade", "spellthief", "bulwark", "savageAcrobat", "swiftblade", "phantomBlade", "assassin", "combatGenius", "colossus", "unyieldingTitan", "bladedTempest", "arcaneWarrior", "mysticShield"].includes(combatClass)) {
+        if (["Juggernaut", "BladeDancer", "Chieftain", "IronWill", "Berserker", "Titan", "StalwartDefender", "survivor", "hexblade", "spellthief", "bulwark", "savageAcrobat", "swiftblade", "AuraWarrior", "assassin", "combatGenius", "colossus", "unyieldingTitan", "bladedTempest", "arcaneWarrior", "mysticShield", "PhantomBlade"].includes(combatClass)) {
     combatStyle = "Melee";
 } else if (["deadeye", "sniper", "scout", "trickshot", "sharpshooter", "vanguard", "arcaneArcher", "godsEye"].includes(combatClass)) {
     combatStyle = "Ranged";
-} else if (["sorcerer", "spiritAdept", "mage", "diviner", "archmage", "mentalFortress", "battlePriest"].includes(combatClass)) {
+} else if (["sorcerer", "spiritAdept", "mage", "diviner", "archmage", "mentalFortress", "battlePriest", "Sage"].includes(combatClass)) {
     combatStyle = "Magic";
 }
         document.getElementById('combatStyle').value = combatStyle;
@@ -1363,12 +1434,32 @@ function calculateBMIAndAssignBodyBuild() {
     document.getElementById('bmi').innerText = `BMI: ${bmi.toFixed(2)} (${bmiCategory})`;
     document.getElementById('bodyBuild').innerText = `Body Build: ${randomBodyBuild}`;
 }
+function setPixelArtAsBackground() {
+    // Get the pixel art image source from the <img> tag
+    const pixelArtImage = document.querySelector('#statusDisplay img').src;
+
+    // Apply the pixel art as background to the top part only
+    const statusTop = document.getElementById('statusTop');
+    statusTop.style.backgroundImage = `url(${pixelArtImage})`;
+    statusTop.style.backgroundRepeat = 'repeat';  // Repeat the image
+    statusTop.style.backgroundSize = 'auto';      // Keep the original size
+    statusTop.style.backgroundPosition = 'center';
+    statusTop.style.height = '400px';             // Adjust the height as needed
+    
+    const statusBottom = document.getElementById('statusBottom');
+    statusBottom.style.backgroundImage = `url(${pixelArtImage})`;
+    statusBottom.style.backgroundRepeat = 'repeat';  // Repeat the image
+    statusBottom.style.backgroundSize = 'auto';      // Keep the original size
+    statusBottom.style.backgroundPosition = 'center';
+    statusBottom.style.height = '400px';             // Adjust the height as needed
+}
 function randomizeAndUpdate() {
     randomizeStatus(); // Calls the randomizeStatus function
 	randomizePhysicalAppearance();
 	randomizeHeightAndWeight();
 	calculateBMIAndAssignBodyBuild();
     updateStatus();    // Then calls the updateStatus function
+     setPixelArtAsBackground();
 }
 function randomizeHWBMI() {
 	randomizeHeightAndWeight();
@@ -1376,37 +1467,32 @@ function randomizeHWBMI() {
 	updateStatus();  
 }
 function exportStatus() {
-    const statusText = document.getElementById('statusDisplay').innerText.trim(); // Get the status text
+    const { jsPDF } = window.jspdf;
+
+    const statusText = document.getElementById('statusDisplay').innerText.trim();
     const firstName = document.getElementById('firstName').value || "Unknown";
     const lastName = document.getElementById('lastName').value || "Hero";
-    const characterName = `${firstName}_${lastName}`.replace(/\s+/g, '_'); // Replace spaces with underscores
+    const characterName = `${firstName}_${lastName}`.replace(/\s+/g, '_');
 
-    // Get the already generated pixel art from the statusDisplay (you may need to store it earlier)
-    const pixelArtImage = document.querySelector('#statusDisplay img').src; // Assuming the pixel art image is in the <img> tag
+    // Get the pixel art image source from the <img> tag
+    const pixelArtImage = document.querySelector('#statusDisplay img').src;
 
-    // Convert the Base64 image to Blob
-    fetch(pixelArtImage)
-        .then(res => res.blob())
-        .then(pixelArtBlob => {
-            const zip = new JSZip();
+    // Create a new PDF document
+    const doc = new jsPDF();
 
-            // Add statusText as a .txt file
-            zip.file(`${characterName}_Status.txt`, statusText);
+    // Add the pixel art image to the PDF
+    const imgWidth = 80;  // Adjust width as needed
+    const imgHeight = 80; // Adjust height as needed
+    doc.addImage(pixelArtImage, 'PNG', 15, 10, imgWidth, imgHeight);
 
-            // Add the pixel art as a .jpg file
-            zip.file(`${characterName}_PixelArt.jpg`, pixelArtBlob);
+    // Add the status text to the PDF
+    doc.setFontSize(12);
+    const splitText = doc.splitTextToSize(statusText, 180);
+    doc.text(splitText, 15, 100);
 
-            // Generate the zip and trigger download
-            zip.generateAsync({ type: 'blob' }).then(content => {
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(content);
-                a.download = `${characterName}.zip`;
-                a.click();
-            });
-        })
-        .catch(err => console.error("Error exporting files: ", err));
+    // Save the PDF with the character's name
+    doc.save(`${characterName}_Status.pdf`);
 }
-
 </script>
 
 </body>
