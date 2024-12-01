@@ -206,6 +206,108 @@ input[type="text"], input[type="number"], select {
         text-shadow: 1px 1px 1px #2b211a;
         overflow-y: auto;
     }
+	/* Styling the character list container */
+#characterList {
+    width: 100%;
+    border-collapse: collapse; /* Combine borders for a clean look */
+    margin-top: 20px;
+    font-family: 'Bookman Old Style', serif;
+    background-color: #4a3d34; /* Match the app's color scheme */
+    color: #e0d5c1; /* Text color for better contrast */
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Styling the table header */
+#characterList thead tr {
+    background-color: #3b2f28; /* Darker background for the header */
+    color: #d8c7a7; /* Text color for header */
+    font-size: 40px;
+    text-shadow: 1px 1px 0 #2b211a;
+}
+
+/* Styling the header cells */
+#characterList th {
+    padding: 10px;
+    border: 2px solid #6d5c4b; /* Border color matching app design */
+}
+
+/* Styling the table rows */
+#characterList tbody tr {
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+/* Alternate row coloring for better readability */
+#characterList tbody tr:nth-child(odd) {
+    background-color: #4e4037; /* Slightly lighter background */
+}
+
+#characterList tbody tr:nth-child(even) {
+    background-color: #4a3d34;
+}
+
+/* Hover effect on table rows */
+#characterList tbody tr:hover {
+    background-color: #5a4c42; /* Highlight row on hover */
+}
+
+/* Styling the table cells */
+#characterList td {
+    padding: 10px;
+    border: 2px solid #6d5c4b;
+    vertical-align: middle; /* Center content vertically */
+    font-size: 50px;
+    text-shadow: 1px 1px 0 #2b211a;
+}
+
+/* Styling the emblem images */
+#characterList img {
+    border-radius: 50%; /* Circular emblem */
+    border: 2px solid #6d5c4b;
+    width: 100px; /* Set a consistent size */
+    height: 100px;
+    object-fit: cover; /* Ensure image fits within the circle */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Styling the load button */
+#characterList button {
+    background-color: #5a4c42;
+    color: #e0d5c1;
+    border: 2px solid #6d5c4b;
+    padding: 5px 10px;
+    font-size: 40px;
+    cursor: pointer;
+    border-radius: 5px;
+    text-shadow: 1px 1px 0 #2b211a;
+    font-family: 'Bookman Old Style', serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Button hover effect */
+#characterList button:hover {
+    background-color: #7a665b;
+    border-color: #9d8872;
+}
+/* Toggleable container styling */
+#characterListContainer {
+    max-height: 0; /* Initially collapsed */
+    overflow: hidden;
+    transition: max-height 0.5s ease; /* Smooth expand/collapse */
+}
+
+/* Adjust header cursor */
+h2[onclick="toggleCharacterList()"] {
+    cursor: pointer;
+    color: #d8c7a7;
+    text-shadow: 1px 1px 0 #2b211a;
+    font-family: 'Bookman Old Style', serif;
+}
+
+/* Change cursor on hover */
+h2[onclick="toggleCharacterList()"]:hover {
+    color: #f0e6d2;
+}
 </style>
 
 </head>
@@ -333,11 +435,22 @@ input[type="text"], input[type="number"], select {
         <div id="statusDisplay"></div>
   <div id="statusBottom"></div>
   <button id="mobileButton" onclick="randomizeAndUpdate()">Generate</button>
-  <div>
-    <label for="savedCharactersDropdown">Load Character:</label>
-    <select id="savedCharactersDropdown">
-        <option value="" disabled selected>Select a character</option>
-    </select>
+ <h2 onclick="toggleCharacterList()" style="cursor: pointer;">Saved Characters ▼</h2>
+<div id="characterListContainer" style="display: none; overflow: hidden; transition: max-height 0.5s ease;">
+    <table id="characterList">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Potential</th>
+                <th>Combat Class</th>
+                <th>Emblem</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Dynamic rows will be added here -->
+        </tbody>
+    </table>
 </div>
     </div>
     
@@ -1088,8 +1201,20 @@ function randomizeStatus() {
 'Chinedu', 'Ngozi', 'Olumide', 'Adebayo', 'Chioma', 'Kemi', 'Emeka', 'Ifeoma', 'Oluwaseun', 'Amara', 'Bola', 'Ireti', 'Durojaiye', 'Tolu', 'Adesola', 'Funke', 'Uche', 'Ngozi', 'Chika', 'Ayotunde',
 'Jiho', 'Jiwon', 'Minji', 'Seojin', 'Jisoo', 'Yuna', 'Jihoon', 'Nari', 'Minseok', 'Soojung', 'Taeyang', 'Hana', 'Seungmin', 'Jiwon', 'Sunwoo', 'Kyung', 'Eunjoo', 'Changmin', 'Nari', 'Haebin',
 'Hiroshi', 'Yuki', 'Sakura', 'Haruto', 'Yui', 'Takumi', 'Mei', 'Taro', 'Aoi', 'Haruka', 'Satoshi', 'Riko', 'Kaito', 'Ayumi', 'Shinji', 'Kana', 'Kenta', 'Nanami', 'Ren', 'Makoto', 'Natsuki',
-'David', 'Miriam', 'Yaara', 'Yitzhak', 'Talia', 'Eli', 'Shira', 'Natan', 'Yael', 'Erez', 'Oren', 'Tamar', 'Reuven', 'Sarah', 'Daniel', 'Or', 'Hila', 'Lior', 'Yaakov', 'Dafna', 'Noa'];
-    const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Miller', 'Davis', 'Garcia', 'Martinez', 'Hernandez', 'Li', 'Wang', 'Zhang', 'Liu', 'Chen', 'Yang', 'Huang', 'Zhao', 'Xu', 'Zhou', 'Sun', 'He', 'Gao', 'Lin', 'Wu', 'Deng', 'Yu', 'Tang', 'Xu',
+'David', 'Miriam', 'Yaara', 'Yitzhak', 'Talia', 'Eli', 'Shira', 'Natan', 'Yael', 'Erez', 'Oren', 'Tamar', 'Reuven', 'Sarah', 'Daniel', 'Or', 'Hila', 'Lior', 'Yaakov', 'Dafna', 'Noa', 'Arthur', 'Eleanor', 'Gawain', 'Guinevere', 'Lancelot', 'Isolde', 'Tristan', 'Alistair', 'Beatrice', 'Roland', 'Rosalind', 'Cedric', 'Matilda', 'Geoffrey', 'Isabel', 'Hugh', 'Adelaide', 'Evangeline', 'Theobald', 'Vivienne',
+'Edmund', 'Alfred', 'Margaret', 'Roderick', 'Amelia', 'Benedict', 'Cecilia', 'Godfrey', 'Genevieve', 'Basil', 'Adeline', 'Sybilla', 'Eustace', 'Elinor', 'Percival', 'Aveline', 'Matthias', 'Florence', 'Leopold', 'Marion',
+'Lucinda', 'Ambrose', 'Emmeline', 'Edwina', 'Rowena', 'Oswald', 'Emery', 'Millicent', 'Salvator', 'Sabrina', 'Lysander', 'Clementine', 'Ralph', 'Hilda', 'Giles', 'Beatrix', 'Owen', 'Alaric', 'Clara', 'Gwyneth',
+'Ignatius', 'Helena', 'Jasper', 'Maud', 'Althea', 'Balthazar', 'Matilda', 'Sylvester', 'Juliana', 'Ferdinand', 'Myrtle', 'Walter', 'Alicia', 'Ephraim', 'Rosamund', 'Elric', 'Seraphina', 'Swanhild', 'Catherine', 'Reuben',
+'Reginald', 'Daphne', 'Tobias', 'Winifred', 'Gordon', 'Elspeth', 'Hector', 'Lucia', 'Barnabas', 'Odessa', 'Sibylla', 'Sigmund', 'Odilon', 'Mabel', 'Eamon', 'Estelle', 'Griffin', 'Constance', 'Berengar', 'Ermina',
+'Rufus', 'Damaris', 'Gerald', 'Isolde', 'Aldric', 'Margery', 'Raymond', 'Sabina', 'Anselm', 'Wilhelmina', 'Jayden', 'Alyx', 'Khristopher', 'Zacharye', 'Lilliane', 'Sophiah', 'Emmalyn', 'Jonathyn', 'Kaitlynne', 'Krislyn', 'Michaelae', 'Jaxon', 'Cadenze', 'Graciee', 'Jorja', 'Ezraiah', 'Ashtynn', 'Kayleb', 'Lenae', 'Danyelle',
+'Gabriellah', 'Madisyn', 'Xander', 'Rowennah', 'Kalebbe', 'Brihanna', 'Tylerr', 'Clyve', 'Rhiannonne', 'Jasminne', 'Blayk', 'Zahraah', 'Levinna', 'Tristanne', 'Zoee', 'Fayth', 'Huntere', 'Chloee', 'Kynzie', 'Ashlynnne',
+'Jordynne', 'Chayse', 'Aubreee', 'Daxson', 'Bennet', 'Zaneve', 'Isabellah', 'Maddix', 'Avalyn', 'Halleigh', 'Leighann', 'Broc', 'Elliotth', 'Ciarra', 'Shawndra', 'Emberleigh', 'Tye', 'Violetta', 'Oliviah', 'Adelynne',
+'Addisyn', 'Raeleigh', 'Karisa', 'Korrine', 'Jakobi', 'Haizlee', 'Brookk', 'Maddisonn', 'Toriann', 'Danicka', 'Zacharye', 'Eviegh', 'Kendalyn', 'Avari', 'Bryston', 'Mikenna', 'Caralyn', 'Kalliegh', 'Brennan', 'Averlee',
+'Severynn', 'Paityn', 'Hailiegh', 'Tylerik', 'Reegan', 'Sophiia', 'Luken', 'Olivya', 'Addyson', 'Kamryn', 'Ava-Lee', 'Graciella', 'Marleena', 'Bradenne', 'Emiliya', 'Braylen', 'Paytonn', 'Everleigh', 'Jaycie', 'Lindeley', 'Astrid', 'Bjorn', 'Sigrid', 'Leif', 'Ingrid', 'Nils', 'Freya', 'Oskar', 'Elsa', 'Magnus', 'Hilda', 'Rune', 'Solveig', 'Erik', 'Kari', 'Thor', 'Anika', 'Jens', 'Viggo', 'Maja',
+'Harald', 'Kirsten', 'Sven', 'Greta', 'Aksel', 'Liv', 'Einar', 'Linnea', 'Otto', 'Frida', 'Anders', 'Saga', 'Tobias', 'Tove', 'Henrik', 'Alva', 'Ragnar', 'Birgit', 'Freyja','Jorunn', 'Knut', 'Emil', 'Selma', 'Bengt', 'Ylva', 'Stig', 'Dagny', 'Håkon', 'Frederik', 'Elin', 'Vera', 'Mikkel', 'Ida', 'Sigurd', 'Johanna', 'Lasse', 'Mari', 'Nina',
+'Vera', 'Pelle', 'Rikard', 'Birgitta', 'Torben', 'Alfred', 'Mats', 'Tilda', 'Ingmar', 'Klara', 'Rune', 'Thora', 'Bjørn', 'Sanna', 'Ellen', 'Frans', 'Torbjörn', 'Lena'];
+   
+   const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Miller', 'Davis', 'Garcia', 'Martinez', 'Hernandez', 'Li', 'Wang', 'Zhang', 'Liu', 'Chen', 'Yang', 'Huang', 'Zhao', 'Xu', 'Zhou', 'Sun', 'He', 'Gao', 'Lin', 'Wu', 'Deng', 'Yu', 'Tang', 'Xu',
 'Smith', 'Johnson', 'Williams', 'Jones', 'Brown', 'Davis', 'Miller', 'Wilson', 'Moore', 'Taylor', 'Anderson', 'Thomas', 'Jackson', 'White', 'Harris', 'Martin', 'Thompson', 'Garcia', 'Martinez', 'Roberts',
 'Brown', 'Jones', 'Taylor', 'Williams', 'Davies', 'Wilson', 'Evans', 'Thomas', 'Johnson', 'Roberts', 'Lewis', 'Walker', 'Wright', 'Green', 'Harris', 'Clarke', 'King', 'Scott', 'Baker', 'Adams',
 'Ivanov', 'Petrov', 'Sidorov', 'Smirnov', 'Kuznetsov', 'Popov', 'Vasilyev', 'Mikhailov', 'Morozov', 'Fedorov', 'Solovyev', 'Novikov', 'Borisov', 'Karpov', 'Lebedev', 'Romanov', 'Tikhonov', 'Gusev', 'Kozlov', 'Shishkin',
@@ -1102,7 +1227,36 @@ function randomizeStatus() {
 'Okeke', 'Adebayo', 'Ogunleye', 'Akinwale', 'Eze', 'Onyekachi', 'Oluwaseun', 'Chukwuemeka', 'Olaoye', 'Ayodele', 'Ajayi', 'Nwankwo', 'Abiola', 'Olawale', 'Obi', 'Ifedayo', 'Ogunbiyi', 'Olatunji', 'Amadi', 'Chibuzo',
 'Kim', 'Lee', 'Park', 'Choi', 'Cho', 'Jung', 'Kang', 'Im', 'Han', 'Yoon', 'Lim', 'Seo', 'Shin', 'Oh', 'Ryu', 'Hwang', 'Kwon', 'Nam', 'Song', 'Jeong',
 'Tanaka', 'Yamamoto', 'Kobayashi', 'Sato', 'Watanabe', 'Takahashi', 'Yamada', 'Matsumoto', 'Inoue', 'Ishikawa', 'Fujita', 'Yamaguchi', 'Kuroda', 'Hasegawa', 'Iida', 'Sakai', 'Hashimoto', 'Murakami', 'Nakajima', 'Fujimoto',
-'Levi', 'Cohen', 'Mizrahi', 'Shalev', 'Dahan', 'Rosenberg', 'Ben-David', 'Zohar', 'Shalom', 'Erez', 'Ben-Ami', 'Nissim', 'Baruch', 'Tzukrel', 'Farkash', 'Yeger', 'Yona', 'Klein', 'Shani', 'Golan'];
+'Levi', 'Cohen', 'Mizrahi', 'Shalev', 'Dahan', 'Rosenberg', 'Ben-David', 'Zohar', 'Shalom', 'Erez', 'Ben-Ami', 'Nissim', 'Baruch', 'Tzukrel', 'Farkash', 'Yeger', 'Yona', 'Klein', 'Shani', 'Golan', 'Smith', 'Jones', 'Taylor', 'Brown', 'Wilson', 'Evans', 'Thomas', 'Roberts', 'Walker', 'Harris',
+'Jackson', 'White', 'Clark', 'Lewis', 'Young', 'King', 'Scott', 'Green', 'Adams', 'Baker',
+'Allen', 'Carter', 'Mitchell', 'Perez', 'Morris', 'Wood', 'Davis', 'Hughes', 'Nelson', 'Hill',
+'Wright', 'Collins', 'Kingston', 'Turner', 'King', 'Fisher', 'Miller', 'Collier', 'Chapman', 'Cook',
+'Freeman', 'Parker', 'Bennett', 'Barnes', 'Price', 'Reed', 'Campbell', 'Cooper', 'Morgan', 'Dubois', 'Lemoine', 'Lefevre', 'Leclerc', 'Moreau', 'Petit', 'Roux', 'Bernard', 'Garnier', 'Blanc',
+'Robert', 'Fournier', 'Chauvin', 'Lemoine', 'Meyer', 'Barbier', 'Gauthier', 'Dupont', 'Lemoine', 'Lemoine',
+'Martin', 'Girard', 'Boyer', 'Vidal', 'Moulin', 'Dufresne', 'Giraud', 'Marchand', 'Lejeune', 'Perrot',
+'Picard', 'Jacquet', 'Tanguy', 'Roch', 'Henri', 'Lemoine', 'Benoit', 'Jacques', 'Carlier', 'Sauvage',
+'Deschamps', 'Lemoine', 'Sevigny', 'Blanchard', 'Brossard', 'Legrand', 'Bailly', 'Legros', 'Gilles', 'Schmidt', 'Müller', 'Schneider', 'Fischer', 'Weber', 'Hoffmann', 'Schwarz', 'Bauer', 'Richter', 'Klein',
+'Zimmermann', 'Wagner', 'Becker', 'Braun', 'Schulz', 'Jäger', 'Hartmann', 'Schäfer', 'Krause', 'Schmidt',
+'Neumann', 'Schuster', 'Peters', 'Meyer', 'Heinrich', 'König', 'Roth', 'Lang', 'Keller', 'Weiß',
+'Vogel', 'Lange', 'Hahn', 'Berg', 'Keller', 'Fuchs', 'Reuter', 'Brandt', 'Riedel', 'Zimmer',
+'Kraft', 'Lutz', 'Böhm', 'Götz', 'Maurer', 'Schmitt', 'Haas', 'Ott', 'Schwabe', 'Bender', 'García', 'Martínez', 'López', 'Hernández', 'Pérez', 'González', 'Rodríguez', 'Sánchez', 'Ramírez', 'Flores',
+'Gutiérrez', 'Jiménez', 'Díaz', 'Vázquez', 'Morales', 'Cruz', 'Mendoza', 'Reyes', 'Castro', 'García',
+'Martín', 'Ruiz', 'Torres', 'Álvarez', 'Jiménez', 'Vega', 'Ríos', 'Salazar', 'Paredes', 'Márquez',
+'Navarro', 'Herrera', 'Moreno', 'Fernández', 'Gómez', 'Molina', 'González', 'Ramón', 'Solís', 'Domínguez',
+'Vázquez', 'Vera', 'Rivas', 'Castaño', 'Ávila', 'Gálvez', 'Camacho', 'Pérez', 'López', 'Cordero', 'Rossi', 'Bianchi', 'Romano', 'Ricci', 'Marino', 'Greco', 'Conti', 'Lombardi', 'Ferrari', 'Esposito',
+'Santoro', 'De Luca', 'Mancini', 'Giordano', 'Moretti', 'Gallo', 'Longo', 'Giovanni', 'Martino', 'Rinaldi',
+'Martini', 'Barbieri', 'Costa', 'Angelo', 'Ferrara', 'Coppola', 'Sanna', 'Cammarota', 'Caputo', 'Caruso',
+'Luciano', 'Valenti', 'Pugliese', 'De Santis', 'Della Valle', 'De Marco', 'Lombardi', 'Ferri', 'Cavaliere',
+'Aurora', 'Basso', 'Vitali', 'Siciliano', 'Vitale', 'Bellini', 'Motta', 'Sorrentino', 'Trombetta', 'Petrillo', 'Silva', 'Santos', 'Pereira', 'Oliveira', 'Ferreira', 'Costa', 'Rodrigues', 'Almeida', 'Sousa', 'Martins',
+'Fernandes', 'Carvalho', 'Nascimento', 'Ribeiro', 'Mendes', 'Teixeira', 'Lima', 'Gomes', 'Castro', 'Moura',
+'Azevedo', 'Sousa', 'Pinto', 'Dias', 'Campos', 'Silveira', 'Martins', 'Cardoso', 'Machado', 'Cunha',
+'Monteiro', 'Barbosa', 'Correia', 'Tavares', 'Duarte', 'Figueiredo', 'Brito', 'Lopes', 'Sousa', 'Santos',
+'Ferreira', 'Morais', 'Alves', 'Cavalcante', 'Borges', 'Marques', 'Furtado', 'Franco', 'Gonçalves', 'Adams', 'Allen', 'Bennett', 'Bishop', 'Black', 'Blake', 'Booth', 'Bradley', 'Brooks', 'Brown',
+'Burns', 'Butler', 'Chapman', 'Chambers', 'Clarke', 'Clayton', 'Cole', 'Collins', 'Cooper', 'Curtis',
+'Davis', 'Dixon', 'Douglas', 'Ferguson', 'Fletcher', 'Ford', 'Gibson', 'Glover', 'Grant', 'Gray',
+'Greenwood', 'Hancock', 'Harrison', 'Harvey', 'Hughes', 'Jackson', 'James', 'Johnston', 'Kingston', 'Knight',
+'Lawrence', 'Lawson', 'Lee', 'Lloyd', 'Mason', 'Miller', 'Mitchell', 'Moore', 'Morgan', 'Morris',
+'Nelson', 'Owen', 'Parker', 'Patterson', 'Phillips', 'Robinson'];
     
     const meleeItems = ['Fists', 'Sword', 'Axe', 'Dagger', 'Spear', 'Mace', 'Hammer', 'Flail', 'Katana', 'Scythe', 'Whip', 'Claws', 'Club', 'Halberd', 'Greatsword', 'Battleaxe', 'Shortsword', 'Trident', 'Javelin', 'Saber', 'Pike', 'Rapier', 'Morningstar', 'Falchion', 'Gladius', 'Bastard Sword', 'Claymore', 'Runic Greatsword', 'Dragonbone Sword', 'Stormbreaker Axe', 'Wyrmsbane Pike', 'Thunderstrike Mace', 'Grim Reaper Scythe', 'Basic Wood Sword', 'Sturdy Wood Sword', 'Well-Made Wood Sword', 'Masterwork Wood Sword', 'Exquisite Wood Sword', 'Runed Wood Sword', 'Enchanted Wood Sword', 'Arcane-Infused Wood Sword', 'Divine Wood Sword', 'Mythic Wood Sword',
 'Basic Iron Sword', 'Sturdy Iron Sword', 'Well-Made Iron Sword', 'Masterwork Iron Sword', 'Exquisite Iron Sword', 'Runed Iron Sword', 'Enchanted Iron Sword', 'Arcane-Infused Iron Sword', 'Divine Iron Sword', 'Mythic Iron Sword',
@@ -1548,66 +1702,117 @@ function saveGeneration() {
 
     const statusText = document.getElementById('statusDisplay').innerText.trim();
     const pixelArtImage = document.querySelector('#statusDisplay img').src;
+    const potential = document.getElementById('potentialDisplay').innerText;
+    const combatClass = document.getElementById('combatClass').value;
 
     // Save data to localStorage
     const characterData = {
+        firstName,
+        lastName,
+        potential,
+        combatClass,
         statusText,
         pixelArtImage
     };
     localStorage.setItem(characterName, JSON.stringify(characterData));
 
-    // Update dropdown
-    updateDropdown();
+    // Update character list
+    updateCharacterList();
 }
 
-// Load generation from localStorage
-function loadGeneration() {
-    const dropdown = document.getElementById('savedCharactersDropdown');
-    const selectedCharacter = dropdown.value;
+function loadCharacterFromList(characterKey) {
+    const characterData = JSON.parse(localStorage.getItem(characterKey));
 
-    if (selectedCharacter) {
-        const characterData = JSON.parse(localStorage.getItem(selectedCharacter));
+    if (characterData) {
+        // Populate fields with character data
+        document.getElementById('firstName').value = characterData.firstName;
+        document.getElementById('lastName').value = characterData.lastName;
+        document.getElementById('potentialDisplay').innerText = characterData.potential;
+        document.getElementById('combatClass').value = characterData.combatClass;
 
-        if (characterData) {
-            // Update statusDisplay
-            document.getElementById('statusDisplay').innerHTML = `
-                <figure>
-                    <img src="${characterData.pixelArtImage}" alt="Pixel Art">
-                </figure>
-                <p>${characterData.statusText}</p>
-            `;
-        } else {
-            alert("No data found for the selected character.");
-        }
-		setPixelArtAsBackground();
+        // Update status display
+        document.getElementById('statusDisplay').innerHTML = `
+            <figure>
+                <img src="${characterData.pixelArtImage}" alt="Pixel Art">
+            </figure>
+            <p>${characterData.statusText}</p>
+        `;
+    } else {
+        alert("Character data not found!");
     }
+	setPixelArtAsBackground();
 }
-
-// Update dropdown menu
-function updateDropdown() {
-    const dropdown = document.getElementById('savedCharactersDropdown');
-    dropdown.innerHTML = ""; // Clear existing options
+function updateCharacterList() {
+    const characterList = document.getElementById('characterList').querySelector('tbody');
+    characterList.innerHTML = ""; // Clear existing rows
 
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
 
-        // Only add entries that are character names (exclude numeric keys)
+        // Only process character data keys (exclude numeric or unrelated keys)
         if (isNaN(key)) {
-            const option = document.createElement('option');
-            option.value = key;
-            option.textContent = key.replace(/_/g, ' '); // Display name nicely
-            dropdown.appendChild(option);
+            const characterData = JSON.parse(localStorage.getItem(key));
+            if (characterData) {
+                // Create a new row
+                const row = document.createElement('tr');
+
+                // Name column
+                const nameCell = document.createElement('td');
+                nameCell.textContent = `${characterData.firstName} ${characterData.lastName}`;
+                row.appendChild(nameCell);
+
+                // Potential column
+                const potentialCell = document.createElement('td');
+                potentialCell.textContent = characterData.potential || "Unknown";
+                row.appendChild(potentialCell);
+
+                // Combat Class column
+                const combatClassCell = document.createElement('td');
+                combatClassCell.textContent = characterData.combatClass || "None";
+                row.appendChild(combatClassCell);
+
+                // Emblem column
+                const emblemCell = document.createElement('td');
+                const emblemImg = document.createElement('img');
+                emblemImg.src = characterData.pixelArtImage;
+                emblemImg.alt = "Emblem";
+                emblemImg.style.width = "100px";
+                emblemImg.style.height = "100px";
+                emblemCell.appendChild(emblemImg);
+                row.appendChild(emblemCell);
+
+                // Load button column
+                const actionCell = document.createElement('td');
+                const loadButton = document.createElement('button');
+                loadButton.textContent = "Load";
+                loadButton.onclick = () => loadCharacterFromList(key); // Attach load function
+                actionCell.appendChild(loadButton);
+                row.appendChild(actionCell);
+
+                // Append the row to the table
+                characterList.appendChild(row);
+            }
         }
     }
 }
+function toggleCharacterList() {
+    const container = document.getElementById('characterListContainer');
+    const header = document.querySelector('h2[onclick="toggleCharacterList()"]');
 
-// Add event listener to dropdown
-document.getElementById('savedCharactersDropdown').addEventListener('change', loadGeneration);
-
-// Initialize dropdown on page load
-window.onload = function () {
-    updateDropdown();
-};
+    if (container.style.display === 'none' || container.style.display === '') {
+        // Expand the list
+        container.style.display = 'block';
+        container.style.maxHeight = container.scrollHeight + "px"; // Set height dynamically
+        header.textContent = "Saved Characters ▲"; // Update toggle indicator
+    } else {
+        // Collapse the list
+        container.style.maxHeight = '0';
+        setTimeout(() => {
+            container.style.display = 'none';
+        }, 500); // Wait for transition to finish before hiding
+        header.textContent = "Saved Characters ▼"; // Update toggle indicator
+    }
+}
 function randomizeAndUpdate() {
     randomizeStatus(); // Calls the randomizeStatus function
 	randomizePhysicalAppearance();
