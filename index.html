@@ -909,13 +909,13 @@ function getRandomCombatTechnique(combatClass) {
             "Sentinel of the Mind Art", "Ironclad Watch Stance", "Titanwatch Discipline",
             "Unseen Protector Form"
         ],
-        savageAcrobat: [
+        SavageSwifter: [
             "Cat’s Leap Form", "Savage Dance Discipline", "Stormspin Stance",
             "Agile Pounce Art", "Quickstrike Acrobatics", "Momentum Dance Form",
             "Panther’s Precision Stance", "Skyblaze Discipline", "Feral Twirl Art",
             "Raging Flip Form"
         ],
-        swiftblade: [
+        Swiftblade: [
             "Razorwind Form", "Swiftsurge Stance", "Fleetstrike Discipline",
             "Viper’s Swiftness Art", "Quickdraw Discipline", "Bladewind Form",
             "Enduring Flash Art", "Silent Cut Stance", "Steelswift Discipline",
@@ -927,7 +927,7 @@ function getRandomCombatTechnique(combatClass) {
             "Haunting Blow Discipline", "Ghostwalker Stance", "Silent Assassin Art",
             "Shadowstrike Form"
         ],
-        assassin: [
+        Assassin: [
             "Silent Fang Form", "Lethal Precision Discipline", "Shadowstrike Stance",
             "Deadly Silence Art", "Nightstalker Discipline", "Critical Eye Form",
             "Deathblow Stance", "Serpent’s Strike Discipline", "Veiled Hunter Art",
@@ -951,7 +951,7 @@ function getRandomCombatTechnique(combatClass) {
             "Stonebreaker Stance", "Tireless Titan Discipline", "Indomitable Form",
             "Resolute Wall Stance"
         ],
-        bladedTempest: [
+        Tempest: [
             "Cyclone Strike Form", "Tempest Dance Stance", "Windblade Art",
             "Razorstorm Discipline", "Stormblaze Form", "Whirlwind Slash Stance",
             "Gale Fury Discipline", "Cyclone Piercer Form", "Skybound Slash Art",
@@ -963,7 +963,7 @@ function getRandomCombatTechnique(combatClass) {
             "Aura Assault Form", "One Slash Discipline", "Thunderki Form",
             "Asura Wrath Art"
         ],
-        mysticShield: [
+        IronAura: [
             "Shield of Aegis Stance", "Unbreakable Ward Form", "Eternal Protector Art",
             "Arcane Shield Discipline", "Stalwart Shield Stance", "Mystical Bastion Form",
             "Sacred Defense Art", "Shieldbearer’s Resolve Discipline", "Mystic Barrier Stance",
@@ -971,22 +971,22 @@ function getRandomCombatTechnique(combatClass) {
         ],
               // Ranged CombatClass Techniques
         deadeye: ["Eagle’s Focus Stance", "Pinpoint Precision Art", "Sharpshot Discipline", "Hawk’s Vision Form", "Silent Arrow Stance", "Longshot Precision Discipline", "True Sight Form", "Hunter’s Mark Art", "Bullseye Strike Stance", "Silent Strike Discipline"],
-        sniper: ["Silent Observer Art", "Longshot Discipline", "Pinpoint Focus Stance", "Phantom Shot Form", "One Shot Art", "Deadly Aim Discipline", "Steady Hands Stance", "Hidden Killer Form", "Eagle’s Eye Art", "Focused Strike Discipline"],
-        scout: ["Silent Sentinel Stance", "Swift Tracker Discipline", "Hunter’s Vigil Art", "Pathfinder Form", "Stealth Watch Stance", "Tracking Precision Discipline", "Unseen Stalker Form", "Survivalist’s Eye Art", "Scout’s Focus Stance", "Watchful Pursuit Discipline"],
-        trickshot: ["Arcane Trick Discipline", "Bouncing Shot Form", "Quickthinker’s Precision Art", "Trickster’s Aim Stance", "Clever Ricochet Discipline", "Illusory Arrow Art", "Trapshot Form", "Swift Redirect Stance", "Mindful Shot Discipline", "Trickster’s Focus Art"],
-        sharpshooter: ["Heavy Shot Form", "Power Focus Stance", "Bullseye Strike Discipline", "Knockback Arrow Art", "Piercing Shot Stance", "Mighty Range Discipline", "Strengthened Focus Form", "Titan’s Shot Art", "Musclecraft Discipline", "Long-range Fury Stance"],
-        vanguard: ["Steady Deflection Form", "Ironclad Focus Stance", "Enduring Vigil Discipline", "Shielding Arrow Art", "Guardian’s Shot Form", "Watchful Defender Stance", "Sturdy Hunter Discipline", "Tactical Barrage Art", "Guardian’s Focus Stance", "Resilient Shot Form"],
-        arcaneArcher: ["Mystic Arrow Stance", "Arcane Shot Discipline", "Eldritch Precision Art", "Runebound Focus Form", "Elemental Arrow Discipline", "Enchanted Barrage Stance", "Arcane Piercer Art", "Mystic Bowmaster Form", "Runic Precision Stance", "Eldritch Barrage Discipline"],
-        godsEye: ["Omniscient Shot Art", "Divine Focus Discipline", "Clairvoyant Barrage Stance", "Ultimate Sight Form", "Vision of Truth Stance", "Unerring Arrow Art", "Celestial Aim Discipline", "Precision Strike Stance", "Fate’s Eye Form", "Unseen Vision Discipline"],
+        Deadeye: ["Silent Observer Art", "Longshot Discipline", "Pinpoint Focus Stance", "Phantom Shot Form", "One Shot Art", "Deadly Aim Discipline", "Steady Hands Stance", "Hidden Killer Form", "Eagle’s Eye Art", "Focused Strike Discipline"],
+        Scout: ["Silent Sentinel Stance", "Swift Tracker Discipline", "Hunter’s Vigil Art", "Pathfinder Form", "Stealth Watch Stance", "Tracking Precision Discipline", "Unseen Stalker Form", "Survivalist’s Eye Art", "Scout’s Focus Stance", "Watchful Pursuit Discipline"],
+        Trickshot: ["Arcane Trick Discipline", "Bouncing Shot Form", "Quickthinker’s Precision Art", "Trickster’s Aim Stance", "Clever Ricochet Discipline", "Illusory Arrow Art", "Trapshot Form", "Swift Redirect Stance", "Mindful Shot Discipline", "Trickster’s Focus Art"],
+        Powershot: ["Heavy Shot Form", "Power Focus Stance", "Bullseye Strike Discipline", "Knockback Arrow Art", "Piercing Shot Stance", "Mighty Range Discipline", "Strengthened Focus Form", "Titan’s Shot Art", "Musclecraft Discipline", "Long-range Fury Stance"],
+        Vanguard: ["Steady Deflection Form", "Ironclad Focus Stance", "Enduring Vigil Discipline", "Shielding Arrow Art", "Guardian’s Shot Form", "Watchful Defender Stance", "Sturdy Hunter Discipline", "Tactical Barrage Art", "Guardian’s Focus Stance", "Resilient Shot Form"],
+        ArcaneArcher: ["Mystic Arrow Stance", "Arcane Shot Discipline", "Eldritch Precision Art", "Runebound Focus Form", "Elemental Arrow Discipline", "Enchanted Barrage Stance", "Arcane Piercer Art", "Mystic Bowmaster Form", "Runic Precision Stance", "Eldritch Barrage Discipline"],
+        GodEye: ["Omniscient Shot Art", "Divine Focus Discipline", "Clairvoyant Barrage Stance", "Ultimate Sight Form", "Vision of Truth Stance", "Unerring Arrow Art", "Celestial Aim Discipline", "Precision Strike Stance", "Fate’s Eye Form", "Unseen Vision Discipline"],
 
         // Magic CombatClass Techniques
-        sorcerer: ["Arcane Fury Stance", "Mystical Empowerment Art", "Sorcerer’s Wrath Discipline", "Ethereal Pulse Form", "Firebrand Focus Stance", "Mana Surge Discipline", "Arcane Infusion Form", "Soulfire Art", "Spellwoven Might Stance", "Bloodspell Discipline"],
-        spiritAdept: ["Soul Weaver Art", "Phantom Sense Discipline", "Spirit Channel Form", "Ghost Whisper Stance", "Spirit Surge Art", "Ethereal Sight Discipline", "Wraithcall Stance", "Astral Hand Form", "Spectral Presence Art", "Spiritwalk Discipline"],
+        Sorcerer: ["Arcane Fury Stance", "Mystical Empowerment Art", "Sorcerer’s Wrath Discipline", "Ethereal Pulse Form", "Firebrand Focus Stance", "Mana Surge Discipline", "Arcane Infusion Form", "Soulfire Art", "Spellwoven Might Stance", "Bloodspell Discipline"],
+        Spiritist: ["Soul Weaver Art", "Phantom Sense Discipline", "Spirit Channel Form", "Ghost Whisper Stance", "Spirit Surge Art", "Ethereal Sight Discipline", "Wraithcall Stance", "Astral Hand Form", "Spectral Presence Art", "Spiritwalk Discipline"],
         Mage: ["Mystic Empowerment Form", "Arcane Mastery Stance", "Energy Channel Discipline", "Eldritch Burst Art", "Mystic Surge Form", "Unbreakable Focus Stance", "Mana Flow Discipline", "Enchanted Strength Art", "Runeflare Discipline", "Elemental Mastery Form"],
-        diviner: ["Foresight Discipline", "Clairvoyant Focus Art", "Mystic Vision Stance", "Augury Strike Form", "Precognitive Magic Discipline", "Divination’s Reach Art", "Future Sight Form", "Oracle’s Sight Stance", "Fatebinding Discipline", "Prophetic Strike Art"],
-        archmage: ["Supreme Arcana Stance", "Infinite Knowledge Art", "Ultimate Power Discipline", "Archmage’s Fury Form", "Celestial Summons Stance", "Master of Elements Art", "Cosmic Arcana Discipline", "Omnipotent Surge Form", "Endless Wisdom Stance", "Grand Sorcery Art"],
-        mentalFortress: ["Ironclad Will Art", "Psychic Barrier Discipline", "Mindshield Stance", "Mental Fortitude Form", "Unbreakable Focus Art", "Soul Deflection Discipline", "Steelmind Form", "Mental Bastion Stance", "Resilient Mind Discipline", "Unyielding Thought Form"],
-        battlePriest: ["Divine Smite Form", "Sacred Healing Stance", "Celestial Wrath Discipline", "Holy Resilience Art", "God’s Blessing Form", "Faithfire Stance", "Blessed Strike Discipline", "Guardian’s Prayer Art", "Devotion’s Might Form", "Divine Fury Stance"],
+        Diviner: ["Foresight Discipline", "Clairvoyant Focus Art", "Mystic Vision Stance", "Augury Strike Form", "Precognitive Magic Discipline", "Divination’s Reach Art", "Future Sight Form", "Oracle’s Sight Stance", "Fatebinding Discipline", "Prophetic Strike Art"],
+        ManaWeaver: ["Supreme Arcana Stance", "Infinite Knowledge Art", "Ultimate Power Discipline", "Archmage’s Fury Form", "Celestial Summons Stance", "Master of Elements Art", "Cosmic Arcana Discipline", "Omnipotent Surge Form", "Endless Wisdom Stance", "Grand Sorcery Art"],
+        MentalFortress: ["Ironclad Will Art", "Psychic Barrier Discipline", "Mindshield Stance", "Mental Fortitude Form", "Unbreakable Focus Art", "Soul Deflection Discipline", "Steelmind Form", "Mental Bastion Stance", "Resilient Mind Discipline", "Unyielding Thought Form"],
+        BattlePriest: ["Divine Smite Form", "Sacred Healing Stance", "Celestial Wrath Discipline", "Holy Resilience Art", "God’s Blessing Form", "Faithfire Stance", "Blessed Strike Discipline", "Guardian’s Prayer Art", "Devotion’s Might Form", "Divine Fury Stance"],
         Sage: ["Arcane Shield Discipline", "Mindflow Technique", "Vital Binding Art", "Ethereal Fortitude Form", "Runic Essence Way", "Spirit Ward Stance", "Mental Clarity Discipline", "Resonance Surge Art", "Celestial Barrier Form", "Inner Focus Way"]
 
 
@@ -1047,11 +1047,11 @@ function randomizeCombatDetails() {
    // Dynamic combat class selection based on coreStat and subStat
     const classNames = [
         'Juggernaut', 'BladeDancer', 'Chieftain', 'IronWill', 'Berserker', 'Titan', 
-        'StalwartDefender', 'Mercenery', 'Bladecaster', 'MartialArtist', 'Sentinel', 'savageAcrobat',
-        'swiftblade', 'AuraWarrior', 'assassin', 'Tactician', 'Colossus', 'FleshFortress',
-        'bladedTempest', 'arcaneWarrior', 'mysticShield', 'deadeye', 'sniper', 'scout', 'trickshot',
-        'sharpshooter', 'vanguard', 'arcaneArcher', 'godsEye', 'sorcerer', 'spiritAdept', 'Mage',
-        'diviner', 'archmage', 'mentalFortress', 'battlePriest', 'PhantomBlade', 'Sage',
+        'StalwartDefender', 'Mercenery', 'Bladecaster', 'MartialArtist', 'Sentinel', 'SavageSwifter',
+        'Swiftblade', 'AuraWarrior', 'Assassin', 'Tactician', 'Colossus', 'FleshFortress',
+        'Tempest', 'arcaneWarrior', 'IronAura','Deadeye', 'Scout', 'Trickshot',
+        'Powershot', 'Vanguard', 'ArcaneArcher', 'GodEye', 'Sorcerer', 'Spiritist', 'Mage',
+        'Diviner', 'ManaWeaver', 'MentalFortress', 'BattlePriest', 'PhantomBlade', 'Sage',
     ];
 
     // Find the matching combat class based on coreStat and subStat in strict order
@@ -1068,30 +1068,30 @@ function randomizeCombatDetails() {
             case 'Bladecaster': return highestStat === 'dexterity' && secondHighestStat === 'intelligence';
             case 'MartialArtist': return highestStat === 'dexterity' && secondHighestStat === 'resolve';
             case 'Sentinel': return highestStat === 'constitution' && secondHighestStat === 'perception';
-            case 'savageAcrobat': return highestStat === 'dexterity' && secondHighestStat === 'strength';
-            case 'swiftblade': return highestStat === 'dexterity' && secondHighestStat === 'constitution';
+            case 'SavageSwifter': return highestStat === 'dexterity' && secondHighestStat === 'strength';
+            case 'Swiftblade': return highestStat === 'dexterity' && secondHighestStat === 'constitution';
             case 'AuraWarrior': return highestStat === 'resolve' && secondHighestStat === 'strength';
-            case 'assassin': return highestStat === 'dexterity' && secondHighestStat === 'perception';
+            case 'Assassin': return highestStat === 'dexterity' && secondHighestStat === 'perception';
             case 'Tactician': return highestStat === 'intelligence' && secondHighestStat === 'strength';
             case 'Colossus': return highestStat === 'strength' && secondHighestStat === 'strength';
             case 'FleshFortress': return highestStat === 'constitution' && secondHighestStat === 'constitution';
-            case 'bladedTempest': return highestStat === 'dexterity' && secondHighestStat === 'dexterity';
-            case 'mysticShield': return highestStat === 'resolve' && secondHighestStat === 'constitution';
+            case 'Tempest': return highestStat === 'dexterity' && secondHighestStat === 'dexterity';
+            case 'IronAura': return highestStat === 'resolve' && secondHighestStat === 'constitution';
             case 'PhantomBlade': return highestStat === 'resolve' && secondHighestStat === 'dexterity';
-            case 'sniper': return highestStat === 'perception' && secondHighestStat === 'dexterity';
-            case 'scout': return highestStat === 'perception' && secondHighestStat === 'resolve';
-            case 'trickshot': return highestStat === 'perception' && secondHighestStat === 'intelligence';
-            case 'sharpshooter': return highestStat === 'perception' && secondHighestStat === 'strength';
-            case 'vanguard': return highestStat === 'perception' && secondHighestStat === 'constitution';
-            case 'arcaneArcher': return highestStat === 'intelligence' && secondHighestStat === 'dexterity';
-            case 'godsEye': return highestStat === 'perception' && secondHighestStat === 'perception';
-            case 'sorcerer': return highestStat === 'resolve' && secondHighestStat === 'intelligence';
-            case 'spiritAdept': return highestStat === 'resolve' && secondHighestStat === 'perception';
+            case 'Deadeye': return highestStat === 'perception' && secondHighestStat === 'dexterity';
+            case 'Scout': return highestStat === 'perception' && secondHighestStat === 'resolve';
+            case 'Trickshot': return highestStat === 'perception' && secondHighestStat === 'intelligence';
+            case 'Powershot': return highestStat === 'perception' && secondHighestStat === 'strength';
+            case 'Vanguard': return highestStat === 'perception' && secondHighestStat === 'constitution';
+            case 'ArcaneArcher': return highestStat === 'intelligence' && secondHighestStat === 'dexterity';
+            case 'GodEye': return highestStat === 'perception' && secondHighestStat === 'perception';
+            case 'Sorcerer': return highestStat === 'resolve' && secondHighestStat === 'intelligence';
+            case 'Spiritist': return highestStat === 'resolve' && secondHighestStat === 'perception';
             case 'Mage': return highestStat === 'intelligence' && secondHighestStat === 'resolve';
-            case 'diviner': return highestStat === 'intelligence' && secondHighestStat === 'perception';
-            case 'archmage': return highestStat === 'intelligence' && secondHighestStat === 'intelligence';
-            case 'mentalFortress': return highestStat === 'resolve' && secondHighestStat === 'resolve';
-            case 'battlePriest': return highestStat === 'constitution' && secondHighestStat === 'intelligence';
+            case 'Diviner': return highestStat === 'intelligence' && secondHighestStat === 'perception';
+            case 'ManaWeaver': return highestStat === 'intelligence' && secondHighestStat === 'intelligence';
+            case 'MentalFortress': return highestStat === 'resolve' && secondHighestStat === 'resolve';
+            case 'BattlePriest': return highestStat === 'constitution' && secondHighestStat === 'intelligence';
             case 'Sage': return highestStat === 'intelligence' && secondHighestStat === 'constitution';
             default: return false;
         }
@@ -1109,11 +1109,11 @@ function randomizeCombatDetails() {
 
 
     if (!isLocked('combatStyle')) {
-        if (["Juggernaut", "BladeDancer", "Chieftain", "IronWill", "Berserker", "Titan", "StalwartDefender", "Mercenery", "Bladecaster", "MartialArtist", "Sentinel", "savageAcrobat", "swiftblade", "AuraWarrior", "assassin", "Tactician", "Colossus", "FleshFortress", "bladedTempest", "arcaneWarrior", "mysticShield", "PhantomBlade"].includes(combatClass)) {
+        if (["Juggernaut", "BladeDancer", "Chieftain", "IronWill", "Berserker", "Titan", "StalwartDefender", "Mercenery", "Vanguard", "Bladecaster", "MartialArtist", "Sentinel", "SavageSwifter", "Swiftblade", "AuraWarrior", "Assassin", "Tactician", "Colossus", "FleshFortress", "Tempest", "arcaneWarrior", "IronAura", "PhantomBlade"].includes(combatClass)) {
     combatStyle = "Melee";
-} else if (["deadeye", "sniper", "scout", "trickshot", "sharpshooter", "vanguard", "arcaneArcher", "godsEye"].includes(combatClass)) {
+} else if (["deadeye", "Deadeye", "Scout", "Trickshot", "Powershot", "ArcaneArcher", "GodEye"].includes(combatClass)) {
     combatStyle = "Ranged";
-} else if (["sorcerer", "spiritAdept", "Mage", "diviner", "archmage", "mentalFortress", "battlePriest", "Sage"].includes(combatClass)) {
+} else if (["Sorcerer", "Spiritist", "Mage", "Diviner", "ManaWeaver", "MentalFortress", "BattlePriest", "Sage"].includes(combatClass)) {
     combatStyle = "Magic";
 }
         document.getElementById('combatStyle').value = combatStyle;
