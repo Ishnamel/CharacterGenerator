@@ -440,6 +440,7 @@ h2[onclick="toggleCharacterList()"]:hover {
     <table id="characterList">
         <thead>
             <tr>
+				<th>#</th>
                 <th>Name</th>
                 <th>Potential</th>
                 <th>Combat Class</th>
@@ -1712,7 +1713,8 @@ function saveGeneration() {
         potential,
         combatClass,
         statusText,
-        pixelArtImage
+        pixelArtImage,
+		timestamp: Date.now() // Add the current timestamp
     };
     localStorage.setItem(characterName, JSON.stringify(characterData));
 
@@ -1744,8 +1746,11 @@ function loadCharacterFromList(characterKey) {
 }
 function updateCharacterList() {
     const characterList = document.getElementById('characterList').querySelector('tbody');
+    const container = document.getElementById('characterListContainer'); // Ensure this is correctly defined
     characterList.innerHTML = ""; // Clear existing rows
 
+    // Collect all saved characters
+    const characters = [];
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
 
@@ -1753,48 +1758,70 @@ function updateCharacterList() {
         if (isNaN(key)) {
             const characterData = JSON.parse(localStorage.getItem(key));
             if (characterData) {
-                // Create a new row
-                const row = document.createElement('tr');
-
-                // Name column
-                const nameCell = document.createElement('td');
-                nameCell.textContent = `${characterData.firstName} ${characterData.lastName}`;
-                row.appendChild(nameCell);
-
-                // Potential column
-                const potentialCell = document.createElement('td');
-                potentialCell.textContent = characterData.potential || "Unknown";
-                row.appendChild(potentialCell);
-
-                // Combat Class column
-                const combatClassCell = document.createElement('td');
-                combatClassCell.textContent = characterData.combatClass || "None";
-                row.appendChild(combatClassCell);
-
-                // Emblem column
-                const emblemCell = document.createElement('td');
-                const emblemImg = document.createElement('img');
-                emblemImg.src = characterData.pixelArtImage;
-                emblemImg.alt = "Emblem";
-                emblemImg.style.width = "100px";
-                emblemImg.style.height = "100px";
-                emblemCell.appendChild(emblemImg);
-                row.appendChild(emblemCell);
-
-                // Load button column
-                const actionCell = document.createElement('td');
-                const loadButton = document.createElement('button');
-                loadButton.textContent = "Load";
-                loadButton.onclick = () => loadCharacterFromList(key); // Attach load function
-                actionCell.appendChild(loadButton);
-                row.appendChild(actionCell);
-
-                // Append the row to the table
-                characterList.appendChild(row);
+                characters.push({ key, ...characterData });
             }
         }
     }
+
+    // Sort characters by timestamp (oldest to newest)
+    characters.sort((a, b) => a.timestamp - b.timestamp);
+
+    // Populate the table with sorted characters
+    characters.forEach((character, index) => {
+        const row = document.createElement('tr');
+
+        // Number column
+        const numberCell = document.createElement('td');
+        numberCell.textContent = index + 1; // Start numbering from 1
+        row.appendChild(numberCell);
+
+        // Name column
+        const nameCell = document.createElement('td');
+        nameCell.textContent = `${character.firstName} ${character.lastName}`;
+        row.appendChild(nameCell);
+
+        // Potential column
+        const potentialCell = document.createElement('td');
+        potentialCell.textContent = character.potential || "Unknown";
+        row.appendChild(potentialCell);
+
+        // Combat Class column
+        const combatClassCell = document.createElement('td');
+        combatClassCell.textContent = character.combatClass || "None";
+        row.appendChild(combatClassCell);
+
+        // Emblem column
+        const emblemCell = document.createElement('td');
+        const emblemImg = document.createElement('img');
+        emblemImg.src = character.pixelArtImage;
+        emblemImg.alt = "Emblem";
+        emblemImg.style.width = "150px";
+        emblemImg.style.height = "150px";
+        emblemImg.style.objectFit = "cover";
+        emblemImg.style.borderRadius = "50%";
+        emblemCell.appendChild(emblemImg);
+        row.appendChild(emblemCell);
+
+        // Load button column
+        const actionCell = document.createElement('td');
+        const loadButton = document.createElement('button');
+        loadButton.textContent = "Load";
+        loadButton.onclick = () => loadCharacterFromList(character.key); // Attach load function
+        actionCell.appendChild(loadButton);
+        row.appendChild(actionCell);
+
+        // Append the row to the table
+        characterList.appendChild(row);
+    });
+
+    // Check if the container exists and is currently displayed
+    if (container && container.style.display === 'block') {
+        setTimeout(() => {
+            container.style.maxHeight = container.scrollHeight + "px"; // Recalculate height smoothly
+        }, 50); // Allow for DOM updates before recalculating
+    }
 }
+
 function toggleCharacterList() {
     const container = document.getElementById('characterListContainer');
     const header = document.querySelector('h2[onclick="toggleCharacterList()"]');
@@ -1821,6 +1848,7 @@ function randomizeAndUpdate() {
     updateStatus();    // Then calls the updateStatus function
     setPixelArtAsBackground();
 	saveGeneration();
+	updateCharacterList();
 }
 
 </script>
