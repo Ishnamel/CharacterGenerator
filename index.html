@@ -48,7 +48,20 @@
         text-shadow: 2px 2px 4px #2b211a;
         font-size: 70px; /* Increased font size */
     }
-
+	h4{
+        text-align: left;
+        font-family: 'Bookman Old Style', serif;
+        color: #d8c7a7;
+        text-shadow: 2px 2px 4px #2b211a;
+        font-size: 43px; /* Increased font size */
+		}
+	h5{
+        text-align: right;
+        font-family: 'Bookman Old Style', serif;
+        color: #d8c7a7;
+        text-shadow: 2px 2px 4px #2b211a;
+        font-size: 35px; /* Increased font size */
+		}	
     label {
     display: block;
     font-family: 'Bookman Old Style', serif;
@@ -105,6 +118,40 @@ input[type="text"], input[type="number"], select {
     text-align: center;
     line-height: 1.6;
 }
+	 #savedCharactersDropdown {
+        font-size: 50px; /* Smaller font */
+        padding: 25px;    /* Adjust padding */
+        width: 500px;    /* Adjust width */
+    }
+	select {
+        font-family: 'Bookman Old Style', serif;
+        background-color: #4a3d34;
+        color: #e0d5c1;
+        border: 2px solid #6d5c4b;
+        padding: 20px;
+        font-size: 40px;
+        border-radius: 4px;
+        text-align: center;
+        text-shadow: 1px 1px 0 #2b211a;
+        box-shadow: inset 2px 2px 4px #2b211a, inset -2px -2px 4px #6d5c4b;
+        width: 100%;
+        box-sizing: border-box;
+        cursor: pointer;
+    }
+
+    select:hover {
+        border-color: #7a665b; /* Slightly lighter border on hover */
+    }
+
+    select:focus {
+        outline: none;
+        border-color: #9d8872; /* Focus border color */
+    }
+    /* Option styling for the dropdown */
+    option {
+        font-size: 20px;
+        padding: 20px;
+    }
 
 #statusDisplay figure {
     display: flex;
@@ -167,7 +214,8 @@ input[type="text"], input[type="number"], select {
 
 </div>
 <div class="left-panel">
-<h1>Character Generator</h1>
+<h1>Ishnamel's Character Generator</h1>
+<h5>v.15</h5>
 <button onclick="toggleSideStatus()">Show/Hide Side Status Display</button>
 <button onclick="randomizeAndUpdate()">Generate</button>
 <button onclick="generateNarrative()">Generate Narrative</button>
@@ -285,6 +333,13 @@ input[type="text"], input[type="number"], select {
         <div id="statusDisplay"></div>
   <div id="statusBottom"></div>
   <button id="mobileButton" onclick="randomizeAndUpdate()">Generate</button>
+  <div>
+    <button onclick="saveGeneration()">Save Generation</button>
+    <label for="savedCharactersDropdown">Load Character:</label>
+    <select id="savedCharactersDropdown">
+        <option value="" disabled selected>Select a character</option>
+    </select>
+</div>
     </div>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -717,28 +772,28 @@ function getRandomCombatTechnique(combatClass) {
             "Shield of the Fallen Art", "Fortress Resolve Form", "Immovable Guardian Stance",
             "Bastion of Hope Art"
         ],
-        survivor: [
+        Mercenery: [
             "Agile Endurance Art", "Escape Artist Stance", "Wilderness Form",
             "Survivalist Discipline", "Elusive Guardian Stance", "Nimble Resilience Art",
             "Wild Runner Discipline", "Serpent’s Grace Stance", "Tenacious Pursuit Form",
             "Enduring Predator Discipline"
         ],
-        hexblade: [
+        Bladecaster: [
             "Shadowcaster Form", "Eldritch Edge Stance", "Mindshard Discipline",
-            "Hexblade Art", "Arcane Fang Stance", "Runeweaver Form",
+            "Bladecaster Art", "Arcane Fang Stance", "Runeweaver Form",
             "Phantomstrike Discipline", "Mystic Slash Art", "Mindbreaker Stance",
             "Spectral Piercer Discipline"
         ],
-        spellthief: [
-            "Phantom Theft Form", "Silent Steal Discipline", "Arcane Pilfer Art",
-            "Voidstep Stance", "Shadow Trick Discipline", "Energy Drain Form",
-            "Thief’s Resolve Stance", "Quick Hex Form", "Ethereal Heist Art",
-            "Silent Swipe Stance"
+        MartialArtist: [
+            "Crimson Lotus Form", "Serpent's Flow Stance", "Tiger's Fury Discipline",
+    "Heavenly Crane Art", "Dragonfire Strike Stance", "Shadow Fang Form",
+    "Eagle Claw Discipline", "Iron Palm Art", "Flowing Water Stance",
+    "Celestial Tempest Form"
         ],
-        bulwark: [
+        Sentinel: [
             "Perceptive Wall Stance", "Fortress Vigilance Discipline", "Watchful Guardian Form",
             "Ironwatch Art", "Sentinel’s Resolve Stance", "Perceptive Shield Form",
-            "Bulwark of the Mind Art", "Ironclad Watch Stance", "Titanwatch Discipline",
+            "Sentinel of the Mind Art", "Ironclad Watch Stance", "Titanwatch Discipline",
             "Unseen Protector Form"
         ],
         savageAcrobat: [
@@ -765,19 +820,19 @@ function getRandomCombatTechnique(combatClass) {
             "Deathblow Stance", "Serpent’s Strike Discipline", "Veiled Hunter Art",
             "Swift Killer Form"
         ],
-        combatGenius: [
+        Tactician: [
             "Tactical Fury Form", "Strategist’s Strike Art", "Mind over Might Discipline",
             "Commanding Assault Stance", "Battle Planner Form", "Quick Wit Strike Discipline",
             "Strategist’s Fury Art", "Battlefield Brain Form", "Tactical Mastery Stance",
             "Genius Strike Discipline"
         ],
-        colossus: [
+        Colossus: [
             "Behemoth’s Wrath Form", "Titan’s Might Discipline", "Colossal Strike Stance",
             "Earthshaker Art", "Thunderous Impact Discipline", "Mountain Mover Stance",
             "Immense Power Form", "Gigantic Fury Art", "Crushing Strength Stance",
             "Leviathan’s Rage Discipline"
         ],
-        unyieldingTitan: [
+        FleshFortress: [
             "Stubborn Resolve Art", "Unyielding Wall Form", "Enduring Titan Stance",
             "Immovable Might Discipline", "Stalwart Defender Art", "Eternal Strength Form",
             "Stonebreaker Stance", "Tireless Titan Discipline", "Indomitable Form",
@@ -814,7 +869,7 @@ function getRandomCombatTechnique(combatClass) {
         // Magic CombatClass Techniques
         sorcerer: ["Arcane Fury Stance", "Mystical Empowerment Art", "Sorcerer’s Wrath Discipline", "Ethereal Pulse Form", "Firebrand Focus Stance", "Mana Surge Discipline", "Arcane Infusion Form", "Soulfire Art", "Spellwoven Might Stance", "Bloodspell Discipline"],
         spiritAdept: ["Soul Weaver Art", "Phantom Sense Discipline", "Spirit Channel Form", "Ghost Whisper Stance", "Spirit Surge Art", "Ethereal Sight Discipline", "Wraithcall Stance", "Astral Hand Form", "Spectral Presence Art", "Spiritwalk Discipline"],
-        mage: ["Mystic Empowerment Form", "Arcane Mastery Stance", "Energy Channel Discipline", "Eldritch Burst Art", "Mystic Surge Form", "Unbreakable Focus Stance", "Mana Flow Discipline", "Enchanted Strength Art", "Runeflare Discipline", "Elemental Mastery Form"],
+        Mage: ["Mystic Empowerment Form", "Arcane Mastery Stance", "Energy Channel Discipline", "Eldritch Burst Art", "Mystic Surge Form", "Unbreakable Focus Stance", "Mana Flow Discipline", "Enchanted Strength Art", "Runeflare Discipline", "Elemental Mastery Form"],
         diviner: ["Foresight Discipline", "Clairvoyant Focus Art", "Mystic Vision Stance", "Augury Strike Form", "Precognitive Magic Discipline", "Divination’s Reach Art", "Future Sight Form", "Oracle’s Sight Stance", "Fatebinding Discipline", "Prophetic Strike Art"],
         archmage: ["Supreme Arcana Stance", "Infinite Knowledge Art", "Ultimate Power Discipline", "Archmage’s Fury Form", "Celestial Summons Stance", "Master of Elements Art", "Cosmic Arcana Discipline", "Omnipotent Surge Form", "Endless Wisdom Stance", "Grand Sorcery Art"],
         mentalFortress: ["Ironclad Will Art", "Psychic Barrier Discipline", "Mindshield Stance", "Mental Fortitude Form", "Unbreakable Focus Art", "Soul Deflection Discipline", "Steelmind Form", "Mental Bastion Stance", "Resilient Mind Discipline", "Unyielding Thought Form"],
@@ -879,10 +934,10 @@ function randomizeCombatDetails() {
    // Dynamic combat class selection based on coreStat and subStat
     const classNames = [
         'Juggernaut', 'BladeDancer', 'Chieftain', 'IronWill', 'Berserker', 'Titan', 
-        'StalwartDefender', 'survivor', 'hexblade', 'spellthief', 'bulwark', 'savageAcrobat',
-        'swiftblade', 'AuraWarrior', 'assassin', 'combatGenius', 'colossus', 'unyieldingTitan',
+        'StalwartDefender', 'Mercenery', 'Bladecaster', 'MartialArtist', 'Sentinel', 'savageAcrobat',
+        'swiftblade', 'AuraWarrior', 'assassin', 'Tactician', 'Colossus', 'FleshFortress',
         'bladedTempest', 'arcaneWarrior', 'mysticShield', 'deadeye', 'sniper', 'scout', 'trickshot',
-        'sharpshooter', 'vanguard', 'arcaneArcher', 'godsEye', 'sorcerer', 'spiritAdept', 'mage',
+        'sharpshooter', 'vanguard', 'arcaneArcher', 'godsEye', 'sorcerer', 'spiritAdept', 'Mage',
         'diviner', 'archmage', 'mentalFortress', 'battlePriest', 'PhantomBlade', 'Sage',
     ];
 
@@ -896,17 +951,17 @@ function randomizeCombatDetails() {
             case 'Berserker': return highestStat === 'strength' && secondHighestStat === 'perception';
             case 'Titan': return highestStat === 'constitution' && secondHighestStat === 'strength';  // Corrected mapping
             case 'StalwartDefender': return highestStat === 'constitution' && secondHighestStat === 'resolve';
-            case 'survivor': return highestStat === 'constitution' && secondHighestStat === 'dexterity';
-            case 'hexblade': return highestStat === 'dexterity' && secondHighestStat === 'intelligence';
-            case 'spellthief': return highestStat === 'dexterity' && secondHighestStat === 'resolve';
-            case 'bulwark': return highestStat === 'constitution' && secondHighestStat === 'perception';
+            case 'Mercenery': return highestStat === 'constitution' && secondHighestStat === 'dexterity';
+            case 'Bladecaster': return highestStat === 'dexterity' && secondHighestStat === 'intelligence';
+            case 'MartialArtist': return highestStat === 'dexterity' && secondHighestStat === 'resolve';
+            case 'Sentinel': return highestStat === 'constitution' && secondHighestStat === 'perception';
             case 'savageAcrobat': return highestStat === 'dexterity' && secondHighestStat === 'strength';
             case 'swiftblade': return highestStat === 'dexterity' && secondHighestStat === 'constitution';
-            case 'AuraWarrior': return highestStat === 'resolve' && secondHighestStat === 'strenght';
+            case 'AuraWarrior': return highestStat === 'resolve' && secondHighestStat === 'strength';
             case 'assassin': return highestStat === 'dexterity' && secondHighestStat === 'perception';
-            case 'combatGenius': return highestStat === 'intelligence' && secondHighestStat === 'strength';
-            case 'colossus': return highestStat === 'strength' && secondHighestStat === 'strength';
-            case 'unyieldingTitan': return highestStat === 'constitution' && secondHighestStat === 'constitution';
+            case 'Tactician': return highestStat === 'intelligence' && secondHighestStat === 'strength';
+            case 'Colossus': return highestStat === 'strength' && secondHighestStat === 'strength';
+            case 'FleshFortress': return highestStat === 'constitution' && secondHighestStat === 'constitution';
             case 'bladedTempest': return highestStat === 'dexterity' && secondHighestStat === 'dexterity';
             case 'mysticShield': return highestStat === 'resolve' && secondHighestStat === 'constitution';
             case 'PhantomBlade': return highestStat === 'resolve' && secondHighestStat === 'dexterity';
@@ -919,7 +974,7 @@ function randomizeCombatDetails() {
             case 'godsEye': return highestStat === 'perception' && secondHighestStat === 'perception';
             case 'sorcerer': return highestStat === 'resolve' && secondHighestStat === 'intelligence';
             case 'spiritAdept': return highestStat === 'resolve' && secondHighestStat === 'perception';
-            case 'mage': return highestStat === 'intelligence' && secondHighestStat === 'resolve';
+            case 'Mage': return highestStat === 'intelligence' && secondHighestStat === 'resolve';
             case 'diviner': return highestStat === 'intelligence' && secondHighestStat === 'perception';
             case 'archmage': return highestStat === 'intelligence' && secondHighestStat === 'intelligence';
             case 'mentalFortress': return highestStat === 'resolve' && secondHighestStat === 'resolve';
@@ -941,11 +996,11 @@ function randomizeCombatDetails() {
 
 
     if (!isLocked('combatStyle')) {
-        if (["Juggernaut", "BladeDancer", "Chieftain", "IronWill", "Berserker", "Titan", "StalwartDefender", "survivor", "hexblade", "spellthief", "bulwark", "savageAcrobat", "swiftblade", "AuraWarrior", "assassin", "combatGenius", "colossus", "unyieldingTitan", "bladedTempest", "arcaneWarrior", "mysticShield", "PhantomBlade"].includes(combatClass)) {
+        if (["Juggernaut", "BladeDancer", "Chieftain", "IronWill", "Berserker", "Titan", "StalwartDefender", "Mercenery", "Bladecaster", "MartialArtist", "Sentinel", "savageAcrobat", "swiftblade", "AuraWarrior", "assassin", "Tactician", "Colossus", "FleshFortress", "bladedTempest", "arcaneWarrior", "mysticShield", "PhantomBlade"].includes(combatClass)) {
     combatStyle = "Melee";
 } else if (["deadeye", "sniper", "scout", "trickshot", "sharpshooter", "vanguard", "arcaneArcher", "godsEye"].includes(combatClass)) {
     combatStyle = "Ranged";
-} else if (["sorcerer", "spiritAdept", "mage", "diviner", "archmage", "mentalFortress", "battlePriest", "Sage"].includes(combatClass)) {
+} else if (["sorcerer", "spiritAdept", "Mage", "diviner", "archmage", "mentalFortress", "battlePriest", "Sage"].includes(combatClass)) {
     combatStyle = "Magic";
 }
         document.getElementById('combatStyle').value = combatStyle;
@@ -1453,14 +1508,7 @@ function setPixelArtAsBackground() {
     statusBottom.style.backgroundPosition = 'center';
     statusBottom.style.height = '400px';             // Adjust the height as needed
 }
-function randomizeAndUpdate() {
-    randomizeStatus(); // Calls the randomizeStatus function
-	randomizePhysicalAppearance();
-	randomizeHeightAndWeight();
-	calculateBMIAndAssignBodyBuild();
-    updateStatus();    // Then calls the updateStatus function
-     setPixelArtAsBackground();
-}
+
 function randomizeHWBMI() {
 	randomizeHeightAndWeight();
 	calculateBMIAndAssignBodyBuild();
@@ -1493,6 +1541,84 @@ function exportStatus() {
     // Save the PDF with the character's name
     doc.save(`${characterName}_Status.pdf`);
 }
+// Save generation to localStorage
+function saveGeneration() {
+    const firstName = document.getElementById('firstName').value || "Unknown";
+    const lastName = document.getElementById('lastName').value || "Hero";
+    const characterName = `${firstName}_${lastName}`.replace(/\s+/g, '_');
+
+    const statusText = document.getElementById('statusDisplay').innerText.trim();
+    const pixelArtImage = document.querySelector('#statusDisplay img').src;
+
+    // Save data to localStorage
+    const characterData = {
+        statusText,
+        pixelArtImage
+    };
+    localStorage.setItem(characterName, JSON.stringify(characterData));
+
+    // Update dropdown
+    updateDropdown();
+}
+
+// Load generation from localStorage
+function loadGeneration() {
+    const dropdown = document.getElementById('savedCharactersDropdown');
+    const selectedCharacter = dropdown.value;
+
+    if (selectedCharacter) {
+        const characterData = JSON.parse(localStorage.getItem(selectedCharacter));
+
+        if (characterData) {
+            // Update statusDisplay
+            document.getElementById('statusDisplay').innerHTML = `
+                <figure>
+                    <img src="${characterData.pixelArtImage}" alt="Pixel Art">
+                </figure>
+                <p>${characterData.statusText}</p>
+            `;
+        } else {
+            alert("No data found for the selected character.");
+        }
+		setPixelArtAsBackground();
+    }
+}
+
+// Update dropdown menu
+function updateDropdown() {
+    const dropdown = document.getElementById('savedCharactersDropdown');
+    dropdown.innerHTML = ""; // Clear existing options
+
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+
+        // Only add entries that are character names (exclude numeric keys)
+        if (isNaN(key)) {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = key.replace(/_/g, ' '); // Display name nicely
+            dropdown.appendChild(option);
+        }
+    }
+}
+
+// Add event listener to dropdown
+document.getElementById('savedCharactersDropdown').addEventListener('change', loadGeneration);
+
+// Initialize dropdown on page load
+window.onload = function () {
+    updateDropdown();
+};
+function randomizeAndUpdate() {
+    randomizeStatus(); // Calls the randomizeStatus function
+	randomizePhysicalAppearance();
+	randomizeHeightAndWeight();
+	calculateBMIAndAssignBodyBuild();
+    updateStatus();    // Then calls the updateStatus function
+    setPixelArtAsBackground();
+	saveGeneration();
+}
+
 </script>
 
 </body>
