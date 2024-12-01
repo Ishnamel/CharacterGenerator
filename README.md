@@ -1,2 +1,2 @@
 a character genertrot
-use it here https://ishnamel.github.io/CharacterGenerator/
+use it here https://ishnamel.github.io/Ishnamel-Character-Generator/
