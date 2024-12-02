@@ -457,32 +457,8 @@ h2[onclick="toggleCharacterList()"]:hover {
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
-      
-        // Your web app's Firebase configuration
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-        const firebaseConfig = {
-          apiKey: "AIzaSyCE3le_2fl6JhBbofbpJhYlCJ5dbjrKSac",
-          authDomain: "ishnamel-character-generator.firebaseapp.com",
-          projectId: "ishnamel-character-generator",
-          storageBucket: "ishnamel-character-generator.firebasestorage.app",
-          messagingSenderId: "764901174037",
-          appId: "1:764901174037:web:d06b47a65d0bf2c72f171c",
-          measurementId: "G-ER6FKSNQ1F"
-        };
-      
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-      </script>
-    
+
 <script>
-    
 // Listen for keydown events
     document.addEventListener('keydown', function(event) {
         // Check if the spacebar (keyCode 32) is pressed
@@ -711,9 +687,8 @@ const bloodType = document.getElementById('bloodType').value;
         Main Hand: ${document.getElementById('wieldLHand').value}           Offhand: ${document.getElementById('wieldRHand').value}
     `;
 
-    db.collection("statuses").doc(String(randomId)).set({ statusText, timestamp: Date.now() })
-  .then(() => console.log("Status saved to Firestore"))
-  .catch((error) => console.error("Error saving status:", error));
+    localStorage
+    localStorage.setItem(randomId, statusText);
 
     // Generate pixel art using the randomId as the seed
     const pixelArtImage = generateSymmetricalPixelArt(randomId, 20, 20, 20); // Generate 16x16 pixel art with 8px per square
@@ -745,15 +720,12 @@ const bloodType = document.getElementById('bloodType').value;
 
 function retrieveStatus() {
         const seed = document.getElementById("retrieveSeed").value;
-        db.collection("statuses").doc(seed).get().then((doc) => {
-    if (doc.exists) {
-        const storedStatus = doc.data().statusText;
-        // Process storedStatus here
-    } else {
-        alert("No status found for the given number!");
-    }
-}).catch((error) => console.error("Error retrieving status:", error));
+        const storedStatus = localStorage.getItem(seed);
 
+        if (storedStatus) {
+            const pixelArtImage = generateSymmetricalPixelArt(seed, 16, 16, 8);
+            const sideStatusElement = document.getElementById("sideStatus");
+            sideStatusElement.innerHTML = `
                 
                 <pre>${storedStatus}</pre>
                 <figure>
@@ -1744,19 +1716,16 @@ function saveGeneration() {
         pixelArtImage,
 		timestamp: Date.now() // Add the current timestamp
     };
-    db.collection("characters").doc(characterName).set(characterData)
-  .then(() => console.log("Character saved to Firestore"))
-  .catch((error) => console.error("Error saving character:", error));
-
+    localStorage.setItem(characterName, JSON.stringify(characterData));
 
     // Update character list
     updateCharacterList();
 }
 
 function loadCharacterFromList(characterKey) {
-    db.collection("characters").doc(characterKey).get().then((doc) => {
-    if (doc.exists) {
-        const characterData = doc.data();
+    const characterData = JSON.parse(localStorage.getItem(characterKey));
+
+    if (characterData) {
         // Populate fields with character data
         document.getElementById('firstName').value = characterData.firstName;
         document.getElementById('lastName').value = characterData.lastName;
@@ -1782,10 +1751,17 @@ function updateCharacterList() {
 
     // Collect all saved characters
     const characters = [];
-    db.collection("characters").orderBy("timestamp").get().then((querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-        characters.push({ key: doc.id, ...doc.data() });
-    });
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+
+        // Only process character data keys (exclude numeric or unrelated keys)
+        if (isNaN(key)) {
+            const characterData = JSON.parse(localStorage.getItem(key));
+            if (characterData) {
+                characters.push({ key, ...characterData });
+            }
+        }
+    }
 
     // Sort characters by timestamp (oldest to newest)
     characters.sort((a, b) => a.timestamp - b.timestamp);
