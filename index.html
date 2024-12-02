@@ -317,8 +317,8 @@ h2[onclick="toggleCharacterList()"]:hover {
 </div>
 <div class="left-panel">
 <h1>Ishnamel's Character Generator</h1>
-<h5>v.15</h5>
-<button onclick="toggleSideStatus()">Show/Hide Side Status Display</button>
+<h5>v.15.15</h5>
+<button onclick="generateMultipleTimes(100)">Generate 100 Times</button>
 <button onclick="randomizeAndUpdate()">Generate</button>
 <button onclick="generateNarrative()">Generate Narrative</button>
 <button onclick="exportStatus()">Download</button>
@@ -1850,7 +1850,12 @@ function randomizeAndUpdate() {
 	saveGeneration();
 	updateCharacterList();
 }
-
+function generateMultipleTimes(times) {
+    for (let i = 0; i < times; i++) {
+            randomizeAndUpdate(); // Assuming this is your main generation function
+                }
+                    alert(`${times} characters generated!`);
+                    }
 </script>
 
 </body>
