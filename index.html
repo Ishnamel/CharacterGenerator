@@ -48,7 +48,20 @@
         text-shadow: 2px 2px 4px #2b211a;
         font-size: 70px; /* Increased font size */
     }
-
+	h4{
+        text-align: left;
+        font-family: 'Bookman Old Style', serif;
+        color: #d8c7a7;
+        text-shadow: 2px 2px 4px #2b211a;
+        font-size: 43px; /* Increased font size */
+		}
+	h5{
+        text-align: right;
+        font-family: 'Bookman Old Style', serif;
+        color: #d8c7a7;
+        text-shadow: 2px 2px 4px #2b211a;
+        font-size: 35px; /* Increased font size */
+		}	
     label {
     display: block;
     font-family: 'Bookman Old Style', serif;
@@ -105,6 +118,40 @@ input[type="text"], input[type="number"], select {
     text-align: center;
     line-height: 1.6;
 }
+	 #savedCharactersDropdown {
+        font-size: 50px; /* Smaller font */
+        padding: 25px;    /* Adjust padding */
+        width: 500px;    /* Adjust width */
+    }
+	select {
+        font-family: 'Bookman Old Style', serif;
+        background-color: #4a3d34;
+        color: #e0d5c1;
+        border: 2px solid #6d5c4b;
+        padding: 20px;
+        font-size: 40px;
+        border-radius: 4px;
+        text-align: center;
+        text-shadow: 1px 1px 0 #2b211a;
+        box-shadow: inset 2px 2px 4px #2b211a, inset -2px -2px 4px #6d5c4b;
+        width: 100%;
+        box-sizing: border-box;
+        cursor: pointer;
+    }
+
+    select:hover {
+        border-color: #7a665b; /* Slightly lighter border on hover */
+    }
+
+    select:focus {
+        outline: none;
+        border-color: #9d8872; /* Focus border color */
+    }
+    /* Option styling for the dropdown */
+    option {
+        font-size: 20px;
+        padding: 20px;
+    }
 
 #statusDisplay figure {
     display: flex;
@@ -122,7 +169,15 @@ input[type="text"], input[type="number"], select {
     margin-top: 0; /* Remove the margin above the paragraph */
     padding-top: 0; /* Make sure there's no padding on the top */
 }
-
+#statusTop {
+    width: 100%;
+    height: 300px; /* This defines the top section height */
+  }
+  
+  #statusBottom {
+    width: 100%;
+    height: 300px; /* This defines the top section height */
+  }
 
     .section {
         margin: 15px auto; /* Adjusted margin */
@@ -151,6 +206,108 @@ input[type="text"], input[type="number"], select {
         text-shadow: 1px 1px 1px #2b211a;
         overflow-y: auto;
     }
+	/* Styling the character list container */
+#characterList {
+    width: 100%;
+    border-collapse: collapse; /* Combine borders for a clean look */
+    margin-top: 20px;
+    font-family: 'Bookman Old Style', serif;
+    background-color: #4a3d34; /* Match the app's color scheme */
+    color: #e0d5c1; /* Text color for better contrast */
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Styling the table header */
+#characterList thead tr {
+    background-color: #3b2f28; /* Darker background for the header */
+    color: #d8c7a7; /* Text color for header */
+    font-size: 40px;
+    text-shadow: 1px 1px 0 #2b211a;
+}
+
+/* Styling the header cells */
+#characterList th {
+    padding: 10px;
+    border: 2px solid #6d5c4b; /* Border color matching app design */
+}
+
+/* Styling the table rows */
+#characterList tbody tr {
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+/* Alternate row coloring for better readability */
+#characterList tbody tr:nth-child(odd) {
+    background-color: #4e4037; /* Slightly lighter background */
+}
+
+#characterList tbody tr:nth-child(even) {
+    background-color: #4a3d34;
+}
+
+/* Hover effect on table rows */
+#characterList tbody tr:hover {
+    background-color: #5a4c42; /* Highlight row on hover */
+}
+
+/* Styling the table cells */
+#characterList td {
+    padding: 10px;
+    border: 2px solid #6d5c4b;
+    vertical-align: middle; /* Center content vertically */
+    font-size: 50px;
+    text-shadow: 1px 1px 0 #2b211a;
+}
+
+/* Styling the emblem images */
+#characterList img {
+    border-radius: 50%; /* Circular emblem */
+    border: 2px solid #6d5c4b;
+    width: 100px; /* Set a consistent size */
+    height: 100px;
+    object-fit: cover; /* Ensure image fits within the circle */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Styling the load button */
+#characterList button {
+    background-color: #5a4c42;
+    color: #e0d5c1;
+    border: 2px solid #6d5c4b;
+    padding: 5px 10px;
+    font-size: 40px;
+    cursor: pointer;
+    border-radius: 5px;
+    text-shadow: 1px 1px 0 #2b211a;
+    font-family: 'Bookman Old Style', serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Button hover effect */
+#characterList button:hover {
+    background-color: #7a665b;
+    border-color: #9d8872;
+}
+/* Toggleable container styling */
+#characterListContainer {
+    max-height: 0; /* Initially collapsed */
+    overflow: hidden;
+    transition: max-height 0.5s ease; /* Smooth expand/collapse */
+}
+
+/* Adjust header cursor */
+h2[onclick="toggleCharacterList()"] {
+    cursor: pointer;
+    color: #d8c7a7;
+    text-shadow: 1px 1px 0 #2b211a;
+    font-family: 'Bookman Old Style', serif;
+}
+
+/* Change cursor on hover */
+h2[onclick="toggleCharacterList()"]:hover {
+    color: #f0e6d2;
+}
 </style>
 
 </head>
@@ -159,8 +316,9 @@ input[type="text"], input[type="number"], select {
 
 </div>
 <div class="left-panel">
-<h1>Character Generator</h1>
-<button onclick="toggleSideStatus()">Show/Hide Side Status Display</button>
+<h1>Ishnamel's Character Generator</h1>
+<h5>v.15.15</h5>
+<button onclick="generateMultipleTimes(100)">Generate 100 Times</button>
 <button onclick="randomizeAndUpdate()">Generate</button>
 <button onclick="generateNarrative()">Generate Narrative</button>
 <button onclick="exportStatus()">Download</button>
@@ -273,12 +431,58 @@ input[type="text"], input[type="number"], select {
 <!-- Hidden Span for measuring text width -->
 <span id="measurementSpan" class="input-measurement"></span>
 <div class="right-panel">
+        <div id="statusTop"></div>
         <div id="statusDisplay"></div>
+  <div id="statusBottom"></div>
+  <button id="mobileButton" onclick="randomizeAndUpdate()">Generate</button>
+ <h2 onclick="toggleCharacterList()" style="cursor: pointer;">Saved Characters ▼</h2>
+<div id="characterListContainer" style="display: none; overflow: hidden; transition: max-height 0.5s ease;">
+    <table id="characterList">
+        <thead>
+            <tr>
+				<th>#</th>
+                <th>Name</th>
+                <th>Potential</th>
+                <th>Combat Class</th>
+                <th>Emblem</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Dynamic rows will be added here -->
+        </tbody>
+    </table>
+</div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+          apiKey: "AIzaSyCE3le_2fl6JhBbofbpJhYlCJ5dbjrKSac",
+          authDomain: "ishnamel-character-generator.firebaseapp.com",
+          projectId: "ishnamel-character-generator",
+          storageBucket: "ishnamel-character-generator.firebasestorage.app",
+          messagingSenderId: "764901174037",
+          appId: "1:764901174037:web:d06b47a65d0bf2c72f171c",
+          measurementId: "G-ER6FKSNQ1F"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+      </script>
+    
 <script>
+    
 // Listen for keydown events
     document.addEventListener('keydown', function(event) {
         // Check if the spacebar (keyCode 32) is pressed
@@ -289,6 +493,20 @@ input[type="text"], input[type="number"], select {
             document.querySelector('button[onclick="randomizeAndUpdate()"]').click();
         }
     });
+    function isMobileDevice() {
+    return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent);
+  }
+
+  window.onload = function () {
+    const mobileButton = document.getElementById('mobileButton');
+    if (isMobileDevice()) {
+      mobileButton.style.display = 'block';
+      mobileButton.style.fontSize = '75px';       // Bigger text
+      mobileButton.style.padding = '15px 30px';   // More padding
+      mobileButton.style.width = '90%';           // Wide button
+      mobileButton.style.margin = '10px auto';    // Centered horizontally
+    }
+  };
 // Function to resize input based on content length
 function resizeInput(input) {
     const measurementSpan = document.getElementById('measurementSpan');
@@ -493,8 +711,9 @@ const bloodType = document.getElementById('bloodType').value;
         Main Hand: ${document.getElementById('wieldLHand').value}           Offhand: ${document.getElementById('wieldRHand').value}
     `;
 
-    localStorage
-    localStorage.setItem(randomId, statusText);
+    db.collection("statuses").doc(String(randomId)).set({ statusText, timestamp: Date.now() })
+  .then(() => console.log("Status saved to Firestore"))
+  .catch((error) => console.error("Error saving status:", error));
 
     // Generate pixel art using the randomId as the seed
     const pixelArtImage = generateSymmetricalPixelArt(randomId, 20, 20, 20); // Generate 16x16 pixel art with 8px per square
@@ -526,12 +745,15 @@ const bloodType = document.getElementById('bloodType').value;
 
 function retrieveStatus() {
         const seed = document.getElementById("retrieveSeed").value;
-        const storedStatus = localStorage.getItem(seed);
+        db.collection("statuses").doc(seed).get().then((doc) => {
+    if (doc.exists) {
+        const storedStatus = doc.data().statusText;
+        // Process storedStatus here
+    } else {
+        alert("No status found for the given number!");
+    }
+}).catch((error) => console.error("Error retrieving status:", error));
 
-        if (storedStatus) {
-            const pixelArtImage = generateSymmetricalPixelArt(seed, 16, 16, 8);
-            const sideStatusElement = document.getElementById("sideStatus");
-            sideStatusElement.innerHTML = `
                 
                 <pre>${storedStatus}</pre>
                 <figure>
@@ -691,85 +913,85 @@ function getRandomCombatTechnique(combatClass) {
             "Shield of the Fallen Art", "Fortress Resolve Form", "Immovable Guardian Stance",
             "Bastion of Hope Art"
         ],
-        survivor: [
+        Mercenery: [
             "Agile Endurance Art", "Escape Artist Stance", "Wilderness Form",
             "Survivalist Discipline", "Elusive Guardian Stance", "Nimble Resilience Art",
             "Wild Runner Discipline", "Serpent’s Grace Stance", "Tenacious Pursuit Form",
             "Enduring Predator Discipline"
         ],
-        hexblade: [
+        Bladecaster: [
             "Shadowcaster Form", "Eldritch Edge Stance", "Mindshard Discipline",
-            "Hexblade Art", "Arcane Fang Stance", "Runeweaver Form",
+            "Bladecaster Art", "Arcane Fang Stance", "Runeweaver Form",
             "Phantomstrike Discipline", "Mystic Slash Art", "Mindbreaker Stance",
             "Spectral Piercer Discipline"
         ],
-        spellthief: [
-            "Phantom Theft Form", "Silent Steal Discipline", "Arcane Pilfer Art",
-            "Voidstep Stance", "Shadow Trick Discipline", "Energy Drain Form",
-            "Thief’s Resolve Stance", "Quick Hex Form", "Ethereal Heist Art",
-            "Silent Swipe Stance"
+        MartialArtist: [
+            "Crimson Lotus Form", "Serpent's Flow Stance", "Tiger's Fury Discipline",
+    "Heavenly Crane Art", "Dragonfire Strike Stance", "Shadow Fang Form",
+    "Eagle Claw Discipline", "Iron Palm Art", "Flowing Water Stance",
+    "Celestial Tempest Form"
         ],
-        bulwark: [
+        Sentinel: [
             "Perceptive Wall Stance", "Fortress Vigilance Discipline", "Watchful Guardian Form",
             "Ironwatch Art", "Sentinel’s Resolve Stance", "Perceptive Shield Form",
-            "Bulwark of the Mind Art", "Ironclad Watch Stance", "Titanwatch Discipline",
+            "Sentinel of the Mind Art", "Ironclad Watch Stance", "Titanwatch Discipline",
             "Unseen Protector Form"
         ],
-        savageAcrobat: [
+        SavageSwifter: [
             "Cat’s Leap Form", "Savage Dance Discipline", "Stormspin Stance",
             "Agile Pounce Art", "Quickstrike Acrobatics", "Momentum Dance Form",
             "Panther’s Precision Stance", "Skyblaze Discipline", "Feral Twirl Art",
             "Raging Flip Form"
         ],
-        swiftblade: [
+        Swiftblade: [
             "Razorwind Form", "Swiftsurge Stance", "Fleetstrike Discipline",
             "Viper’s Swiftness Art", "Quickdraw Discipline", "Bladewind Form",
             "Enduring Flash Art", "Silent Cut Stance", "Steelswift Discipline",
             "Lightning Speed Form"
         ],
-        phantomBlade: [
+        PhantomBlade: [
             "Spectral Slash Stance", "Ethereal Strike Discipline", "Ghostblade Form",
             "Shade Step Art", "Veil of Shadows Discipline", "Phantom Piercer Stance",
             "Haunting Blow Discipline", "Ghostwalker Stance", "Silent Assassin Art",
             "Shadowstrike Form"
         ],
-        assassin: [
+        Assassin: [
             "Silent Fang Form", "Lethal Precision Discipline", "Shadowstrike Stance",
             "Deadly Silence Art", "Nightstalker Discipline", "Critical Eye Form",
             "Deathblow Stance", "Serpent’s Strike Discipline", "Veiled Hunter Art",
             "Swift Killer Form"
         ],
-        combatGenius: [
+        Tactician: [
             "Tactical Fury Form", "Strategist’s Strike Art", "Mind over Might Discipline",
             "Commanding Assault Stance", "Battle Planner Form", "Quick Wit Strike Discipline",
             "Strategist’s Fury Art", "Battlefield Brain Form", "Tactical Mastery Stance",
             "Genius Strike Discipline"
         ],
-        colossus: [
+        Colossus: [
             "Behemoth’s Wrath Form", "Titan’s Might Discipline", "Colossal Strike Stance",
             "Earthshaker Art", "Thunderous Impact Discipline", "Mountain Mover Stance",
             "Immense Power Form", "Gigantic Fury Art", "Crushing Strength Stance",
             "Leviathan’s Rage Discipline"
         ],
-        unyieldingTitan: [
+        FleshFortress: [
             "Stubborn Resolve Art", "Unyielding Wall Form", "Enduring Titan Stance",
             "Immovable Might Discipline", "Stalwart Defender Art", "Eternal Strength Form",
             "Stonebreaker Stance", "Tireless Titan Discipline", "Indomitable Form",
             "Resolute Wall Stance"
         ],
-        bladedTempest: [
+        Tempest: [
             "Cyclone Strike Form", "Tempest Dance Stance", "Windblade Art",
             "Razorstorm Discipline", "Stormblaze Form", "Whirlwind Slash Stance",
             "Gale Fury Discipline", "Cyclone Piercer Form", "Skybound Slash Art",
             "Tempest Fury Stance"
         ],
-        arcaneWarrior: [
-            "Arcane Strike Stance", "Mystic Combat Art", "Elemental Fury Discipline",
-            "Mystic Blade Form", "Arcane Knight Stance", "Runebound Art",
-            "Spellbound Assault Form", "Mystic Slash Discipline", "Thunderstrike Form",
-            "Arcane Wrath Art"
+        AuraWarrior: [
+            "Aura Strike Stance", "Ki Flow Combat Art", "Aura Fury Discipline",
+            "Heavenly Blade Form", "Divine Lotus Stance", "Aurabound Art",
+            "Aura Assault Form", "One Slash Discipline", "Thunderki Form",
+            "Asura Wrath Art"
         ],
-        mysticShield: [
+        IronAura: [
             "Shield of Aegis Stance", "Unbreakable Ward Form", "Eternal Protector Art",
             "Arcane Shield Discipline", "Stalwart Shield Stance", "Mystical Bastion Form",
             "Sacred Defense Art", "Shieldbearer’s Resolve Discipline", "Mystic Barrier Stance",
@@ -777,23 +999,26 @@ function getRandomCombatTechnique(combatClass) {
         ],
               // Ranged CombatClass Techniques
         deadeye: ["Eagle’s Focus Stance", "Pinpoint Precision Art", "Sharpshot Discipline", "Hawk’s Vision Form", "Silent Arrow Stance", "Longshot Precision Discipline", "True Sight Form", "Hunter’s Mark Art", "Bullseye Strike Stance", "Silent Strike Discipline"],
-        sniper: ["Silent Observer Art", "Longshot Discipline", "Pinpoint Focus Stance", "Phantom Shot Form", "One Shot Art", "Deadly Aim Discipline", "Steady Hands Stance", "Hidden Killer Form", "Eagle’s Eye Art", "Focused Strike Discipline"],
-        scout: ["Silent Sentinel Stance", "Swift Tracker Discipline", "Hunter’s Vigil Art", "Pathfinder Form", "Stealth Watch Stance", "Tracking Precision Discipline", "Unseen Stalker Form", "Survivalist’s Eye Art", "Scout’s Focus Stance", "Watchful Pursuit Discipline"],
-        trickshot: ["Arcane Trick Discipline", "Bouncing Shot Form", "Quickthinker’s Precision Art", "Trickster’s Aim Stance", "Clever Ricochet Discipline", "Illusory Arrow Art", "Trapshot Form", "Swift Redirect Stance", "Mindful Shot Discipline", "Trickster’s Focus Art"],
-        sharpshooter: ["Heavy Shot Form", "Power Focus Stance", "Bullseye Strike Discipline", "Knockback Arrow Art", "Piercing Shot Stance", "Mighty Range Discipline", "Strengthened Focus Form", "Titan’s Shot Art", "Musclecraft Discipline", "Long-range Fury Stance"],
-        vanguard: ["Steady Deflection Form", "Ironclad Focus Stance", "Enduring Vigil Discipline", "Shielding Arrow Art", "Guardian’s Shot Form", "Watchful Defender Stance", "Sturdy Hunter Discipline", "Tactical Barrage Art", "Guardian’s Focus Stance", "Resilient Shot Form"],
-        arcaneArcher: ["Mystic Arrow Stance", "Arcane Shot Discipline", "Eldritch Precision Art", "Runebound Focus Form", "Elemental Arrow Discipline", "Enchanted Barrage Stance", "Arcane Piercer Art", "Mystic Bowmaster Form", "Runic Precision Stance", "Eldritch Barrage Discipline"],
-        godsEye: ["Omniscient Shot Art", "Divine Focus Discipline", "Clairvoyant Barrage Stance", "Ultimate Sight Form", "Vision of Truth Stance", "Unerring Arrow Art", "Celestial Aim Discipline", "Precision Strike Stance", "Fate’s Eye Form", "Unseen Vision Discipline"],
+        Deadeye: ["Silent Observer Art", "Longshot Discipline", "Pinpoint Focus Stance", "Phantom Shot Form", "One Shot Art", "Deadly Aim Discipline", "Steady Hands Stance", "Hidden Killer Form", "Eagle’s Eye Art", "Focused Strike Discipline"],
+        Scout: ["Silent Sentinel Stance", "Swift Tracker Discipline", "Hunter’s Vigil Art", "Pathfinder Form", "Stealth Watch Stance", "Tracking Precision Discipline", "Unseen Stalker Form", "Survivalist’s Eye Art", "Scout’s Focus Stance", "Watchful Pursuit Discipline"],
+        Trickshot: ["Arcane Trick Discipline", "Bouncing Shot Form", "Quickthinker’s Precision Art", "Trickster’s Aim Stance", "Clever Ricochet Discipline", "Illusory Arrow Art", "Trapshot Form", "Swift Redirect Stance", "Mindful Shot Discipline", "Trickster’s Focus Art"],
+        Powershot: ["Heavy Shot Form", "Power Focus Stance", "Bullseye Strike Discipline", "Knockback Arrow Art", "Piercing Shot Stance", "Mighty Range Discipline", "Strengthened Focus Form", "Titan’s Shot Art", "Musclecraft Discipline", "Long-range Fury Stance"],
+        Vanguard: ["Steady Deflection Form", "Ironclad Focus Stance", "Enduring Vigil Discipline", "Shielding Arrow Art", "Guardian’s Shot Form", "Watchful Defender Stance", "Sturdy Hunter Discipline", "Tactical Barrage Art", "Guardian’s Focus Stance", "Resilient Shot Form"],
+        ArcaneArcher: ["Mystic Arrow Stance", "Arcane Shot Discipline", "Eldritch Precision Art", "Runebound Focus Form", "Elemental Arrow Discipline", "Enchanted Barrage Stance", "Arcane Piercer Art", "Mystic Bowmaster Form", "Runic Precision Stance", "Eldritch Barrage Discipline"],
+        GodEye: ["Omniscient Shot Art", "Divine Focus Discipline", "Clairvoyant Barrage Stance", "Ultimate Sight Form", "Vision of Truth Stance", "Unerring Arrow Art", "Celestial Aim Discipline", "Precision Strike Stance", "Fate’s Eye Form", "Unseen Vision Discipline"],
 
         // Magic CombatClass Techniques
-        sorcerer: ["Arcane Fury Stance", "Mystical Empowerment Art", "Sorcerer’s Wrath Discipline", "Ethereal Pulse Form", "Firebrand Focus Stance", "Mana Surge Discipline", "Arcane Infusion Form", "Soulfire Art", "Spellwoven Might Stance", "Bloodspell Discipline"],
-        spiritAdept: ["Soul Weaver Art", "Phantom Sense Discipline", "Spirit Channel Form", "Ghost Whisper Stance", "Spirit Surge Art", "Ethereal Sight Discipline", "Wraithcall Stance", "Astral Hand Form", "Spectral Presence Art", "Spiritwalk Discipline"],
-        mage: ["Mystic Empowerment Form", "Arcane Mastery Stance", "Energy Channel Discipline", "Eldritch Burst Art", "Mystic Surge Form", "Unbreakable Focus Stance", "Mana Flow Discipline", "Enchanted Strength Art", "Runeflare Discipline", "Elemental Mastery Form"],
-        diviner: ["Foresight Discipline", "Clairvoyant Focus Art", "Mystic Vision Stance", "Augury Strike Form", "Precognitive Magic Discipline", "Divination’s Reach Art", "Future Sight Form", "Oracle’s Sight Stance", "Fatebinding Discipline", "Prophetic Strike Art"],
-        archmage: ["Supreme Arcana Stance", "Infinite Knowledge Art", "Ultimate Power Discipline", "Archmage’s Fury Form", "Celestial Summons Stance", "Master of Elements Art", "Cosmic Arcana Discipline", "Omnipotent Surge Form", "Endless Wisdom Stance", "Grand Sorcery Art"],
-        mentalFortress: ["Ironclad Will Art", "Psychic Barrier Discipline", "Mindshield Stance", "Mental Fortitude Form", "Unbreakable Focus Art", "Soul Deflection Discipline", "Steelmind Form", "Mental Bastion Stance", "Resilient Mind Discipline", "Unyielding Thought Form"],
-        battlePriest: ["Divine Smite Form", "Sacred Healing Stance", "Celestial Wrath Discipline", "Holy Resilience Art", "God’s Blessing Form", "Faithfire Stance", "Blessed Strike Discipline", "Guardian’s Prayer Art", "Devotion’s Might Form", "Divine Fury Stance"]
-        
+        Sorcerer: ["Arcane Fury Stance", "Mystical Empowerment Art", "Sorcerer’s Wrath Discipline", "Ethereal Pulse Form", "Firebrand Focus Stance", "Mana Surge Discipline", "Arcane Infusion Form", "Soulfire Art", "Spellwoven Might Stance", "Bloodspell Discipline"],
+        Spiritist: ["Soul Weaver Art", "Phantom Sense Discipline", "Spirit Channel Form", "Ghost Whisper Stance", "Spirit Surge Art", "Ethereal Sight Discipline", "Wraithcall Stance", "Astral Hand Form", "Spectral Presence Art", "Spiritwalk Discipline"],
+        Mage: ["Mystic Empowerment Form", "Arcane Mastery Stance", "Energy Channel Discipline", "Eldritch Burst Art", "Mystic Surge Form", "Unbreakable Focus Stance", "Mana Flow Discipline", "Enchanted Strength Art", "Runeflare Discipline", "Elemental Mastery Form"],
+        Diviner: ["Foresight Discipline", "Clairvoyant Focus Art", "Mystic Vision Stance", "Augury Strike Form", "Precognitive Magic Discipline", "Divination’s Reach Art", "Future Sight Form", "Oracle’s Sight Stance", "Fatebinding Discipline", "Prophetic Strike Art"],
+        ManaWeaver: ["Supreme Arcana Stance", "Infinite Knowledge Art", "Ultimate Power Discipline", "Archmage’s Fury Form", "Celestial Summons Stance", "Master of Elements Art", "Cosmic Arcana Discipline", "Omnipotent Surge Form", "Endless Wisdom Stance", "Grand Sorcery Art"],
+        MentalFortress: ["Ironclad Will Art", "Psychic Barrier Discipline", "Mindshield Stance", "Mental Fortitude Form", "Unbreakable Focus Art", "Soul Deflection Discipline", "Steelmind Form", "Mental Bastion Stance", "Resilient Mind Discipline", "Unyielding Thought Form"],
+        BattlePriest: ["Divine Smite Form", "Sacred Healing Stance", "Celestial Wrath Discipline", "Holy Resilience Art", "God’s Blessing Form", "Faithfire Stance", "Blessed Strike Discipline", "Guardian’s Prayer Art", "Devotion’s Might Form", "Divine Fury Stance"],
+        Sage: ["Arcane Shield Discipline", "Mindflow Technique", "Vital Binding Art", "Ethereal Fortitude Form", "Runic Essence Way", "Spirit Ward Stance", "Mental Clarity Discipline", "Resonance Surge Art", "Celestial Barrier Form", "Inner Focus Way"]
+
+
+
     };
 
     if (combatTechniques[combatClass]) {
@@ -809,72 +1034,114 @@ function randomizeCombatDetails() {
     const stats = fields.map(field => ({
         name: field,
         value: parseInt(document.getElementById(field)?.value || 0, 10)
-    })).sort((a, b) => b.value - a.value);
+    })).sort((a, b) => b.value - a.value);  // Sorting stats in descending order
 
-    const highestStat = stats[0].name;
-    const secondHighestStat = stats[1].name;
+    // Collect the highest and second-highest stats
+    let highestStat = stats[0].name;
+    let highestValue = stats[0].value;
+    
+    // Check if multiple stats share the highest value
+    let highestStats = stats.filter(stat => stat.value === highestValue);
 
-    const combatClassMapping = {
-Juggernaut: { core: 'strength', sub: 'constitution' },
-    BladeDancer: { core: 'strength', sub: 'dexterity' },
-    Chieftain: { core: 'strength', sub: 'intelligence' },
-    IronWill: { core: 'strength', sub: 'resolve' },
-    Berserker: { core: 'strength', sub: 'perception' },
-    Titan: { core: 'constitution', sub: 'strength' },
-    StalwartDefender: { core: 'constitution', sub: 'resolve' },
-    survivor: { core: 'constitution', sub: 'dexterity' },
-    hexblade: { core: 'dexterity', sub: 'intelligence' },
-    spellthief: { core: 'dexterity', sub: 'resolve' },
-    bulwark: { core: 'constitution', sub: 'perception' },
-    savageAcrobat: { core: 'dexterity', sub: 'strength' },
-    swiftblade: { core: 'dexterity', sub: 'constitution' },
-    phantomBlade: { core: 'dexterity', sub: 'resolve' },
-    assassin: { core: 'dexterity', sub: 'perception' },
-    combatGenius: { core: 'intelligence', sub: 'strength' },
-    colossus: { core: 'strength', sub: 'strength' },
-    unyieldingTitan: { core: 'constitution', sub: 'constitution' },
-    bladedTempest: { core: 'dexterity', sub: 'dexterity' },
-    arcaneWarrior: { core: 'strength', sub: 'intelligence' },
-    mysticShield: { core: 'resolve', sub: 'constitution' },
-    deadeye: { core: 'dexterity', sub: 'perception' },
-    sniper: { core: 'perception', sub: 'dexterity' },
-    scout: { core: 'perception', sub: 'resolve' },
-    trickshot: { core: 'perception', sub: 'intelligence' },
-    sharpshooter: { core: 'perception', sub: 'strength' },
-    vanguard: { core: 'perception', sub: 'constitution' },
-    arcaneArcher: { core: 'intelligence', sub: 'dexterity' },
-    godsEye: { core: 'perception', sub: 'perception' },
-    sorcerer: { core: 'resolve', sub: 'intelligence' },
-    spiritAdept: { core: 'resolve', sub: 'perception' },
-    mage: { core: 'intelligence', sub: 'resolve' },
-    diviner: { core: 'intelligence', sub: 'perception' },
-    archmage: { core: 'intelligence', sub: 'intelligence' },
-    mentalFortress: { core: 'resolve', sub: 'resolve' },
-    battlePriest: { core: 'constitution', sub: 'intelligence' }
-    };
+    if (highestStats.length > 1) {
+        // Randomly select the highest stat if there's a tie
+        highestStat = highestStats[Math.floor(Math.random() * highestStats.length)].name;
+    }
+
+    // Find the second highest value, excluding the highest stat
+    let secondHighestStats = stats.filter(stat => stat.name !== highestStat);
+    let secondHighestValue = secondHighestStats[0].value;
+
+    // Check if there are multiple second-highest stats
+    let secondHighestStatsFiltered = secondHighestStats.filter(stat => stat.value === secondHighestValue);
+
+    // If the gap between highest and second-highest is large enough, assign the highest to both
+    const gapThreshold = 20; // You can adjust this threshold
+    if (highestValue - secondHighestValue > gapThreshold) {
+        secondHighestStat = highestStat; // Assign the highest stat to the second as well
+    } else {
+        if (secondHighestStatsFiltered.length > 1) {
+            // Randomly select the second highest stat if there's a tie
+            secondHighestStat = secondHighestStatsFiltered[Math.floor(Math.random() * secondHighestStatsFiltered.length)].name;
+        } else {
+            secondHighestStat = secondHighestStats[0].name;
+        }
+    }
+
+    // Log the highest and second highest stats for debugging
+    console.log(`Highest Stat: ${highestStat}, Second Highest Stat: ${secondHighestStat}`);
+
+
+   // Dynamic combat class selection based on coreStat and subStat
+    const classNames = [
+        'Juggernaut', 'BladeDancer', 'Chieftain', 'IronWill', 'Berserker', 'Titan', 
+        'StalwartDefender', 'Mercenery', 'Bladecaster', 'MartialArtist', 'Sentinel', 'SavageSwifter',
+        'Swiftblade', 'AuraWarrior', 'Assassin', 'Tactician', 'Colossus', 'FleshFortress',
+        'Tempest', 'arcaneWarrior', 'IronAura','Deadeye', 'Scout', 'Trickshot',
+        'Powershot', 'Vanguard', 'ArcaneArcher', 'GodEye', 'Sorcerer', 'Spiritist', 'Mage',
+        'Diviner', 'ManaWeaver', 'MentalFortress', 'BattlePriest', 'PhantomBlade', 'Sage',
+    ];
+
+    // Find the matching combat class based on coreStat and subStat in strict order
+    let selectedClass = classNames.find(className => {
+        switch (className) {
+            case 'Juggernaut': return highestStat === 'strength' && secondHighestStat === 'constitution';
+            case 'BladeDancer': return highestStat === 'strength' && secondHighestStat === 'dexterity';
+            case 'Chieftain': return highestStat === 'strength' && secondHighestStat === 'intelligence';
+            case 'IronWill': return highestStat === 'strength' && secondHighestStat === 'resolve';
+            case 'Berserker': return highestStat === 'strength' && secondHighestStat === 'perception';
+            case 'Titan': return highestStat === 'constitution' && secondHighestStat === 'strength';  // Corrected mapping
+            case 'StalwartDefender': return highestStat === 'constitution' && secondHighestStat === 'resolve';
+            case 'Mercenery': return highestStat === 'constitution' && secondHighestStat === 'dexterity';
+            case 'Bladecaster': return highestStat === 'dexterity' && secondHighestStat === 'intelligence';
+            case 'MartialArtist': return highestStat === 'dexterity' && secondHighestStat === 'resolve';
+            case 'Sentinel': return highestStat === 'constitution' && secondHighestStat === 'perception';
+            case 'SavageSwifter': return highestStat === 'dexterity' && secondHighestStat === 'strength';
+            case 'Swiftblade': return highestStat === 'dexterity' && secondHighestStat === 'constitution';
+            case 'AuraWarrior': return highestStat === 'resolve' && secondHighestStat === 'strength';
+            case 'Assassin': return highestStat === 'dexterity' && secondHighestStat === 'perception';
+            case 'Tactician': return highestStat === 'intelligence' && secondHighestStat === 'strength';
+            case 'Colossus': return highestStat === 'strength' && secondHighestStat === 'strength';
+            case 'FleshFortress': return highestStat === 'constitution' && secondHighestStat === 'constitution';
+            case 'Tempest': return highestStat === 'dexterity' && secondHighestStat === 'dexterity';
+            case 'IronAura': return highestStat === 'resolve' && secondHighestStat === 'constitution';
+            case 'PhantomBlade': return highestStat === 'resolve' && secondHighestStat === 'dexterity';
+            case 'Deadeye': return highestStat === 'perception' && secondHighestStat === 'dexterity';
+            case 'Scout': return highestStat === 'perception' && secondHighestStat === 'resolve';
+            case 'Trickshot': return highestStat === 'perception' && secondHighestStat === 'intelligence';
+            case 'Powershot': return highestStat === 'perception' && secondHighestStat === 'strength';
+            case 'Vanguard': return highestStat === 'perception' && secondHighestStat === 'constitution';
+            case 'ArcaneArcher': return highestStat === 'intelligence' && secondHighestStat === 'dexterity';
+            case 'GodEye': return highestStat === 'perception' && secondHighestStat === 'perception';
+            case 'Sorcerer': return highestStat === 'resolve' && secondHighestStat === 'intelligence';
+            case 'Spiritist': return highestStat === 'resolve' && secondHighestStat === 'perception';
+            case 'Mage': return highestStat === 'intelligence' && secondHighestStat === 'resolve';
+            case 'Diviner': return highestStat === 'intelligence' && secondHighestStat === 'perception';
+            case 'ManaWeaver': return highestStat === 'intelligence' && secondHighestStat === 'intelligence';
+            case 'MentalFortress': return highestStat === 'resolve' && secondHighestStat === 'resolve';
+            case 'BattlePriest': return highestStat === 'constitution' && secondHighestStat === 'intelligence';
+            case 'Sage': return highestStat === 'intelligence' && secondHighestStat === 'constitution';
+            default: return false;
+        }
+    });
+
+    if (selectedClass) {
+        document.getElementById('combatClass').value = selectedClass;
+    } else {
+        document.getElementById('combatClass').value = "nothing";  // If no class matches
+    }
 
     let combatClass = document.getElementById('combatClass').value;
     let combatStyle = document.getElementById('combatStyle').value;
     let combatTechnique = document.getElementById('combatTechnique').value;
 
-    if (!isLocked('combatClass')) {
-        combatClass = "nothing";
-        for (const [className, { core, sub }] of Object.entries(combatClassMapping)) {
-            if ((core === highestStat && sub === secondHighestStat) || 
-                (core === secondHighestStat && sub === highestStat)) {
-                combatClass = className;
-                break;
-            }
-        }
-        document.getElementById('combatClass').value = combatClass;
-    }
 
     if (!isLocked('combatStyle')) {
-        if (["Juggernaut", "BladeDancer", "Chieftain", "IronWill", "Berserker", "Titan", "StalwartDefender", "survivor", "hexblade", "spellthief", "bulwark", "savageAcrobat", "swiftblade", "phantomBlade", "assassin", "combatGenius", "colossus", "unyieldingTitan", "bladedTempest", "arcaneWarrior", "mysticShield"].includes(combatClass)) {
+        if (["Juggernaut", "BladeDancer", "Chieftain", "IronWill", "Berserker", "Titan", "StalwartDefender", "Mercenery", "Vanguard", "Bladecaster", "MartialArtist", "Sentinel", "SavageSwifter", "Swiftblade", "AuraWarrior", "Assassin", "Tactician", "Colossus", "FleshFortress", "Tempest", "arcaneWarrior", "IronAura", "PhantomBlade"].includes(combatClass)) {
     combatStyle = "Melee";
-} else if (["deadeye", "sniper", "scout", "trickshot", "sharpshooter", "vanguard", "arcaneArcher", "godsEye"].includes(combatClass)) {
+} else if (["deadeye", "Deadeye", "Scout", "Trickshot", "Powershot", "ArcaneArcher", "GodEye"].includes(combatClass)) {
     combatStyle = "Ranged";
-} else if (["sorcerer", "spiritAdept", "mage", "diviner", "archmage", "mentalFortress", "battlePriest"].includes(combatClass)) {
+} else if (["Sorcerer", "Spiritist", "Mage", "Diviner", "ManaWeaver", "MentalFortress", "BattlePriest", "Sage"].includes(combatClass)) {
     combatStyle = "Magic";
 }
         document.getElementById('combatStyle').value = combatStyle;
@@ -963,8 +1230,20 @@ function randomizeStatus() {
 'Chinedu', 'Ngozi', 'Olumide', 'Adebayo', 'Chioma', 'Kemi', 'Emeka', 'Ifeoma', 'Oluwaseun', 'Amara', 'Bola', 'Ireti', 'Durojaiye', 'Tolu', 'Adesola', 'Funke', 'Uche', 'Ngozi', 'Chika', 'Ayotunde',
 'Jiho', 'Jiwon', 'Minji', 'Seojin', 'Jisoo', 'Yuna', 'Jihoon', 'Nari', 'Minseok', 'Soojung', 'Taeyang', 'Hana', 'Seungmin', 'Jiwon', 'Sunwoo', 'Kyung', 'Eunjoo', 'Changmin', 'Nari', 'Haebin',
 'Hiroshi', 'Yuki', 'Sakura', 'Haruto', 'Yui', 'Takumi', 'Mei', 'Taro', 'Aoi', 'Haruka', 'Satoshi', 'Riko', 'Kaito', 'Ayumi', 'Shinji', 'Kana', 'Kenta', 'Nanami', 'Ren', 'Makoto', 'Natsuki',
-'David', 'Miriam', 'Yaara', 'Yitzhak', 'Talia', 'Eli', 'Shira', 'Natan', 'Yael', 'Erez', 'Oren', 'Tamar', 'Reuven', 'Sarah', 'Daniel', 'Or', 'Hila', 'Lior', 'Yaakov', 'Dafna', 'Noa'];
-    const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Miller', 'Davis', 'Garcia', 'Martinez', 'Hernandez', 'Li', 'Wang', 'Zhang', 'Liu', 'Chen', 'Yang', 'Huang', 'Zhao', 'Xu', 'Zhou', 'Sun', 'He', 'Gao', 'Lin', 'Wu', 'Deng', 'Yu', 'Tang', 'Xu',
+'David', 'Miriam', 'Yaara', 'Yitzhak', 'Talia', 'Eli', 'Shira', 'Natan', 'Yael', 'Erez', 'Oren', 'Tamar', 'Reuven', 'Sarah', 'Daniel', 'Or', 'Hila', 'Lior', 'Yaakov', 'Dafna', 'Noa', 'Arthur', 'Eleanor', 'Gawain', 'Guinevere', 'Lancelot', 'Isolde', 'Tristan', 'Alistair', 'Beatrice', 'Roland', 'Rosalind', 'Cedric', 'Matilda', 'Geoffrey', 'Isabel', 'Hugh', 'Adelaide', 'Evangeline', 'Theobald', 'Vivienne',
+'Edmund', 'Alfred', 'Margaret', 'Roderick', 'Amelia', 'Benedict', 'Cecilia', 'Godfrey', 'Genevieve', 'Basil', 'Adeline', 'Sybilla', 'Eustace', 'Elinor', 'Percival', 'Aveline', 'Matthias', 'Florence', 'Leopold', 'Marion',
+'Lucinda', 'Ambrose', 'Emmeline', 'Edwina', 'Rowena', 'Oswald', 'Emery', 'Millicent', 'Salvator', 'Sabrina', 'Lysander', 'Clementine', 'Ralph', 'Hilda', 'Giles', 'Beatrix', 'Owen', 'Alaric', 'Clara', 'Gwyneth',
+'Ignatius', 'Helena', 'Jasper', 'Maud', 'Althea', 'Balthazar', 'Matilda', 'Sylvester', 'Juliana', 'Ferdinand', 'Myrtle', 'Walter', 'Alicia', 'Ephraim', 'Rosamund', 'Elric', 'Seraphina', 'Swanhild', 'Catherine', 'Reuben',
+'Reginald', 'Daphne', 'Tobias', 'Winifred', 'Gordon', 'Elspeth', 'Hector', 'Lucia', 'Barnabas', 'Odessa', 'Sibylla', 'Sigmund', 'Odilon', 'Mabel', 'Eamon', 'Estelle', 'Griffin', 'Constance', 'Berengar', 'Ermina',
+'Rufus', 'Damaris', 'Gerald', 'Isolde', 'Aldric', 'Margery', 'Raymond', 'Sabina', 'Anselm', 'Wilhelmina', 'Jayden', 'Alyx', 'Khristopher', 'Zacharye', 'Lilliane', 'Sophiah', 'Emmalyn', 'Jonathyn', 'Kaitlynne', 'Krislyn', 'Michaelae', 'Jaxon', 'Cadenze', 'Graciee', 'Jorja', 'Ezraiah', 'Ashtynn', 'Kayleb', 'Lenae', 'Danyelle',
+'Gabriellah', 'Madisyn', 'Xander', 'Rowennah', 'Kalebbe', 'Brihanna', 'Tylerr', 'Clyve', 'Rhiannonne', 'Jasminne', 'Blayk', 'Zahraah', 'Levinna', 'Tristanne', 'Zoee', 'Fayth', 'Huntere', 'Chloee', 'Kynzie', 'Ashlynnne',
+'Jordynne', 'Chayse', 'Aubreee', 'Daxson', 'Bennet', 'Zaneve', 'Isabellah', 'Maddix', 'Avalyn', 'Halleigh', 'Leighann', 'Broc', 'Elliotth', 'Ciarra', 'Shawndra', 'Emberleigh', 'Tye', 'Violetta', 'Oliviah', 'Adelynne',
+'Addisyn', 'Raeleigh', 'Karisa', 'Korrine', 'Jakobi', 'Haizlee', 'Brookk', 'Maddisonn', 'Toriann', 'Danicka', 'Zacharye', 'Eviegh', 'Kendalyn', 'Avari', 'Bryston', 'Mikenna', 'Caralyn', 'Kalliegh', 'Brennan', 'Averlee',
+'Severynn', 'Paityn', 'Hailiegh', 'Tylerik', 'Reegan', 'Sophiia', 'Luken', 'Olivya', 'Addyson', 'Kamryn', 'Ava-Lee', 'Graciella', 'Marleena', 'Bradenne', 'Emiliya', 'Braylen', 'Paytonn', 'Everleigh', 'Jaycie', 'Lindeley', 'Astrid', 'Bjorn', 'Sigrid', 'Leif', 'Ingrid', 'Nils', 'Freya', 'Oskar', 'Elsa', 'Magnus', 'Hilda', 'Rune', 'Solveig', 'Erik', 'Kari', 'Thor', 'Anika', 'Jens', 'Viggo', 'Maja',
+'Harald', 'Kirsten', 'Sven', 'Greta', 'Aksel', 'Liv', 'Einar', 'Linnea', 'Otto', 'Frida', 'Anders', 'Saga', 'Tobias', 'Tove', 'Henrik', 'Alva', 'Ragnar', 'Birgit', 'Freyja','Jorunn', 'Knut', 'Emil', 'Selma', 'Bengt', 'Ylva', 'Stig', 'Dagny', 'Håkon', 'Frederik', 'Elin', 'Vera', 'Mikkel', 'Ida', 'Sigurd', 'Johanna', 'Lasse', 'Mari', 'Nina',
+'Vera', 'Pelle', 'Rikard', 'Birgitta', 'Torben', 'Alfred', 'Mats', 'Tilda', 'Ingmar', 'Klara', 'Rune', 'Thora', 'Bjørn', 'Sanna', 'Ellen', 'Frans', 'Torbjörn', 'Lena'];
+   
+   const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Miller', 'Davis', 'Garcia', 'Martinez', 'Hernandez', 'Li', 'Wang', 'Zhang', 'Liu', 'Chen', 'Yang', 'Huang', 'Zhao', 'Xu', 'Zhou', 'Sun', 'He', 'Gao', 'Lin', 'Wu', 'Deng', 'Yu', 'Tang', 'Xu',
 'Smith', 'Johnson', 'Williams', 'Jones', 'Brown', 'Davis', 'Miller', 'Wilson', 'Moore', 'Taylor', 'Anderson', 'Thomas', 'Jackson', 'White', 'Harris', 'Martin', 'Thompson', 'Garcia', 'Martinez', 'Roberts',
 'Brown', 'Jones', 'Taylor', 'Williams', 'Davies', 'Wilson', 'Evans', 'Thomas', 'Johnson', 'Roberts', 'Lewis', 'Walker', 'Wright', 'Green', 'Harris', 'Clarke', 'King', 'Scott', 'Baker', 'Adams',
 'Ivanov', 'Petrov', 'Sidorov', 'Smirnov', 'Kuznetsov', 'Popov', 'Vasilyev', 'Mikhailov', 'Morozov', 'Fedorov', 'Solovyev', 'Novikov', 'Borisov', 'Karpov', 'Lebedev', 'Romanov', 'Tikhonov', 'Gusev', 'Kozlov', 'Shishkin',
@@ -977,7 +1256,36 @@ function randomizeStatus() {
 'Okeke', 'Adebayo', 'Ogunleye', 'Akinwale', 'Eze', 'Onyekachi', 'Oluwaseun', 'Chukwuemeka', 'Olaoye', 'Ayodele', 'Ajayi', 'Nwankwo', 'Abiola', 'Olawale', 'Obi', 'Ifedayo', 'Ogunbiyi', 'Olatunji', 'Amadi', 'Chibuzo',
 'Kim', 'Lee', 'Park', 'Choi', 'Cho', 'Jung', 'Kang', 'Im', 'Han', 'Yoon', 'Lim', 'Seo', 'Shin', 'Oh', 'Ryu', 'Hwang', 'Kwon', 'Nam', 'Song', 'Jeong',
 'Tanaka', 'Yamamoto', 'Kobayashi', 'Sato', 'Watanabe', 'Takahashi', 'Yamada', 'Matsumoto', 'Inoue', 'Ishikawa', 'Fujita', 'Yamaguchi', 'Kuroda', 'Hasegawa', 'Iida', 'Sakai', 'Hashimoto', 'Murakami', 'Nakajima', 'Fujimoto',
-'Levi', 'Cohen', 'Mizrahi', 'Shalev', 'Dahan', 'Rosenberg', 'Ben-David', 'Zohar', 'Shalom', 'Erez', 'Ben-Ami', 'Nissim', 'Baruch', 'Tzukrel', 'Farkash', 'Yeger', 'Yona', 'Klein', 'Shani', 'Golan'];
+'Levi', 'Cohen', 'Mizrahi', 'Shalev', 'Dahan', 'Rosenberg', 'Ben-David', 'Zohar', 'Shalom', 'Erez', 'Ben-Ami', 'Nissim', 'Baruch', 'Tzukrel', 'Farkash', 'Yeger', 'Yona', 'Klein', 'Shani', 'Golan', 'Smith', 'Jones', 'Taylor', 'Brown', 'Wilson', 'Evans', 'Thomas', 'Roberts', 'Walker', 'Harris',
+'Jackson', 'White', 'Clark', 'Lewis', 'Young', 'King', 'Scott', 'Green', 'Adams', 'Baker',
+'Allen', 'Carter', 'Mitchell', 'Perez', 'Morris', 'Wood', 'Davis', 'Hughes', 'Nelson', 'Hill',
+'Wright', 'Collins', 'Kingston', 'Turner', 'King', 'Fisher', 'Miller', 'Collier', 'Chapman', 'Cook',
+'Freeman', 'Parker', 'Bennett', 'Barnes', 'Price', 'Reed', 'Campbell', 'Cooper', 'Morgan', 'Dubois', 'Lemoine', 'Lefevre', 'Leclerc', 'Moreau', 'Petit', 'Roux', 'Bernard', 'Garnier', 'Blanc',
+'Robert', 'Fournier', 'Chauvin', 'Lemoine', 'Meyer', 'Barbier', 'Gauthier', 'Dupont', 'Lemoine', 'Lemoine',
+'Martin', 'Girard', 'Boyer', 'Vidal', 'Moulin', 'Dufresne', 'Giraud', 'Marchand', 'Lejeune', 'Perrot',
+'Picard', 'Jacquet', 'Tanguy', 'Roch', 'Henri', 'Lemoine', 'Benoit', 'Jacques', 'Carlier', 'Sauvage',
+'Deschamps', 'Lemoine', 'Sevigny', 'Blanchard', 'Brossard', 'Legrand', 'Bailly', 'Legros', 'Gilles', 'Schmidt', 'Müller', 'Schneider', 'Fischer', 'Weber', 'Hoffmann', 'Schwarz', 'Bauer', 'Richter', 'Klein',
+'Zimmermann', 'Wagner', 'Becker', 'Braun', 'Schulz', 'Jäger', 'Hartmann', 'Schäfer', 'Krause', 'Schmidt',
+'Neumann', 'Schuster', 'Peters', 'Meyer', 'Heinrich', 'König', 'Roth', 'Lang', 'Keller', 'Weiß',
+'Vogel', 'Lange', 'Hahn', 'Berg', 'Keller', 'Fuchs', 'Reuter', 'Brandt', 'Riedel', 'Zimmer',
+'Kraft', 'Lutz', 'Böhm', 'Götz', 'Maurer', 'Schmitt', 'Haas', 'Ott', 'Schwabe', 'Bender', 'García', 'Martínez', 'López', 'Hernández', 'Pérez', 'González', 'Rodríguez', 'Sánchez', 'Ramírez', 'Flores',
+'Gutiérrez', 'Jiménez', 'Díaz', 'Vázquez', 'Morales', 'Cruz', 'Mendoza', 'Reyes', 'Castro', 'García',
+'Martín', 'Ruiz', 'Torres', 'Álvarez', 'Jiménez', 'Vega', 'Ríos', 'Salazar', 'Paredes', 'Márquez',
+'Navarro', 'Herrera', 'Moreno', 'Fernández', 'Gómez', 'Molina', 'González', 'Ramón', 'Solís', 'Domínguez',
+'Vázquez', 'Vera', 'Rivas', 'Castaño', 'Ávila', 'Gálvez', 'Camacho', 'Pérez', 'López', 'Cordero', 'Rossi', 'Bianchi', 'Romano', 'Ricci', 'Marino', 'Greco', 'Conti', 'Lombardi', 'Ferrari', 'Esposito',
+'Santoro', 'De Luca', 'Mancini', 'Giordano', 'Moretti', 'Gallo', 'Longo', 'Giovanni', 'Martino', 'Rinaldi',
+'Martini', 'Barbieri', 'Costa', 'Angelo', 'Ferrara', 'Coppola', 'Sanna', 'Cammarota', 'Caputo', 'Caruso',
+'Luciano', 'Valenti', 'Pugliese', 'De Santis', 'Della Valle', 'De Marco', 'Lombardi', 'Ferri', 'Cavaliere',
+'Aurora', 'Basso', 'Vitali', 'Siciliano', 'Vitale', 'Bellini', 'Motta', 'Sorrentino', 'Trombetta', 'Petrillo', 'Silva', 'Santos', 'Pereira', 'Oliveira', 'Ferreira', 'Costa', 'Rodrigues', 'Almeida', 'Sousa', 'Martins',
+'Fernandes', 'Carvalho', 'Nascimento', 'Ribeiro', 'Mendes', 'Teixeira', 'Lima', 'Gomes', 'Castro', 'Moura',
+'Azevedo', 'Sousa', 'Pinto', 'Dias', 'Campos', 'Silveira', 'Martins', 'Cardoso', 'Machado', 'Cunha',
+'Monteiro', 'Barbosa', 'Correia', 'Tavares', 'Duarte', 'Figueiredo', 'Brito', 'Lopes', 'Sousa', 'Santos',
+'Ferreira', 'Morais', 'Alves', 'Cavalcante', 'Borges', 'Marques', 'Furtado', 'Franco', 'Gonçalves', 'Adams', 'Allen', 'Bennett', 'Bishop', 'Black', 'Blake', 'Booth', 'Bradley', 'Brooks', 'Brown',
+'Burns', 'Butler', 'Chapman', 'Chambers', 'Clarke', 'Clayton', 'Cole', 'Collins', 'Cooper', 'Curtis',
+'Davis', 'Dixon', 'Douglas', 'Ferguson', 'Fletcher', 'Ford', 'Gibson', 'Glover', 'Grant', 'Gray',
+'Greenwood', 'Hancock', 'Harrison', 'Harvey', 'Hughes', 'Jackson', 'James', 'Johnston', 'Kingston', 'Knight',
+'Lawrence', 'Lawson', 'Lee', 'Lloyd', 'Mason', 'Miller', 'Mitchell', 'Moore', 'Morgan', 'Morris',
+'Nelson', 'Owen', 'Parker', 'Patterson', 'Phillips', 'Robinson'];
     
     const meleeItems = ['Fists', 'Sword', 'Axe', 'Dagger', 'Spear', 'Mace', 'Hammer', 'Flail', 'Katana', 'Scythe', 'Whip', 'Claws', 'Club', 'Halberd', 'Greatsword', 'Battleaxe', 'Shortsword', 'Trident', 'Javelin', 'Saber', 'Pike', 'Rapier', 'Morningstar', 'Falchion', 'Gladius', 'Bastard Sword', 'Claymore', 'Runic Greatsword', 'Dragonbone Sword', 'Stormbreaker Axe', 'Wyrmsbane Pike', 'Thunderstrike Mace', 'Grim Reaper Scythe', 'Basic Wood Sword', 'Sturdy Wood Sword', 'Well-Made Wood Sword', 'Masterwork Wood Sword', 'Exquisite Wood Sword', 'Runed Wood Sword', 'Enchanted Wood Sword', 'Arcane-Infused Wood Sword', 'Divine Wood Sword', 'Mythic Wood Sword',
 'Basic Iron Sword', 'Sturdy Iron Sword', 'Well-Made Iron Sword', 'Masterwork Iron Sword', 'Exquisite Iron Sword', 'Runed Iron Sword', 'Enchanted Iron Sword', 'Arcane-Infused Iron Sword', 'Divine Iron Sword', 'Mythic Iron Sword',
@@ -1011,9 +1319,9 @@ function randomizeStatus() {
     let totalTarget;
 
     // Rare case logic for total target
-if (randomValue < 0.00002) {  // 1 in 50,000 for total 90-100
+if (randomValue < 0.05) {  // 1 in 50,000 for total 90-100
     totalTarget = Math.floor(Math.random() * 11 + 90);  // 90-100 range
-} else if (randomValue < 0.001) {  // 1 in 1,000 for total 81-90
+} else if (randomValue < 0.01) {  // 1 in 1,000 for total 81-90
     totalTarget = Math.floor(Math.random() * 10 + 81);  // 81-90 range
 } else if (randomValue < 0.07) {  // 1 in 14.3 for total 71-80
     totalTarget = Math.floor(Math.random() * 10 + 71);  // 71-80 range
@@ -1363,50 +1671,215 @@ function calculateBMIAndAssignBodyBuild() {
     document.getElementById('bmi').innerText = `BMI: ${bmi.toFixed(2)} (${bmiCategory})`;
     document.getElementById('bodyBuild').innerText = `Body Build: ${randomBodyBuild}`;
 }
-function randomizeAndUpdate() {
-    randomizeStatus(); // Calls the randomizeStatus function
-	randomizePhysicalAppearance();
-	randomizeHeightAndWeight();
-	calculateBMIAndAssignBodyBuild();
-    updateStatus();    // Then calls the updateStatus function
+function setPixelArtAsBackground() {
+    // Get the pixel art image source from the <img> tag
+    const pixelArtImage = document.querySelector('#statusDisplay img').src;
+
+    // Apply the pixel art as background to the top part only
+    const statusTop = document.getElementById('statusTop');
+    statusTop.style.backgroundImage = `url(${pixelArtImage})`;
+    statusTop.style.backgroundRepeat = 'repeat';  // Repeat the image
+    statusTop.style.backgroundSize = 'auto';      // Keep the original size
+    statusTop.style.backgroundPosition = 'center';
+    statusTop.style.height = '400px';             // Adjust the height as needed
+    
+    const statusBottom = document.getElementById('statusBottom');
+    statusBottom.style.backgroundImage = `url(${pixelArtImage})`;
+    statusBottom.style.backgroundRepeat = 'repeat';  // Repeat the image
+    statusBottom.style.backgroundSize = 'auto';      // Keep the original size
+    statusBottom.style.backgroundPosition = 'center';
+    statusBottom.style.height = '400px';             // Adjust the height as needed
 }
+
 function randomizeHWBMI() {
 	randomizeHeightAndWeight();
 	calculateBMIAndAssignBodyBuild();
 	updateStatus();  
 }
 function exportStatus() {
-    const statusText = document.getElementById('statusDisplay').innerText.trim(); // Get the status text
+    const { jsPDF } = window.jspdf;
+
+    const statusText = document.getElementById('statusDisplay').innerText.trim();
     const firstName = document.getElementById('firstName').value || "Unknown";
     const lastName = document.getElementById('lastName').value || "Hero";
-    const characterName = `${firstName}_${lastName}`.replace(/\s+/g, '_'); // Replace spaces with underscores
+    const characterName = `${firstName}_${lastName}`.replace(/\s+/g, '_');
 
-    // Get the already generated pixel art from the statusDisplay (you may need to store it earlier)
-    const pixelArtImage = document.querySelector('#statusDisplay img').src; // Assuming the pixel art image is in the <img> tag
+    // Get the pixel art image source from the <img> tag
+    const pixelArtImage = document.querySelector('#statusDisplay img').src;
 
-    // Convert the Base64 image to Blob
-    fetch(pixelArtImage)
-        .then(res => res.blob())
-        .then(pixelArtBlob => {
-            const zip = new JSZip();
+    // Create a new PDF document
+    const doc = new jsPDF();
 
-            // Add statusText as a .txt file
-            zip.file(`${characterName}_Status.txt`, statusText);
+    // Add the pixel art image to the PDF
+    const imgWidth = 80;  // Adjust width as needed
+    const imgHeight = 80; // Adjust height as needed
+    doc.addImage(pixelArtImage, 'PNG', 15, 10, imgWidth, imgHeight);
 
-            // Add the pixel art as a .jpg file
-            zip.file(`${characterName}_PixelArt.jpg`, pixelArtBlob);
+    // Add the status text to the PDF
+    doc.setFontSize(12);
+    const splitText = doc.splitTextToSize(statusText, 180);
+    doc.text(splitText, 15, 100);
 
-            // Generate the zip and trigger download
-            zip.generateAsync({ type: 'blob' }).then(content => {
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(content);
-                a.download = `${characterName}.zip`;
-                a.click();
-            });
-        })
-        .catch(err => console.error("Error exporting files: ", err));
+    // Save the PDF with the character's name
+    doc.save(`${characterName}_Status.pdf`);
+}
+// Save generation to localStorage
+function saveGeneration() {
+    const firstName = document.getElementById('firstName').value || "Unknown";
+    const lastName = document.getElementById('lastName').value || "Hero";
+    const characterName = `${firstName}_${lastName}`.replace(/\s+/g, '_');
+
+    const statusText = document.getElementById('statusDisplay').innerText.trim();
+    const pixelArtImage = document.querySelector('#statusDisplay img').src;
+    const potential = document.getElementById('potentialDisplay').innerText;
+    const combatClass = document.getElementById('combatClass').value;
+
+    // Save data to localStorage
+    const characterData = {
+        firstName,
+        lastName,
+        potential,
+        combatClass,
+        statusText,
+        pixelArtImage,
+		timestamp: Date.now() // Add the current timestamp
+    };
+    db.collection("characters").doc(characterName).set(characterData)
+  .then(() => console.log("Character saved to Firestore"))
+  .catch((error) => console.error("Error saving character:", error));
+
+
+    // Update character list
+    updateCharacterList();
 }
 
+function loadCharacterFromList(characterKey) {
+    db.collection("characters").doc(characterKey).get().then((doc) => {
+    if (doc.exists) {
+        const characterData = doc.data();
+        // Populate fields with character data
+        document.getElementById('firstName').value = characterData.firstName;
+        document.getElementById('lastName').value = characterData.lastName;
+        document.getElementById('potentialDisplay').innerText = characterData.potential;
+        document.getElementById('combatClass').value = characterData.combatClass;
+
+        // Update status display
+        document.getElementById('statusDisplay').innerHTML = `
+            <figure>
+                <img src="${characterData.pixelArtImage}" alt="Pixel Art">
+            </figure>
+            <p>${characterData.statusText}</p>
+        `;
+    } else {
+        alert("Character data not found!");
+    }
+	setPixelArtAsBackground();
+}
+function updateCharacterList() {
+    const characterList = document.getElementById('characterList').querySelector('tbody');
+    const container = document.getElementById('characterListContainer'); // Ensure this is correctly defined
+    characterList.innerHTML = ""; // Clear existing rows
+
+    // Collect all saved characters
+    const characters = [];
+    db.collection("characters").orderBy("timestamp").get().then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+        characters.push({ key: doc.id, ...doc.data() });
+    });
+
+    // Sort characters by timestamp (oldest to newest)
+    characters.sort((a, b) => a.timestamp - b.timestamp);
+
+    // Populate the table with sorted characters
+    characters.forEach((character, index) => {
+        const row = document.createElement('tr');
+
+        // Number column
+        const numberCell = document.createElement('td');
+        numberCell.textContent = index + 1; // Start numbering from 1
+        row.appendChild(numberCell);
+
+        // Name column
+        const nameCell = document.createElement('td');
+        nameCell.textContent = `${character.firstName} ${character.lastName}`;
+        row.appendChild(nameCell);
+
+        // Potential column
+        const potentialCell = document.createElement('td');
+        potentialCell.textContent = character.potential || "Unknown";
+        row.appendChild(potentialCell);
+
+        // Combat Class column
+        const combatClassCell = document.createElement('td');
+        combatClassCell.textContent = character.combatClass || "None";
+        row.appendChild(combatClassCell);
+
+        // Emblem column
+        const emblemCell = document.createElement('td');
+        const emblemImg = document.createElement('img');
+        emblemImg.src = character.pixelArtImage;
+        emblemImg.alt = "Emblem";
+        emblemImg.style.width = "150px";
+        emblemImg.style.height = "150px";
+        emblemImg.style.objectFit = "cover";
+        emblemImg.style.borderRadius = "50%";
+        emblemCell.appendChild(emblemImg);
+        row.appendChild(emblemCell);
+
+        // Load button column
+        const actionCell = document.createElement('td');
+        const loadButton = document.createElement('button');
+        loadButton.textContent = "Load";
+        loadButton.onclick = () => loadCharacterFromList(character.key); // Attach load function
+        actionCell.appendChild(loadButton);
+        row.appendChild(actionCell);
+
+        // Append the row to the table
+        characterList.appendChild(row);
+    });
+
+    // Check if the container exists and is currently displayed
+    if (container && container.style.display === 'block') {
+        setTimeout(() => {
+            container.style.maxHeight = container.scrollHeight + "px"; // Recalculate height smoothly
+        }, 50); // Allow for DOM updates before recalculating
+    }
+}
+
+function toggleCharacterList() {
+    const container = document.getElementById('characterListContainer');
+    const header = document.querySelector('h2[onclick="toggleCharacterList()"]');
+
+    if (container.style.display === 'none' || container.style.display === '') {
+        // Expand the list
+        container.style.display = 'block';
+        container.style.maxHeight = container.scrollHeight + "px"; // Set height dynamically
+        header.textContent = "Saved Characters ▲"; // Update toggle indicator
+    } else {
+        // Collapse the list
+        container.style.maxHeight = '0';
+        setTimeout(() => {
+            container.style.display = 'none';
+        }, 500); // Wait for transition to finish before hiding
+        header.textContent = "Saved Characters ▼"; // Update toggle indicator
+    }
+}
+function randomizeAndUpdate() {
+    randomizeStatus(); // Calls the randomizeStatus function
+	randomizePhysicalAppearance();
+	randomizeHeightAndWeight();
+	calculateBMIAndAssignBodyBuild();
+    updateStatus();    // Then calls the updateStatus function
+    setPixelArtAsBackground();
+	saveGeneration();
+	updateCharacterList();
+}
+function generateMultipleTimes(times) {
+    for (let i = 0; i < times; i++) {
+            randomizeAndUpdate(); // Assuming this is your main generation function
+                }
+                    alert(`${times} characters generated!`);
+                    }
 </script>
 
 </body>
