@@ -308,6 +308,37 @@ h2[onclick="toggleCharacterList()"] {
 h2[onclick="toggleCharacterList()"]:hover {
     color: #f0e6d2;
 }
+h1 a {
+    color: #d8c7a7; /* Matches your color scheme */
+    text-decoration: none; /* No underline */
+    font-size: 36px; /* Adjust font size if necessary */
+}
+
+h1 a:hover {
+    color: #f0e6d2; /* Change color on hover */
+    text-decoration: underline; /* Add underline on hover */
+}
+  #scrollToTopBtn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #5a4c42;
+        color: #e0d5c1;
+        border: 2px solid #6d5c4b;
+        padding: 10px 18px;
+        font-size: 44px;
+        cursor: pointer;
+        border-radius: 5px;
+        text-shadow: 1px 1px 0 #2b211a;
+        font-family: 'Bookman Old Style', serif;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    #scrollToTopBtn:hover {
+        background-color: #7a665b;
+        border-color: #9d8872;
+    }
+
 </style>
 
 </head>
@@ -316,8 +347,12 @@ h2[onclick="toggleCharacterList()"]:hover {
 
 </div>
 <div class="left-panel">
-<h1>Ishnamel's Character Generator</h1>
-<h5>v.15.15</h5>
+<h1>
+    Ishnamel's Character <a href="https://github.com/Ishnamel/Ishnamel-Character-Generator/tree/unstable" target="_blank" style="color: #d8c7a7; text-decoration: none; font-size: 70px;">Generator</a>
+</h1>
+
+<h5>v.16</h5> 
+
 <button onclick="randomizeAndUpdate()">Generate</button>
 <button onclick="generateNarrative()">Generate Narrative</button>
 <button onclick="exportStatus()">Download</button>
@@ -436,15 +471,32 @@ h2[onclick="toggleCharacterList()"]:hover {
         <div id="statusTop"></div>
         <div id="statusDisplay"></div>
   <div id="statusBottom"></div>
+
   <button id="mobileButton" onclick="randomizeAndUpdate()">Generate</button>
  <h2 onclick="toggleCharacterList()" style="cursor: pointer;">Saved Characters ▼</h2>
 <div id="characterListContainer" style="display: none; overflow: hidden; transition: max-height 0.5s ease;">
-    <table id="characterList">
+   <input
+       type="text"
+       id="searchInput"
+       placeholder="Search characters by name..."
+       oninput="filterCharacterList()"
+       style="width: 100%; padding: 10px; font-size: 50px; margin-bottom: 10px;"
+   />
+   
+   <table id="characterList">
         <thead>
             <tr>
-				<th>#</th>
-                <th>Name</th>
-                <th>Potential</th>
+				<th onclick="sortCharacterListByNumber()" style="cursor: pointer;">
+    # ▲▼
+</th>
+
+               <th onclick="sortCharacterListAlphabetically()" style="cursor: pointer;">
+    Name ▲▼
+</th>
+
+				<th onclick="sortCharacterListByPotential()" style="cursor: pointer;">
+                   Potential ▲▼
+               </th>
                 <th>Combat Class</th>
                 <th>Emblem</th>
                 <th>Action</th>
@@ -454,9 +506,14 @@ h2[onclick="toggleCharacterList()"]:hover {
             <!-- Dynamic rows will be added here -->
         </tbody>
     </table>
+	
 </div>
+ <button id="scrollToTopBtn" onclick="scrollToTop()" >↑ Scroll to Top</button>
     </div>
-    
+
+
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 
@@ -503,6 +560,17 @@ request.onerror = function(event) {
       mobileButton.style.margin = '10px auto';    // Centered horizontally
     }
   };
+// Function to scroll to the top of the right panel
+function scrollToTop() {
+    const rightPanel = document.querySelector('.right-panel'); // Target the right panel
+    rightPanel.scrollTo({
+        top: 0,
+        behavior: 'smooth'  // Smooth scrolling
+    });
+}
+
+
+  
 // Function to resize input based on content length
 function resizeInput(input) {
     const measurementSpan = document.getElementById('measurementSpan');
@@ -1920,6 +1988,104 @@ function generateMultipleTimesFromInput() {
     const times = document.getElementById('generateTimes').value;
     generateMultipleTimes(parseInt(times, 10)); // Generate based on the input value
 }
+function exportStatus() {
+    const { jsPDF } = window.jspdf;
+
+    const statusText = document.getElementById('statusDisplay').innerText.trim();
+    const firstName = document.getElementById('firstName').value || "Unknown";
+    const lastName = document.getElementById('lastName').value || "Hero";
+    const characterName = `${firstName}_${lastName}`.replace(/\s+/g, '_');
+
+    // Get the pixel art image source from the <img> tag
+    const pixelArtImage = document.querySelector('#statusDisplay img').src;
+
+    // Create a new PDF document
+    const doc = new jsPDF();
+
+    // Add the pixel art image to the PDF
+    const imgWidth = 80;  // Adjust width as needed
+    const imgHeight = 80; // Adjust height as needed
+    doc.addImage(pixelArtImage, 'PNG', 15, 10, imgWidth, imgHeight);
+
+    // Add the status text to the PDF
+    doc.setFontSize(12);
+    const splitText = doc.splitTextToSize(statusText, 180);
+    doc.text(splitText, 15, 100);
+
+    // Save the PDF with the character's name
+    doc.save(`${characterName}_Status.pdf`);
+}
+function filterCharacterList() {
+    const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+    const rows = document.querySelectorAll('#characterList tbody tr');
+
+    rows.forEach(row => {
+        const nameCell = row.querySelector('td:nth-child(2)');
+        const name = nameCell ? nameCell.textContent.toLowerCase() : '';
+        // Show row if the name matches the search query
+        row.style.display = name.includes(searchQuery) ? '' : 'none';
+    });
+}
+let sortAscending = true; // Track sorting order
+
+function sortCharacterListByPotential() {
+    const rows = Array.from(document.querySelectorAll('#characterList tbody tr'));
+    
+    rows.sort((a, b) => {
+        const potentialA = parseInt(a.querySelector('td:nth-child(3)').textContent) || 0;
+        const potentialB = parseInt(b.querySelector('td:nth-child(3)').textContent) || 0;
+
+        return sortAscending ? potentialA - potentialB : potentialB - potentialA;
+    });
+
+    // Toggle sorting order
+    sortAscending = !sortAscending;
+
+    // Append sorted rows back to the table
+    const tbody = document.querySelector('#characterList tbody');
+    rows.forEach(row => tbody.appendChild(row));
+}
+let sortNameAscending = true; // Track sorting order for names
+
+function sortCharacterListAlphabetically() {
+    const rows = Array.from(document.querySelectorAll('#characterList tbody tr'));
+
+    rows.sort((a, b) => {
+        const nameA = a.querySelector('td:nth-child(2)').textContent.toLowerCase();
+        const nameB = b.querySelector('td:nth-child(2)').textContent.toLowerCase();
+
+        if (nameA < nameB) return sortNameAscending ? -1 : 1;
+        if (nameA > nameB) return sortNameAscending ? 1 : -1;
+        return 0;
+    });
+
+    // Toggle sorting order
+    sortNameAscending = !sortNameAscending;
+
+    // Append sorted rows back to the table
+    const tbody = document.querySelector('#characterList tbody');
+    rows.forEach(row => tbody.appendChild(row));
+}
+let sortNumberAscending = true; // Track sorting order for the Number column
+
+function sortCharacterListByNumber() {
+    const rows = Array.from(document.querySelectorAll('#characterList tbody tr'));
+
+    rows.sort((a, b) => {
+        const numberA = parseInt(a.querySelector('td:first-child').textContent, 10);
+        const numberB = parseInt(b.querySelector('td:first-child').textContent, 10);
+
+        return sortNumberAscending ? numberA - numberB : numberB - numberA;
+    });
+
+    // Toggle sorting order
+    sortNumberAscending = !sortNumberAscending;
+
+    // Append sorted rows back to the table
+    const tbody = document.querySelector('#characterList tbody');
+    rows.forEach(row => tbody.appendChild(row));
+}
+
 </script>
 
 </body>
