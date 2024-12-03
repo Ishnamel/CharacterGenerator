@@ -1291,15 +1291,27 @@ function randomizeStatus() {
     let totalTarget;
 
     // Rare case logic for total target
-if (randomValue < 0.05) {  // 1 in 50,000 for total 90-100
-    totalTarget = Math.floor(Math.random() * 11 + 90);  // 90-100 range
-} else if (randomValue < 0.01) {  // 1 in 1,000 for total 81-90
-    totalTarget = Math.floor(Math.random() * 10 + 81);  // 81-90 range
-} else if (randomValue < 0.07) {  // 1 in 14.3 for total 71-80
-    totalTarget = Math.floor(Math.random() * 10 + 71);  // 71-80 range
-} else {  // Common range 60-70
-    totalTarget = Math.floor(Math.random() * 11 + 60);  // 60-70 range
-}
+if (randomValue < 0.0001) {  // 1 in 10,000 for total 200+
+    totalTarget = Math.floor(Math.random() * 21 + 200);  // 200-220 range
+} else if (randomValue < 0.0005) {  // 1 in 2,000 for total 180-199
+    totalTarget = Math.floor(Math.random() * 20 + 180);  // 180-199 range
+} else if (randomValue < 0.001) {  // 1 in 1,000 for total 150-179
+    totalTarget = Math.floor(Math.random() * 30 + 150);  // 150-179 range
+} else if (randomValue < 0.005) {  // 1 in 200 for total 120-149
+    totalTarget = Math.floor(Math.random() * 30 + 120);  // 120-149 range
+} else if (randomValue < 0.01) {  // 1 in 100 for total 100-119
+    totalTarget = Math.floor(Math.random() * 20 + 100);  // 100-119 range
+} else if (randomValue < 0.05) {  // 1 in 20 for total 90-99
+    totalTarget = Math.floor(Math.random() * 10 + 90);  // 90-99 range
+} else if (randomValue < 0.10) {  // 1 in 10 for total 80-89
+    totalTarget = Math.floor(Math.random() * 10 + 80);  // 80-89 range
+} else if (randomValue < 0.15) {  // 1 in 6.7 for total 75-79
+    totalTarget = Math.floor(Math.random() * 5 + 75);  // 75-79 range
+} else if (randomValue < 0.25) {  // 1 in 4 for total 70-74
+    totalTarget = Math.floor(Math.random() * 5 + 70);  // 70-74 range
+} else {  // Most common range 60-69 (E to F range)
+    totalTarget = Math.floor(Math.random() * 10 + 60);  // 60-69 range
+	    }
 
     let remaining = totalTarget;
 
@@ -1353,9 +1365,11 @@ for (let i = 0; i < unlockedFields.length; i++) {
     // Calculate total including locked fields
 const total = lockedValues.reduce((sum, val) => sum + val, 0) + values.reduce((sum, val) => sum + val, 0);
 let rating = "F";
-if (total >= 95) rating = "SS";
-else if (total >= 90) rating = "S";
-else if (total >= 85) rating = "A";
+if (total >= 200) rating = "EX";
+else if (total >= 180) rating = "SSS";
+else if (total >= 150) rating = "SS";
+else if (total >= 120) rating = "S";
+else if (total >= 100) rating = "A";
 else if (total >= 80) rating = "B";
 else if (total >= 75) rating = "C";
 else if (total >= 70) rating = "D";
