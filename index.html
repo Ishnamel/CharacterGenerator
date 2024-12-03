@@ -318,10 +318,12 @@ h2[onclick="toggleCharacterList()"]:hover {
 <div class="left-panel">
 <h1>Ishnamel's Character Generator</h1>
 <h5>v.15.15</h5>
-<button onclick="generateMultipleTimes(100)">Generate 100 Times</button>
 <button onclick="randomizeAndUpdate()">Generate</button>
 <button onclick="generateNarrative()">Generate Narrative</button>
 <button onclick="exportStatus()">Download</button>
+<h3 for="generateTimes">Generate Multiple: </label>
+<input type="number" id="generateTimes" value="100" min="1" step="1" style="width: 100px;">
+<button onclick="generateMultipleTimesFromInput()">Generate</button>
     <h2>Character Info</h2>
     <label for="firstName">First Name:</label><input type="text" id="firstName" disabled oninput="resizeInput(this)"><button onclick="toggleLock('firstName')">Lock</button><br>
     <label for="lastName">Last Name:</label><input type="text" id="lastName" disabled oninput="resizeInput(this)"><button onclick="toggleLock('lastName')">Lock</button><br>
@@ -459,6 +461,24 @@ h2[onclick="toggleCharacterList()"]:hover {
 
 
 <script>
+const request = indexedDB.open("characterDatabase", 2); // Open or create the database
+
+request.onupgradeneeded = function(event) {
+    const db = event.target.result;
+    if (!db.objectStoreNames.contains("characters")) {
+        db.createObjectStore("characters", { keyPath: "key" }); // Create 'characters' store
+        console.log("Object store 'characters' created.");
+    }
+};
+
+request.onsuccess = function(event) {
+    console.log("IndexedDB opened successfully.");
+};
+
+request.onerror = function(event) {
+    console.error("Error opening IndexedDB:", event.target.error);
+};
+
 // Listen for keydown events
     document.addEventListener('keydown', function(event) {
         // Check if the spacebar (keyCode 32) is pressed
@@ -687,8 +707,7 @@ const bloodType = document.getElementById('bloodType').value;
         Main Hand: ${document.getElementById('wieldLHand').value}           Offhand: ${document.getElementById('wieldRHand').value}
     `;
 
-    localStorage
-    localStorage.setItem(randomId, statusText);
+   
 
     // Generate pixel art using the randomId as the seed
     const pixelArtImage = generateSymmetricalPixelArt(randomId, 20, 20, 20); // Generate 16x16 pixel art with 8px per square
@@ -718,25 +737,7 @@ const bloodType = document.getElementById('bloodType').value;
 }
 
 
-function retrieveStatus() {
-        const seed = document.getElementById("retrieveSeed").value;
-        const storedStatus = localStorage.getItem(seed);
 
-        if (storedStatus) {
-            const pixelArtImage = generateSymmetricalPixelArt(seed, 16, 16, 8);
-            const sideStatusElement = document.getElementById("sideStatus");
-            sideStatusElement.innerHTML = `
-                
-                <pre>${storedStatus}</pre>
-                <figure>
-                      <figcaption>Emblem</figcaption>
-               <img src="${pixelArtImage}" alt="Pixel Art">
-        </figure>
-    `;
-        } else {
-            alert("No status found for the given number!");
-        }
-    }
 
 function generateNarrative() {
     const firstName = document.getElementById('firstName').value || "Unknown";
@@ -1682,35 +1683,7 @@ function randomizeHWBMI() {
 	calculateBMIAndAssignBodyBuild();
 	updateStatus();  
 }
-function exportStatus() {
-    const { jsPDF } = window.jspdf;
-
-    const statusText = document.getElementById('statusDisplay').innerText.trim();
-    const firstName = document.getElementById('firstName').value || "Unknown";
-    const lastName = document.getElementById('lastName').value || "Hero";
-    const characterName = `${firstName}_${lastName}`.replace(/\s+/g, '_');
-
-    // Get the pixel art image source from the <img> tag
-    const pixelArtImage = document.querySelector('#statusDisplay img').src;
-
-    // Create a new PDF document
-    const doc = new jsPDF();
-
-    // Add the pixel art image to the PDF
-    const imgWidth = 80;  // Adjust width as needed
-    const imgHeight = 80; // Adjust height as needed
-    doc.addImage(pixelArtImage, 'PNG', 15, 10, imgWidth, imgHeight);
-
-    // Add the status text to the PDF
-    doc.setFontSize(12);
-    const splitText = doc.splitTextToSize(statusText, 180);
-    doc.text(splitText, 15, 100);
-
-    // Save the PDF with the character's name
-    doc.save(`${characterName}_Status.pdf`);
-}
-// Save generation to localStorage
-function saveGeneration() {
+function saveGeneration(isFinalGeneration = false) {
     const firstName = document.getElementById('firstName').value || "Unknown";
     const lastName = document.getElementById('lastName').value || "Hero";
     const characterName = `${firstName}_${lastName}`.replace(/\s+/g, '_');
@@ -1720,121 +1693,176 @@ function saveGeneration() {
     const potential = document.getElementById('potentialDisplay').innerText;
     const combatClass = document.getElementById('combatClass').value;
 
-    // Save data to localStorage
     const characterData = {
+        key: characterName,
         firstName,
         lastName,
         potential,
         combatClass,
         statusText,
         pixelArtImage,
-		timestamp: Date.now() // Add the current timestamp
+        timestamp: Date.now()
     };
-    localStorage.setItem(characterName, JSON.stringify(characterData));
 
-    // Update character list
-    updateCharacterList();
+    const request = indexedDB.open("characterDatabase", 2);
+    request.onsuccess = function(event) {
+        const db = event.target.result;
+        const transaction = db.transaction(["characters"], "readwrite");
+        const objectStore = transaction.objectStore("characters");
+
+        // Check if the character already exists
+        const getRequest = objectStore.get(characterData.key);
+        getRequest.onsuccess = function() {
+            if (getRequest.result) {
+                // If the character exists, update it
+                objectStore.put(characterData);
+            } else {
+                // If it doesn't exist, add it
+                objectStore.add(characterData);
+            }
+        };
+        
+    transaction.oncomplete = function() {
+            // Call updateCharacterList only if it's the final generation
+            if (isFinalGeneration) {
+                updateCharacterList();
+            }
+        };
+    };
+
+    request.onerror = function(event) {
+        console.error("IndexedDB error:", event.target.error);
+    };
 }
 
-function loadCharacterFromList(characterKey) {
-    const characterData = JSON.parse(localStorage.getItem(characterKey));
-
-    if (characterData) {
-        // Populate fields with character data
-        document.getElementById('firstName').value = characterData.firstName;
-        document.getElementById('lastName').value = characterData.lastName;
-        document.getElementById('potentialDisplay').innerText = characterData.potential;
-        document.getElementById('combatClass').value = characterData.combatClass;
-
-        // Update status display
-        document.getElementById('statusDisplay').innerHTML = `
-            <figure>
-                <img src="${characterData.pixelArtImage}" alt="Pixel Art">
-            </figure>
-            <p>${characterData.statusText}</p>
-        `;
-    } else {
-        alert("Character data not found!");
-    }
-	setPixelArtAsBackground();
-}
 function updateCharacterList() {
     const characterList = document.getElementById('characterList').querySelector('tbody');
-    const container = document.getElementById('characterListContainer'); // Ensure this is correctly defined
+    const container = document.getElementById('characterListContainer');
     characterList.innerHTML = ""; // Clear existing rows
 
-    // Collect all saved characters
-    const characters = [];
-    for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
+    const request = indexedDB.open("characterDatabase", 2);
 
-        // Only process character data keys (exclude numeric or unrelated keys)
-        if (isNaN(key)) {
-            const characterData = JSON.parse(localStorage.getItem(key));
-            if (characterData) {
-                characters.push({ key, ...characterData });
+    request.onsuccess = function(event) {
+        const db = event.target.result;
+        const transaction = db.transaction(["characters"], "readonly");
+        const objectStore = transaction.objectStore("characters");
+        const cursorRequest = objectStore.openCursor();
+        const characters = [];
+
+        cursorRequest.onsuccess = function(event) {
+            const cursor = event.target.result;
+            if (cursor) {
+                // Ensure we're not pushing duplicate entries
+                if (!characters.some(c => c.key === cursor.value.key)) {
+                    characters.push(cursor.value);
+                }
+                cursor.continue(); // Continue to next entry
+            } else {
+                // Sort characters by timestamp (oldest to newest)
+                characters.sort((a, b) => a.timestamp - b.timestamp);
+
+                // Populate the table with sorted characters
+                characters.forEach((character, index) => {
+                    const row = document.createElement('tr');
+
+                    // Number column
+                    const numberCell = document.createElement('td');
+                    numberCell.textContent = index + 1; // Start numbering from 1
+                    row.appendChild(numberCell);
+
+                    // Name column
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = `${character.firstName} ${character.lastName}`;
+                    row.appendChild(nameCell);
+
+                    // Potential column
+                    const potentialCell = document.createElement('td');
+                    potentialCell.textContent = character.potential || "Unknown";
+                    row.appendChild(potentialCell);
+
+                    // Combat Class column
+                    const combatClassCell = document.createElement('td');
+                    combatClassCell.textContent = character.combatClass || "None";
+                    row.appendChild(combatClassCell);
+
+                    // Emblem column
+                    const emblemCell = document.createElement('td');
+                    const emblemImg = document.createElement('img');
+                    emblemImg.src = character.pixelArtImage;
+                    emblemImg.alt = "Emblem";
+                    emblemImg.style.width = "150px";
+                    emblemImg.style.height = "150px";
+                    emblemImg.style.objectFit = "cover";
+                    emblemImg.style.borderRadius = "50%";
+                    emblemCell.appendChild(emblemImg);
+                    row.appendChild(emblemCell);
+
+                    // Load button column
+                    const actionCell = document.createElement('td');
+                    const loadButton = document.createElement('button');
+                    loadButton.textContent = "Load";
+                    loadButton.onclick = () => loadCharacterFromList(character.key); // Attach load function
+                    actionCell.appendChild(loadButton);
+                    row.appendChild(actionCell);
+
+                    // Append the row to the table
+                    characterList.appendChild(row);
+                });
+
+                // Check if the container exists and is currently displayed
+                if (container && container.style.display === 'block') {
+                    setTimeout(() => {
+                        container.style.maxHeight = container.scrollHeight + "px"; // Recalculate height smoothly
+                    }, 50);
+                }
             }
-        }
-    }
+        };
 
-    // Sort characters by timestamp (oldest to newest)
-    characters.sort((a, b) => a.timestamp - b.timestamp);
+        cursorRequest.onerror = function(event) {
+            console.error("Error loading characters:", event.target.error);
+        };
+    };
 
-    // Populate the table with sorted characters
-    characters.forEach((character, index) => {
-        const row = document.createElement('tr');
-
-        // Number column
-        const numberCell = document.createElement('td');
-        numberCell.textContent = index + 1; // Start numbering from 1
-        row.appendChild(numberCell);
-
-        // Name column
-        const nameCell = document.createElement('td');
-        nameCell.textContent = `${character.firstName} ${character.lastName}`;
-        row.appendChild(nameCell);
-
-        // Potential column
-        const potentialCell = document.createElement('td');
-        potentialCell.textContent = character.potential || "Unknown";
-        row.appendChild(potentialCell);
-
-        // Combat Class column
-        const combatClassCell = document.createElement('td');
-        combatClassCell.textContent = character.combatClass || "None";
-        row.appendChild(combatClassCell);
-
-        // Emblem column
-        const emblemCell = document.createElement('td');
-        const emblemImg = document.createElement('img');
-        emblemImg.src = character.pixelArtImage;
-        emblemImg.alt = "Emblem";
-        emblemImg.style.width = "150px";
-        emblemImg.style.height = "150px";
-        emblemImg.style.objectFit = "cover";
-        emblemImg.style.borderRadius = "50%";
-        emblemCell.appendChild(emblemImg);
-        row.appendChild(emblemCell);
-
-        // Load button column
-        const actionCell = document.createElement('td');
-        const loadButton = document.createElement('button');
-        loadButton.textContent = "Load";
-        loadButton.onclick = () => loadCharacterFromList(character.key); // Attach load function
-        actionCell.appendChild(loadButton);
-        row.appendChild(actionCell);
-
-        // Append the row to the table
-        characterList.appendChild(row);
-    });
-
-    // Check if the container exists and is currently displayed
-    if (container && container.style.display === 'block') {
-        setTimeout(() => {
-            container.style.maxHeight = container.scrollHeight + "px"; // Recalculate height smoothly
-        }, 50); // Allow for DOM updates before recalculating
-    }
+    request.onerror = function(event) {
+        console.error("IndexedDB error:", event.target.error);
+    };
 }
+
+
+function loadCharacterFromList(characterKey) {
+    const request = indexedDB.open("characterDatabase", 2);
+    request.onsuccess = function(event) {
+        const db = event.target.result;
+        const transaction = db.transaction(["characters"], "readonly");
+        const objectStore = transaction.objectStore("characters");
+        const getRequest = objectStore.get(characterKey);
+        
+        getRequest.onsuccess = function() {
+            const characterData = getRequest.result;
+            if (characterData) {
+                document.getElementById('firstName').value = characterData.firstName;
+                document.getElementById('lastName').value = characterData.lastName;
+                document.getElementById('potentialDisplay').innerText = characterData.potential;
+                document.getElementById('combatClass').value = characterData.combatClass;
+                document.getElementById('statusDisplay').innerHTML = `
+                    <figure>
+                        <img src="${characterData.pixelArtImage}" alt="Pixel Art">
+                    </figure>
+                    <p>${characterData.statusText}</p>
+                `;
+            } else {
+                alert("Character data not found!");
+            }
+            setPixelArtAsBackground();
+        };
+        
+        getRequest.onerror = function() {
+            console.error("Error fetching character data:", getRequest.error);
+        };
+    };
+}
+
+
 
 function toggleCharacterList() {
     const container = document.getElementById('characterListContainer');
@@ -1853,6 +1881,7 @@ function toggleCharacterList() {
         }, 500); // Wait for transition to finish before hiding
         header.textContent = "Saved Characters ▼"; // Update toggle indicator
     }
+	updateCharacterList();
 }
 function randomizeAndUpdate() {
     randomizeStatus(); // Calls the randomizeStatus function
@@ -1864,12 +1893,33 @@ function randomizeAndUpdate() {
 	saveGeneration();
 	updateCharacterList();
 }
+function randomizeAndUpdatee() {
+    randomizeStatus(); // Calls the randomizeStatus function
+	randomizePhysicalAppearance();
+	randomizeHeightAndWeight();
+	calculateBMIAndAssignBodyBuild();
+    updateStatus();    // Then calls the updateStatus function
+    setPixelArtAsBackground();
+	saveGeneration();
+}
 function generateMultipleTimes(times) {
     for (let i = 0; i < times; i++) {
-            randomizeAndUpdate(); // Assuming this is your main generation function
-                }
-                    alert(`${times} characters generated!`);
-                    }
+        randomizeAndUpdatee(); // Generate character
+        if (i === times - 1) {
+            // Only on the last iteration, set isFinalGeneration to true
+            saveGeneration(true); // This will trigger updateCharacterList after the last save
+        } else {
+            saveGeneration(false); // Prevent calling updateCharacterList for intermediate saves
+        }
+    }
+
+    // Notify the user that the characters have been generated
+    alert(`${times} characters generated!`);
+}
+function generateMultipleTimesFromInput() {
+    const times = document.getElementById('generateTimes').value;
+    generateMultipleTimes(parseInt(times, 10)); // Generate based on the input value
+}
 </script>
 
 </body>
