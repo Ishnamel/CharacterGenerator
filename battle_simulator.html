@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battle Simulator</title>
+<style>
+    /* General styles */
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #3b2f28;
+        color: #e0d5c1;
+        font-family: 'Trajan Pro', serif;
+        text-align: center;
+    }
+
+    h1 {
+        color: #d8c7a7;
+        text-shadow: 2px 2px 4px #2b211a;
+        margin: 10px 0;
+    }
+
+    .top-section {
+        display: flex;
+        flex-direction: column; /* Stack dropdowns above displays */
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        padding: 0 20px;
+    }
+
+    .display-container {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    /* Styling for the dropdown containers */
+    .dropdown-container {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: 10px; /* Space between dropdowns and character displays */
+        padding: 0 20px;
+    }
+
+    .character-dropdown {
+        width: 45%;
+        font-size: 14px; /* Smaller font size for dropdown */
+        padding: 5px;
+        background-color: #5a4c42;
+        color: #e0d5c1;
+        border: 2px solid #6d5c4b;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    /* Styling for each character display section */
+    .character-display {
+        flex: 1;
+        background-color: #4a3d34;
+        margin: 5px;
+        padding: 10px;
+        box-sizing: border-box;
+        border: 2px solid #6d5c4b;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        max-width: 45%; /* Prevent exceeding half the screen width */
+        overflow-y: auto;
+        height: calc(70vh - 40px); /* Adjust for better visibility */
+    }
+
+    /* Styling for the character names */
+    .character-display h2 {
+        font-size: 20px; /* Reduced font size */
+        margin: 5px 0; /* Reduced gap above and below */
+        text-align: center;
+    }
+
+    /* Styling for the emblem */
+    .status-content figure img {
+        width: 20px; /* Reduced emblem size */
+        height: 20px;
+        border-radius: 5px;
+        border: 2px solid #6d5c4b;
+        margin-bottom: 1px; /* Slight spacing below the image */
+    }
+
+    /* Compact styling for the status text */
+    .status-content pre {
+        font-size: 12px; /* Reduced font size for content */
+        line-height: 0.8; /* Tighter line spacing */
+        max-height: auto; /* Limit height */
+        margin: 5px 0; /* Reduced gap between sections */
+		text-align: start;
+    }
+    /* Styling for the battle log */
+    .battle-log {
+        display: flex;
+        height: 30%; /* Occupy 30% of the viewport */
+        background-color: #4e4037;
+        margin: 10px 5px;
+        padding: 5px;
+        overflow-y: auto;
+        border: 2px solid #6d5c4b;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        font-size: 14px; /* Reduced font size for compactness */
+        border-radius: 10px;
+        line-height: 1.5;
+    }
+
+    .battle-log-left, .battle-log-right {
+        flex: 1;
+        background-color: #3b2f28;
+        color: #e0d5c1;
+        padding: 5px;
+        border-radius: 5px;
+        overflow-y: auto;
+    }
+
+    .battle-log-center {
+        flex: 2;
+        text-align: center;
+        background-color: #4a3d34;
+        color: #d8c7a7;
+        padding: 5px;
+        margin: 0 5px;
+        border-radius: 5px;
+    }
+
+    /* New styling to ensure the character displays are on the left and right */
+    .character-display-left {
+        margin-right: 1px;
+
+    }
+
+    .character-display-right {
+        margin-left: 1px;
+    }
+</style>
+
+
+</head>
+<body>
+  <div class="top-section">
+    <!-- Dropdowns Above -->
+    <div class="dropdown-container">
+        <select id="characterOneDropdown" class="character-dropdown" onchange="loadCharacterFromDropdown(1)">
+            <option value="">Select a character...</option>
+        </select>
+        <select id="characterTwoDropdown" class="character-dropdown" onchange="loadCharacterFromDropdown(2)">
+            <option value="">Select a character...</option>
+        </select>
+    </div>
+
+    <!-- Character Displays Below -->
+    <div class="display-container">
+        <!-- Left Character Display -->
+        <div class="character-display character-display-left" id="characterOneDisplay">
+            <div id="characterOneStatus" class="status-content">
+                <figure style="display: flex; flex-direction: column; align-items: center;">
+                    <figcaption style="text-align: center; margin-bottom: 8px;">Emblem</figcaption>
+                    <img src="emblem_placeholder.png" alt="Pixel Art">
+                </figure>
+                <p>Status text for character one will appear here...</p>
+            </div>
+        </div>
+
+        <!-- Right Character Display -->
+        <div class="character-display character-display-right" id="characterTwoDisplay">
+            <div id="characterTwoStatus" class="status-content">
+                <figure style="display: flex; flex-direction: column; align-items: center;">
+                    <figcaption style="text-align: center; margin-bottom: 8px;">Emblem</figcaption>
+                    <img src="emblem_placeholder.png" alt="Pixel Art">
+                </figure>
+                <pre>Status text for character two will appear here...</pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+    <!-- Battle Log Section -->
+    <div class="battle-log">
+        <div class="battle-log-left" id="battleLogLeft">
+            <!-- Character One's stats will appear here -->
+        </div>
+        <div class="battle-log-center" id="battleLogCenter">
+            <!-- Battle text will appear here -->
+            <p>Battle events will be displayed here...</p>
+        </div>
+        <div class="battle-log-right" id="battleLogRight">
+            <!-- Character Two's stats will appear here -->
+        </div>
+    </div>
+
+    <script>
+        // Combat class mapping for damage type and scaling
+        const combatClassMapping = {
+    Juggernaut: { coreStat: "strength", subStat: "constitution", damageType: "pure physical" },
+    BladeDancer: { coreStat: "strength", subStat: "dexterity", damageType: "hybrid A" },
+    Chieftain: { coreStat: "strength", subStat: "intelligence", damageType: "hybrid A" },
+    IronWill: { coreStat: "strength", subStat: "resolve", damageType: "hybrid A" },
+    Berserker: { coreStat: "strength", subStat: "perception", damageType: "pure physical" },
+    Titan: { coreStat: "constitution", subStat: "strength", damageType: "pure physical" },
+    StalwartDefender: { coreStat: "constitution", subStat: "resolve", damageType: "hybrid B" },
+    Mercenary: { coreStat: "constitution", subStat: "dexterity", damageType: "pure physical" },
+    Bladecaster: { coreStat: "dexterity", subStat: "intelligence", damageType: "hybrid A" },
+    MartialArtist: { coreStat: "dexterity", subStat: "resolve", damageType: "hybrid A" },
+    Sentinel: { coreStat: "constitution", subStat: "perception", damageType: "pure physical" },
+    SavageSwifter: { coreStat: "dexterity", subStat: "strength", damageType: "hybrid A" },
+    Swiftblade: { coreStat: "dexterity", subStat: "constitution", damageType: "hybrid A" },
+    AuraWarrior: { coreStat: "resolve", subStat: "strength", damageType: "hybrid B" },
+    Assassin: { coreStat: "dexterity", subStat: "perception", damageType: "hybrid A" },
+    Tactician: { coreStat: "intelligence", subStat: "strength", damageType: "hybrid B" },
+    Colossus: { coreStat: "strength", subStat: "strength", damageType: "pure physical" },
+    FleshFortress: { coreStat: "constitution", subStat: "constitution", damageType: "pure physical" },
+    Tempest: { coreStat: "dexterity", subStat: "dexterity", damageType: "pure physical" },
+    IronAura: { coreStat: "resolve", subStat: "constitution", damageType: "hybrid B" },
+    PhantomBlade: { coreStat: "resolve", subStat: "dexterity", damageType: "hybrid B" },
+    Deadeye: { coreStat: "perception", subStat: "dexterity", damageType: "hybrid A" },
+    Scout: { coreStat: "perception", subStat: "resolve", damageType: "hybrid B" },
+    Trickshot: { coreStat: "perception", subStat: "intelligence", damageType: "hybrid B" },
+    Powershot: { coreStat: "perception", subStat: "strength", damageType: "hybrid A" },
+    Vanguard: { coreStat: "perception", subStat: "constitution", damageType: "pure physical" },
+    ArcaneArcher: { coreStat: "intelligence", subStat: "dexterity", damageType: "hybrid A" },
+    GodEye: { coreStat: "perception", subStat: "perception", damageType: "pure physical" },
+    Sorcerer: { coreStat: "resolve", subStat: "intelligence", damageType: "pure magic" },
+    Spiritist: { coreStat: "resolve", subStat: "perception", damageType: "hybrid B" },
+    Mage: { coreStat: "intelligence", subStat: "resolve", damageType: "pure magic" },
+    Diviner: { coreStat: "intelligence", subStat: "perception", damageType: "pure magic" },
+    ManaWeaver: { coreStat: "intelligence", subStat: "intelligence", damageType: "pure magic" },
+    MentalFortress: { coreStat: "resolve", subStat: "resolve", damageType: "pure magic" },
+    BattlePriest: { coreStat: "constitution", subStat: "intelligence", damageType: "hybrid B" },
+    Sage: { coreStat: "intelligence", subStat: "constitution", damageType: "hybrid B" },
+};
+
+        // Function to determine damage type and stats scaling
+        function determineDamageType(combatClass, attributes) {
+            const classInfo = combatClassMapping[combatClass];
+            if (!classInfo) {
+                console.warn(`Combat class ${combatClass} not found in mapping.`);
+                return { coreStat: null, damageType: "unknown" };
+            }
+
+            const { coreStat, subStat, damageType } = classInfo;
+            return { coreStat, subStat, damageType };
+        }
+
+function parseStatsFromStatusText(statusText) {
+    const stats = {
+        strength: 0,
+        constitution: 0,
+        dexterity: 0,
+        intelligence: 0,
+        resolve: 0,
+        perception: 0,
+    };
+
+    // Match and extract values from the statusText
+    const regex = /(Strength|Constitution|Dexterity|Intelligence|Resolve|Perception): (\d+)/g;
+    let match;
+    while ((match = regex.exec(statusText)) !== null) {
+        const statName = match[1].toLowerCase();
+        const statValue = parseInt(match[2], 10);
+        if (stats.hasOwnProperty(statName)) {
+            stats[statName] = statValue;
+        }
+    }
+
+    return stats;
+}
+
+function initializeCharacter(characterData) {
+    const stats = parseStatsFromStatusText(characterData.statusText);
+
+    const hp = stats.constitution * 10; // 10 HP per Constitution
+    const mp = (stats.intelligence + stats.resolve) * 5; // 5 MP per (Int + Resolve)
+    const physicalResistance = stats.constitution * 0.5; // 50% Constitution
+    const magicResistance = stats.resolve * 0.5; // 50% Resolve
+    const physicalDamage = stats.strength + stats.dexterity * 0.5; // Strength + 50% Dexterity
+    const magicDamage = stats.intelligence * 1.5 + stats.resolve * 0.5; // Major Int, minor Resolve
+    const attackSpeed = Math.floor(stats.dexterity / 10); // 1 extra attack per 10 Dex
+    const evasion = stats.dexterity * 0.5 + stats.perception * 0.5; // Half Dex + Half Perception
+    const criticalChance = stats.perception / 2; // Example: 50 Per = 25% crit chance
+
+    return {
+        name: `${characterData.firstName || "Unknown"} ${characterData.lastName || "Character"}`,
+        hp,
+        mp,
+        physicalResistance,
+        magicResistance,
+        physicalDamage,
+        magicDamage,
+        attackSpeed,
+        evasion,
+        criticalChance,
+        stats,
+    };
+}
+
+
+
+        // Display character stats in the battle log
+        function displayCharacterStats(character, side) {
+            const container = side === "left" ? document.getElementById("battleLogLeft") : document.getElementById("battleLogRight");
+            container.innerHTML = `
+                <h3>${character.name}</h3>
+                <div class="stat-display">
+                    <p>HP: ${character.hp}</p>
+                    <p>MP: ${character.mp}</p>
+                    <p>Physical Damage: ${character.physicalDamage}</p>
+                    <p>Magic Damage: ${character.magicDamage}</p>
+                    <p>Physical Resistance: ${character.physicalResistance}</p>
+                    <p>Magic Resistance: ${character.magicResistance}</p>
+                    <p>Attack Speed: ${character.attackSpeed}</p>
+                    <p>Evasion: ${character.evasion.toFixed(1)}</p>
+                    <p>Critical Hit Chance: ${character.criticalChance.toFixed(1)}%</p>
+                </div>
+            `;
+        }
+
+  function loadCharacterFromDropdown(characterNumber) {
+    const dropdown = characterNumber === 1
+        ? document.getElementById("characterOneDropdown")
+        : document.getElementById("characterTwoDropdown");
+    const characterKey = dropdown.value;
+
+    if (!characterKey) return;
+
+    const request = indexedDB.open("characterDatabase", 2);
+    request.onsuccess = function (event) {
+        const db = event.target.result;
+        const transaction = db.transaction(["characters"], "readonly");
+        const objectStore = transaction.objectStore("characters");
+        const getRequest = objectStore.get(characterKey);
+
+        getRequest.onsuccess = function () {
+            const characterData = getRequest.result;
+
+            if (characterData) {
+                console.log("Loaded character data:", characterData); // Log fetched data for debugging
+
+                // Initialize the character stats
+                const character = initializeCharacter(characterData);
+                
+                // Display character stats
+                const side = characterNumber === 1 ? "left" : "right";
+                displayCharacterStats(character, side);
+
+               // Function to omit "Condition" and "Environment" sections from the status text
+function filterStatusText(statusText) {
+    // Use regular expressions to remove the "Condition" section and everything after it until "Combat"
+    return statusText.replace(/Condition\s+[\s\S]*?Combat\s+/g, "Combat\n");
+}
+// Display status text and pixel art
+const statusElement = characterNumber === 1 
+    ? document.getElementById("characterOneStatus") 
+    : document.getElementById("characterTwoStatus");
+
+// Filter the status text
+const filteredStatusText = filterStatusText(characterData.statusText);
+
+statusElement.innerHTML = `
+    <figure style="display: flex; flex-direction: column; align-items: center;">
+        <figcaption style="text-align: center; margin-bottom: 1px;">Emblem</figcaption>
+        <img src="${characterData.pixelArtImage}" alt="Pixel Art" style="width: 50px; height: 50px;">
+    </figure>
+    <pre>${filteredStatusText}</pre>
+`;
+
+            } else {
+                console.error("No character data found for key:", characterKey);
+            }
+        };
+
+        getRequest.onerror = function () {
+            console.error("Error fetching character data:", getRequest.error);
+        };
+    };
+}
+
+
+
+        // Function to populate dropdowns with characters
+        function updateCharacterDropdowns() {
+            const request = indexedDB.open("characterDatabase", 2);
+            request.onsuccess = function (event) {
+                const db = event.target.result;
+                const transaction = db.transaction(["characters"], "readonly");
+                const objectStore = transaction.objectStore("characters");
+                const cursorRequest = objectStore.openCursor();
+
+                cursorRequest.onsuccess = function (event) {
+                    const cursor = event.target.result;
+                    if (cursor) {
+                        const character = cursor.value;
+                        const option1 = document.createElement("option");
+                        const option2 = document.createElement("option");
+
+                        option1.value = option2.value = character.key;
+                        option1.textContent = option2.textContent = `${character.firstName} ${character.lastName}`;
+
+                        document.getElementById("characterOneDropdown").appendChild(option1);
+                        document.getElementById("characterTwoDropdown").appendChild(option2);
+
+                        cursor.continue();
+                    }
+                };
+            };
+        }
+
+        // Initialize dropdowns on page load
+        updateCharacterDropdowns();
+    </script>
+</body>
+</html>
