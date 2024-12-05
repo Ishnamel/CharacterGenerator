@@ -141,7 +141,69 @@
     .character-display-right {
         margin-left: 1px;
     }
+	/* Styling for the stat bars (HP/MP) */
+.bar-container {
+    margin: 10px 0;
+    text-align: center;
+}
+
+.bar {
+    height: 20px;
+    background-color: #56cfe1;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    transition: width 0.3s ease-in-out; /* Smooth animation when the bar changes */
+}
+
+.bar-container p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #e0d5c1;
+}
+/* Emblems Section Style */
+.top-emblems-section {
+    width: 50%;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 20px; /* Adjust spacing */
+}
+
+figure {
+    margin: 0;
+    padding: 0;
+}
+
+#emblemOne, #emblemTwo {
+    width: 40px;
+    height: 40px;
+    transition: transform 0.5s ease; /* Animation for emblem movement */
+}
+
+/* You can style the 'VS' text between the emblems */
+.top-emblems-section p {
+    font-size: 20px;
+    font-weight: bold;
+    color: #e0d5c1;
+}
+#emblemOne, #emblemTwo {
+    width: 50px;
+    height: 80px;
+    clip-path: url(#humanClipPath); /* Apply the human-shaped clip path */
+    -webkit-clip-path: url(#humanClipPath); /* Safari support */
+    object-fit: cover; /* Ensure the image fits nicely within the shape */
+    border: 0px solid #e0d5c1; /* Add a border to emphasize the shape */
+    border-radius: 0px; /* Slightly rounded corners for better appearance */
+}
+
 </style>
+
+<svg width="0" height="0" xmlns="http://www.w3.org/2000/svg" style="position: absolute;">
+    <defs>
+        <clipPath id="humanClipPath" clipPathUnits="objectBoundingBox">
+            <path d="M0.667,0.583H0.333A0.208,0.208,0,0,0,0,0.792V1H1V0.792A0.208,0.208,0,0,0,0.667,0.583ZM0.5,0.25A0.25,0.25,0,1,0,0.75,0.5,0.25,0.25,0,0,0,0.5,0.25Z" />
+        </clipPath>
+    </defs>
+</svg>
 
 
 </head>
@@ -183,7 +245,10 @@
     </div>
 </div>
 
-
+        <!-- Battle text will appear here --><button id="startBattleButton" style="margin-top: 10px; padding: 10px; background-color: #5a4c42; color: #e0d5c1; border-radius: 5px;">Start Battle</button>
+<button id="stopBattleButton" style="margin-top: 10px; padding: 10px; background-color: #e84a5f; color: #e0d5c1; border-radius: 5px; display: none;">
+    Stop Battle
+</button>
 
 
     <!-- Battle Log Section -->
@@ -191,8 +256,9 @@
         <div class="battle-log-left" id="battleLogLeft">
             <!-- Character One's stats will appear here -->
         </div>
+		
         <div class="battle-log-center" id="battleLogCenter">
-            <!-- Battle text will appear here -->
+    
             <p>Battle events will be displayed here...</p>
         </div>
         <div class="battle-log-right" id="battleLogRight">
@@ -280,15 +346,34 @@ function parseStatsFromStatusText(statusText) {
 function initializeCharacter(characterData) {
     const stats = parseStatsFromStatusText(characterData.statusText);
 
-    const hp = stats.constitution * 10; // 10 HP per Constitution
-    const mp = (stats.intelligence + stats.resolve) * 5; // 5 MP per (Int + Resolve)
-    const physicalResistance = stats.constitution * 0.5; // 50% Constitution
-    const magicResistance = stats.resolve * 0.5; // 50% Resolve
-    const physicalDamage = stats.strength + stats.dexterity * 0.5; // Strength + 50% Dexterity
-    const magicDamage = stats.intelligence * 1.5 + stats.resolve * 0.5; // Major Int, minor Resolve
-    const attackSpeed = Math.floor(stats.dexterity / 10); // 1 extra attack per 10 Dex
-    const evasion = stats.dexterity * 0.5 + stats.perception * 0.5; // Half Dex + Half Perception
-    const criticalChance = stats.perception / 2; // Example: 50 Per = 25% crit chance
+    const combatClassInfo = combatClassMapping[characterData.combatClass] || { damageType: "unknown" };
+
+    const hp = stats.constitution * 10;
+    const mp = (stats.intelligence + stats.resolve) * 5;
+    const physicalResistance = stats.constitution * 0.5;
+    const magicResistance = stats.resolve * 0.5;
+    let physicalDamage = stats.strength + stats.dexterity * 0.5; // Strength + 50% Dexterity
+    let magicDamage = stats.intelligence * 1.5 + stats.resolve * 0.5; // Major Int, minor Resolve
+    const attackSpeed = Math.floor(stats.dexterity / 10);
+    const evasion = stats.dexterity * 0.5 + stats.perception * 0.5;
+    const criticalChance = stats.perception / 2;
+
+    // Initialize hybrid damage values
+    let hybridADamage = 0;
+    let hybridBDamage = 0;
+
+    // Adjust damage stats based on damage type
+    if (combatClassInfo.damageType === "pure physical") {
+        magicDamage = 0; // No magic damage for pure physical types
+    } else if (combatClassInfo.damageType === "pure magic") {
+        physicalDamage = 0; // No physical damage for pure magic types
+    } else if (combatClassInfo.damageType === "hybrid A") {
+        // Hybrid A: Mostly physical
+        hybridADamage = (physicalDamage * 0.8) + (magicDamage * 0.2);
+    } else if (combatClassInfo.damageType === "hybrid B") {
+        // Hybrid B: Mostly magic
+        hybridBDamage = (magicDamage * 0.8) + (physicalDamage * 0.2);
+    }
 
     return {
         name: `${characterData.firstName || "Unknown"} ${characterData.lastName || "Character"}`,
@@ -298,33 +383,59 @@ function initializeCharacter(characterData) {
         magicResistance,
         physicalDamage,
         magicDamage,
+        hybridADamage,
+        hybridBDamage,
         attackSpeed,
         evasion,
         criticalChance,
+        damageType: combatClassInfo.damageType, // Include damage type
         stats,
     };
 }
+function displayCharacterStats(character, side) {
+    const container = side === "left" ? document.getElementById("battleLogLeft") : document.getElementById("battleLogRight");
 
+    // Determine if hybrid combined damage should be displayed
+    let combinedDamage = null;
+    if (character.damageType === "hybrid A") {
+        combinedDamage = character.hybridADamage.toFixed(1);
+    } else if (character.damageType === "hybrid B") {
+        combinedDamage = character.hybridBDamage.toFixed(1);
+    }
 
+    // Calculate HP and MP percentages
+    const hpPercentage = (character.hp / (character.stats.constitution * 10)) * 100;
+    const mpPercentage = (character.mp / ((character.stats.intelligence + character.stats.resolve) * 5)) * 100;
 
-        // Display character stats in the battle log
-        function displayCharacterStats(character, side) {
-            const container = side === "left" ? document.getElementById("battleLogLeft") : document.getElementById("battleLogRight");
-            container.innerHTML = `
-                <h3>${character.name}</h3>
-                <div class="stat-display">
-                    <p>HP: ${character.hp}</p>
-                    <p>MP: ${character.mp}</p>
-                    <p>Physical Damage: ${character.physicalDamage}</p>
-                    <p>Magic Damage: ${character.magicDamage}</p>
-                    <p>Physical Resistance: ${character.physicalResistance}</p>
-                    <p>Magic Resistance: ${character.magicResistance}</p>
-                    <p>Attack Speed: ${character.attackSpeed}</p>
-                    <p>Evasion: ${character.evasion.toFixed(1)}</p>
-                    <p>Critical Hit Chance: ${character.criticalChance.toFixed(1)}%</p>
-                </div>
-            `;
-        }
+    container.innerHTML = `
+        <h3>${character.name}</h3>
+        <div class="stat-display">
+            <div class="bar-container">
+                <p>HP</p>
+                <div class="bar" style="width: ${hpPercentage}%"></div>
+                <p>${character.hp.toFixed(1)} / ${character.stats.constitution * 10}</p>
+            </div>
+            <div class="bar-container">
+                <p>MP</p>
+                <div class="bar" style="width: ${mpPercentage}%"></div>
+                <p>${character.mp.toFixed(1)} / ${(character.stats.intelligence + character.stats.resolve) * 5}</p>
+            </div>
+            <p>Physical Damage: ${character.physicalDamage}</p>
+            <p>Magic Damage: ${character.magicDamage}</p>
+            ${
+                combinedDamage !== null
+                    ? `<p><strong>Combined Hybrid Damage:</strong> ${combinedDamage}</p>`
+                    : ""
+            }
+            <p>Physical Resistance: ${character.physicalResistance}</p>
+            <p>Magic Resistance: ${character.magicResistance}</p>
+            <p>Attack Speed: ${character.attackSpeed}</p>
+            <p>Evasion: ${character.evasion.toFixed(1)}</p>
+            <p>Critical Hit Chance: ${character.criticalChance.toFixed(1)}%</p>
+            <p>Damage Type: ${character.damageType}</p>
+        </div>
+    `;
+}
 
   function loadCharacterFromDropdown(characterNumber) {
     const dropdown = characterNumber === 1
@@ -385,7 +496,197 @@ statusElement.innerHTML = `
         };
     };
 }
+document.getElementById('startBattleButton').addEventListener('click', startBattle);
+document.getElementById('stopBattleButton').addEventListener('click', stopBattle);
 
+let battleInterval; // Declare battleInterval globally to access it later
+
+function startBattle() {
+    // Fetch character keys from dropdowns
+    const characterOneKey = document.getElementById('characterOneDropdown').value;
+    const characterTwoKey = document.getElementById('characterTwoDropdown').value;
+
+    if (!characterOneKey || !characterTwoKey) {
+        console.error("Both characters must be selected to start the battle.");
+        return;
+    }
+
+    // Fetch characters from IndexedDB
+    const request = indexedDB.open("characterDatabase", 2);
+    request.onsuccess = function (event) {
+        const db = event.target.result;
+        const transaction = db.transaction(["characters"], "readonly");
+        const objectStore = transaction.objectStore("characters");
+
+        // Get character data for both players
+        const characterOneRequest = objectStore.get(characterOneKey);
+        const characterTwoRequest = objectStore.get(characterTwoKey);
+
+        characterOneRequest.onsuccess = function () {
+            const characterOneData = characterOneRequest.result;
+            const characterOne = initializeCharacter(characterOneData);
+
+            characterTwoRequest.onsuccess = function () {
+                const characterTwoData = characterTwoRequest.result;
+                const characterTwo = initializeCharacter(characterTwoData);
+
+                // Clear the battle log before starting
+                document.getElementById("battleLogCenter").innerHTML = '';
+                document.getElementById("battleLogLeft").innerHTML = '';
+                document.getElementById("battleLogRight").innerHTML = '';
+
+                // Display the emblems inside the battle log center
+                displayEmblems(characterOneData, characterTwoData);
+
+                // Display initial character stats in the battle log
+                displayCharacterStats(characterOne, "left");
+                displayCharacterStats(characterTwo, "right");
+
+                // Show stop button
+                document.getElementById('stopBattleButton').style.display = 'inline-block';
+
+                // Initialize the battle simulation
+                let turn = 1;
+                const battleLog = document.getElementById("battleLogCenter");
+
+                function logMessage(message) {
+                    const logEntry = document.createElement('p');
+                    logEntry.textContent = message;
+                    battleLog.appendChild(logEntry);
+                    battleLog.scrollTop = battleLog.scrollHeight; // Auto-scroll
+                }
+
+                function calculateDamage(attacker, defender, type) {
+                    let baseDamage;
+                    let mitigation;
+
+                    // Determine base damage and resistance
+                    if (type === 'physical') {
+                        baseDamage = attacker.physicalDamage;
+                        mitigation = defender.physicalResistance;
+                    } else if (type === 'magic') {
+                        baseDamage = attacker.magicDamage;
+                        mitigation = 0.8 * defender.magicResistance + 0.2 * defender.physicalResistance;
+                    } else if (type === 'hybridA') {
+                        baseDamage = attacker.hybridADamage;
+                        mitigation = 0.7 * defender.physicalResistance + 0.3 * defender.magicResistance;
+                    } else if (type === 'hybridB') {
+                        baseDamage = attacker.hybridBDamage;
+                        mitigation = 0.7 * defender.magicResistance + 0.3 * defender.physicalResistance;
+                    }
+
+                    // Critical hit and miss logic
+                    const isCritical = Math.random() < attacker.criticalChance / 100;
+                    const isMiss = Math.random() < (1 - attacker.stats.perception / defender.evasion);
+
+                    if (isMiss) {
+                        logMessage(`${attacker.name} missed!`);
+                        return 0;
+                    }
+
+                    let damage = baseDamage - mitigation;
+                    damage = isCritical ? damage * 1.5 : damage; // Apply critical hit multiplier
+                    return Math.max(damage, 0); // Ensure no negative damage
+                }
+
+                function takeTurn(attacker, defender) {
+                    if (attacker.mp > 0) {
+                        // Decide attack type
+                        const attackType = attacker.damageType === 'pure physical'
+                            ? 'physical'
+                            : attacker.damageType === 'pure magic'
+                            ? 'magic'
+                            : attacker.damageType === 'hybrid A'
+                            ? 'hybridA'
+                            : 'hybridB';
+
+                        const damage = calculateDamage(attacker, defender, attackType);
+                        defender.hp -= damage;
+
+                        logMessage(`${attacker.name} attacked ${defender.name} for ${damage.toFixed(1)} damage.`);
+
+                        // Move the attacker's emblem towards the defender's emblem
+                        moveEmblem(attacker.name === characterOne.name ? 'one' : 'two');
+                    } else {
+                        // Defend if out of mana
+                        const mpRegen = attacker.stats.resolve * 2;
+                        attacker.mp += mpRegen;
+
+                        logMessage(`${attacker.name} is out of mana and defends, regaining ${mpRegen.toFixed(1)} MP.`);
+                    }
+
+                    // Re-render stats after the turn
+                    displayCharacterStats(characterOne, "left");
+                    displayCharacterStats(characterTwo, "right");
+                }
+
+                function moveEmblem(attacker) {
+                    // Move the emblem horizontally
+                    const attackerEmblem = attacker === 'one' ? document.getElementById('emblemOne') : document.getElementById('emblemTwo');
+                    const defenderEmblem = attacker === 'one' ? document.getElementById('emblemTwo') : document.getElementById('emblemOne');
+
+                    // If the attacker is character 1, move their emblem towards the right
+                    if (attacker === 'one') {
+                        attackerEmblem.style.transform = 'translateX(50px)'; // Move right
+                    } else {
+                        // If the attacker is character 2, move their emblem towards the left
+                        attackerEmblem.style.transform = 'translateX(-50px)'; // Move left
+                    }
+
+                    // After animation ends, reset the emblem's position
+                    setTimeout(() => {
+                        attackerEmblem.style.transform = 'translateX(0)';
+                    }, 500); // Duration of the movement animation
+                }
+
+                function displayEmblems(characterOneData, characterTwoData) {
+    const battleLogCenter = document.getElementById("battleLogCenter");
+
+    // Create the emblems and display them in the battle log center
+    battleLogCenter.innerHTML = `
+        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+            <figure style="display: flex; flex-direction: column; align-items: center; margin-right: 20px;">
+                <figcaption style="text-align: center; margin-bottom: 1px;">Emblem</figcaption>
+                <img id="emblemOne" src="${characterOneData.pixelArtImage}" alt="Character 1 Emblem">
+            </figure>
+            <p style="font-size: 20px; color: #e0d5c1; font-weight: bold;">VS</p>
+            <figure style="display: flex; flex-direction: column; align-items: center; margin-left: 20px;">
+                <figcaption style="text-align: center; margin-bottom: 1px;">Emblem</figcaption>
+                <img id="emblemTwo" src="${characterTwoData.pixelArtImage}" alt="Character 2 Emblem">
+            </figure>
+        </div>
+    `;
+}
+
+                function battleLoop() {
+                    logMessage(`--- Turn ${turn} ---`);
+                    const attacker = turn % 2 === 1 ? characterOne : characterTwo;
+                    const defender = turn % 2 === 1 ? characterTwo : characterOne;
+
+                    takeTurn(attacker, defender);
+
+                    if (defender.hp <= 0) {
+                        logMessage(`${defender.name} has been defeated!`);
+                        clearInterval(battleInterval);
+                        document.getElementById('stopBattleButton').style.display = 'none'; // Hide stop button after battle ends
+                        return;
+                    }
+
+                    turn++;
+                }
+
+                battleInterval = setInterval(battleLoop, 1000); // Run every 1 second
+            };
+        };
+    };
+}
+
+function stopBattle() {
+    // Stop the ongoing battle
+    clearInterval(battleInterval);
+    document.getElementById('stopBattleButton').style.display = 'none'; // Hide the stop button
+    document.getElementById("battleLogCenter").innerHTML += '<p>Battle has been stopped!</p>';
+}
 
 
         // Function to populate dropdowns with characters
@@ -418,6 +719,7 @@ statusElement.innerHTML = `
 
         // Initialize dropdowns on page load
         updateCharacterDropdowns();
+
     </script>
 </body>
 </html>
