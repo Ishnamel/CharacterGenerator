@@ -338,6 +338,63 @@ h1 a:hover {
         background-color: #7a665b;
         border-color: #9d8872;
     }
+<style>
+    /* Styling for the pixel art settings container */
+    #pixelArtSettings {
+        margin: 2px;
+        padding: 2px;
+        background: #4a3d34;
+        border-radius: 2px;
+        color: #e0d5c1;
+    }
+
+    #pixelArtSettings h3 {
+        text-align: center;
+    }
+
+    /* Styling for the sliders to make them larger */
+    #pixelArtSettings input[type="range"] {
+        width: 100%; /* Make the sliders stretch to the container width */
+        height: 20px; /* Make the slider height larger */
+        -webkit-appearance: none; /* Remove default slider appearance */
+        appearance: none; /* Remove default slider appearance */
+        background: #bbb; /* Slider track background */
+        border-radius: 5px; /* Rounded corners for the track */
+        outline: none; /* Remove outline when focused */
+    }
+
+    /* Slider thumb customization */
+    #pixelArtSettings input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 30px; /* Make the thumb larger */
+        height: 30px; /* Make the thumb larger */
+        background: #4a3d89; /* Thumb color */
+        border-radius: 50%; /* Round the thumb */
+        cursor: pointer; /* Change cursor on hover */
+    }
+
+    #pixelArtSettings input[type="range"]::-moz-range-thumb {
+        width: 30px; /* Make the thumb larger */
+        height: 30px; /* Make the thumb larger */
+        background: #4a3d34; /* Thumb color */
+        border-radius: 50%; /* Round the thumb */
+        cursor: pointer; /* Change cursor on hover */
+    }
+
+    /* Styling for the value labels (span) */
+    #pixelArtSettings span {
+        font-size: 50px; /* Slightly increase font size for value display */
+        margin-left: 10px;
+    }
+
+    /* Styling for the labels */
+    #pixelArtSettings label {
+        display: block;
+        font-size: 50px;
+        margin-bottom: 5px;
+    }
+</style>
 
 </style>
 
@@ -474,6 +531,30 @@ h1 a:hover {
 </h1>
 
 <h5>v.17</h5> 
+<div id="pixelArtSettings" style="margin: 20px; padding: 20px; background: #4a3d34; border-radius: 8px; color: #e0d5c1;">
+    <h3 style="text-align: center;">Pixel Art Settings</h3>
+    <div>
+        <label for="pixelWidthSlider">Pixel Width:</label>
+        <input id="pixelWidthSlider" type="range" min="5" max="50" value="20" />
+        <span id="pixelWidthValue">20</span>
+    </div>
+    <div>
+        <label for="pixelHeightSlider">Pixel Height:</label>
+        <input id="pixelHeightSlider" type="range" min="5" max="50" value="20" />
+        <span id="pixelHeightValue">20</span>
+    </div>
+    <div>
+        <label for="pixelSizeSlider">Pixel Size:</label>
+        <input id="pixelSizeSlider" type="range" min="5" max="50" value="20" />
+        <span id="pixelSizeValue">20</span>
+    </div>
+    <div>
+        <label for="colorCountSlider">Number of Colors (Excluding Black):</label>
+        <input id="colorCountSlider" type="range" min="2" max="10" value="3" />
+        <span id="colorCountValue">3</span>
+    </div>
+</div>
+
 <button onclick="window.location.href = 'characterDisplay.html';">View Characters</button>
 <button onclick="navigateToBattleSimulator()">Battle Simulator</button>
 <button onclick="randomizeAndUpdate()">Generate</button>
@@ -639,6 +720,8 @@ h1 a:hover {
     </div>
 
 
+	<script src="perlin.js"></script>
+
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -738,104 +821,115 @@ function toggleSideStatus() {
         sideStatusElement.style.display = 'none';
     }
 }
-    // Seeded random number generator
-    function seededRandom(seed) {
-        let x = Math.sin(seed) * 10000;
-        return x - Math.floor(x);
-    }
+// Seeded random number generator function
+function seededRandom(seed) {
+    let x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+}
 
-    // Generate random colors based on a seed
-    function getRandomColor(seed, index) {
-        const seededValue = seededRandom(seed + index);
-        return `#${Math.floor(seededValue * 16777215).toString(16).padStart(6, "0")}`;
-    }
-   
-const pixelSize = 16;
-    // Generate symmetrical random pixel art with a main color and two sub-colors
-    function generateSymmetricalPixelArt(seed, width, height, pixelSize) {
+function getRandomColor(seed, index) {
+    const seededValue = seededRandom(seed + index);
+    const hue = Math.floor(seededValue * 360);
+    const saturation = 70 + Math.floor(seededRandom(seed + index + 1) * 30);
+    const lightness = 50 + Math.floor(seededRandom(seed + index + 2) * 20);
+    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+}
+
+// Set subColor3 to always black
+const blackColor = "black";
+
+function getPerlinNoise(x, y, seed) {
+    return noise.perlin2(x / 100, y / 100); // Perlin noise function
+}
+
+function generateSymmetricalPixelArt(seed, pixelWidth, pixelHeight, pixelSize, colorCount) {
     const canvas = document.createElement("canvas");
-    canvas.width = width*pixelSize;
-    canvas.height = height*pixelSize;
-    
+    canvas.width = pixelWidth * pixelSize;
+    canvas.height = pixelHeight * pixelSize;
+
     const ctx = canvas.getContext("2d");
 
-    // Use the seed to generate consistent colors
-    const mainColor = getRandomColor(seed, 1);
-    const subColor1 = getRandomColor(seed, 2);
-    const subColor2 = getRandomColor(seed, 3);
+    // Generate the required number of unique colors
+    const colors = [];
+    for (let i = 0; i < colorCount; i++) {
+        colors.push(getRandomColor(seed, i + 1));
+    }
+    const blackColor = "black"; // Always include black
+    colors.push(blackColor);
 
-    // Random chance to mirror vertically (50% chance)
-    const shouldMirrorVertically = seededRandom(seed + height) > 0.5;
+    // Mirroring type: 1: horizontal, 2: both (horizontal + vertical)
+   const mirroringType = Math.floor(seededRandom(seed) * 2) + 1;
 
-    for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width / 2; x++) {
-            // Use the seed to create a deterministic random pattern
-            const seededValue = seededRandom(seed + y * width + x);
 
-          // Calculate distance from the center of the canvas
-            const distFromCenterX = Math.abs((width / 2) - x);
-            const distFromCenterY = Math.abs((height / 2) - y);
+    for (let y = 0; y < pixelHeight; y++) {
+        for (let x = 0; x < pixelWidth; x++) {
+            // Dedicate edge pixels to black
+            if (x === 0 || y === 0 || x === pixelWidth - 1 || y === pixelHeight - 1) {
+                ctx.fillStyle = blackColor;
+                ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+                if (mirroringType === 1) {
+                    ctx.fillRect((pixelWidth - x - 1) * pixelSize, y * pixelSize, pixelSize, pixelSize);
+                }
+                if (mirroringType === 2) {
+                    ctx.fillRect(x * pixelSize, (pixelHeight - y - 1) * pixelSize, pixelSize, pixelSize);
+                    ctx.fillRect((pixelWidth - x - 1) * pixelSize, (pixelHeight - y - 1) * pixelSize, pixelSize, pixelSize);
+                }
+                continue; // Skip the rest of the code for edge pixels
+            }
 
-            // Randomly select a type of influence (0: Euclidean, 1: Exponential, 2: Linear, 3: Logarithmic)
+            const seededValue = seededRandom(seed + y * pixelWidth + x);
+            const noiseValue = getPerlinNoise(x, y, seed); // Get Perlin noise value
+
+            const distFromCenterX = Math.abs((pixelWidth / 2) - x);
+            const distFromCenterY = Math.abs((pixelHeight / 2) - y);
             const influenceType = Math.floor(seededRandom(seed + x + y) * 4);
-
             let centerInfluence;
 
-            // Apply selected influence type
+            // Influence logic remains the same
             switch (influenceType) {
-                case 0: // Euclidean distance influence
+                case 0:
                     const distFromCenter = Math.sqrt(Math.pow(distFromCenterX, 2) + Math.pow(distFromCenterY, 2));
-                    const maxDist = Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
-                    centerInfluence = 1 - (distFromCenter / maxDist);
+                    const maxDist = Math.sqrt(Math.pow(pixelWidth / 2, 2) + Math.pow(pixelHeight / 2, 2));
+                    centerInfluence = 1 - distFromCenter / maxDist;
                     break;
-
-                case 1: // Exponential decay influence
-                    const decayFactor = 0.1; // Controls how quickly the influence drops off
+                case 1:
+                    const decayFactor = 0.1;
                     centerInfluence = Math.exp(-Math.sqrt(Math.pow(distFromCenterX, 2) + Math.pow(distFromCenterY, 2)) * decayFactor);
                     break;
-
-                case 2: // Linear decay influence
-                    centerInfluence = 1 - (distFromCenterX + distFromCenterY) / (Math.abs((width / 2) - 0) + Math.abs((height / 2) - 0));
+                case 2:
+                    centerInfluence = 1 - (distFromCenterX + distFromCenterY) / (Math.abs((pixelWidth / 2) - 0) + Math.abs((pixelHeight / 2) - 0));
                     break;
-
-                case 3: // Logarithmic decay influence
-                    const maxDistLog = Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
+                case 3:
+                    const maxDistLog = Math.sqrt(Math.pow(pixelWidth / 2, 2) + Math.pow(pixelHeight / 2, 2));
                     centerInfluence = 1 - Math.log(Math.sqrt(Math.pow(distFromCenterX, 2) + Math.pow(distFromCenterY, 2)) + 1) / Math.log(maxDistLog + 1);
                     break;
-
                 default:
-                    centerInfluence = 1; // Default to no influence
+                    centerInfluence = 1;
             }
 
-            // Adjust probability for the main color to flock toward the center
-            const adjustedSeedValue = seededValue + centerInfluence * 0.5; // Increase main color chance near the center
-            let color;
-            if (adjustedSeedValue < 0.6) {
-                color = mainColor; // Main color has a higher chance in the center
-            } else if (adjustedSeedValue < 0.8) {
-                color = subColor1; // First sub-color has a 20% chance
-            } else {
-                color = subColor2; // Second sub-color has a 20% chance
-            }
+            const adjustedSeedValue = seededValue + centerInfluence * 0.5 + noiseValue * 0.2;
 
-            // Draw pixel for the left side of the image
-            ctx.fillStyle = color;
+            // Select a color based on the adjustedSeedValue
+            const colorIndex = Math.floor(adjustedSeedValue * colors.length);
+            ctx.fillStyle = colors[colorIndex];
             ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
 
-            // Mirroring horizontally
-            ctx.fillRect((width - x - 1) * pixelSize, y * pixelSize, pixelSize, pixelSize);
-
-            // If vertical mirroring is enabled, mirror vertically
-            if (shouldMirrorVertically) {
-                ctx.fillRect(x * pixelSize, (height - y - 1) * pixelSize, pixelSize, pixelSize); // Vertical mirror
-                ctx.fillRect((width - x - 1) * pixelSize, (height - y - 1) * pixelSize, pixelSize, pixelSize); // Horizontal + vertical mirror
+    // Apply mirroring based on the mirroring type
+            if (mirroringType === 1 || mirroringType === 2) {
+                ctx.fillRect((pixelWidth - x - 1) * pixelSize, y * pixelSize, pixelSize, pixelSize); // Horizontal mirroring
             }
+            if (mirroringType === 2) {
+                ctx.fillRect(x * pixelSize, (pixelHeight - y - 1) * pixelSize, pixelSize, pixelSize); // Vertical mirroring
+                ctx.fillRect((pixelWidth - x - 1) * pixelSize, (pixelHeight - y - 1) * pixelSize, pixelSize, pixelSize); // Both horizontal and vertical mirroring
+            }
+      
+            
         }
     }
 
     return canvas.toDataURL(); // Get the base64 representation of the image
 }
-   
+
    
 function updateStatus() {
      const fields = ['strength', 'constitution', 'dexterity', 'intelligence', 'resolve', 'perception'];
@@ -909,11 +1003,14 @@ const bloodType = document.getElementById('bloodType').value;
         Main Hand: ${document.getElementById('wieldLHand').value}		Offhand: ${document.getElementById('wieldRHand').value}
     `;
 
-   
+    // Retrieve slider values for pixel art settings
+    const pixelWidth = parseInt(document.getElementById('pixelWidthSlider').value);
+    const pixelHeight = parseInt(document.getElementById('pixelHeightSlider').value);
+    const pixelSize = parseInt(document.getElementById('pixelSizeSlider').value);
+    const colorCount = parseInt(document.getElementById('colorCountSlider').value);
 
-    // Generate pixel art using the randomId as the seed
-    const pixelArtImage = generateSymmetricalPixelArt(randomId, 20, 20, 20); // Generate 16x16 pixel art with 8px per square
-
+    // Generate pixel art using slider settings
+    const pixelArtImage = generateSymmetricalPixelArt(randomId, pixelWidth, pixelHeight, pixelSize, colorCount);
     // Update statusDisplay and sideStatus with both status and pixel art
     document.getElementById('statusDisplay').innerHTML = `
             <figure>
@@ -924,19 +1021,46 @@ const bloodType = document.getElementById('bloodType').value;
 	<p>${statusText}</p>
 
     `;
-    
-    const sideStatusElement = document.getElementById('sideStatus');
-   sideStatusElement.innerHTML = `
-    <figure>
-   <figure style="display: flex; flex-direction: column; align-items: center;">
-            <figcaption style="text-align: center; margin-bottom: 8px;">Emblem</figcaption>
-               <img src="${pixelArtImage}" alt="Pixel Art">
-        </figure> 
-        <pre>${statusText}</pre>
-       
- `;
- 
+    };
+
+function updateSliderUI() {
+    const pixelWidthSlider = document.getElementById('pixelWidthSlider');
+    const pixelHeightSlider = document.getElementById('pixelHeightSlider');
+    const pixelSizeSlider = document.getElementById('pixelSizeSlider');
+    const colorCountSlider = document.getElementById('colorCountSlider');
+
+    const pixelWidthValue = document.getElementById('pixelWidthValue');
+    const pixelHeightValue = document.getElementById('pixelHeightValue');
+    const pixelSizeValue = document.getElementById('pixelSizeValue');
+    const colorCountValue = document.getElementById('colorCountValue');
+
+    // Add event listeners to each slider
+    pixelWidthSlider.addEventListener("input", () => {
+        pixelWidthValue.innerText = pixelWidthSlider.value;
+    });
+
+    pixelHeightSlider.addEventListener("input", () => {
+        pixelHeightValue.innerText = pixelHeightSlider.value;
+    });
+
+    pixelSizeSlider.addEventListener("input", () => {
+        pixelSizeValue.innerText = pixelSizeSlider.value;
+    });
+
+    colorCountSlider.addEventListener("input", () => {
+        colorCountValue.innerText = colorCountSlider.value;
+    });
+
+    // Initialize with the current slider values
+    pixelWidthValue.innerText = pixelWidthSlider.value;
+    pixelHeightValue.innerText = pixelHeightSlider.value;
+    pixelSizeValue.innerText = pixelSizeSlider.value;
+    colorCountValue.innerText = colorCountSlider.value;
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    updateSliderUI(); // Call to initialize the slider UI updates
+});
 
 
 
