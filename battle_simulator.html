@@ -408,6 +408,7 @@ function initializeCharacter(characterData) {
 
     return {
         name: `${characterData.firstName || "Unknown"} ${characterData.lastName || "Character"}`,
+        pixelArtImage: characterData.pixelArtImage, // Include pixelArtImage
         hp,
         mp,
         physicalResistance,
@@ -565,17 +566,18 @@ function startBattle() {
         const transaction = db.transaction(["characters"], "readonly");
         const objectStore = transaction.objectStore("characters");
 
-        // Get character data for both players
-        const characterOneRequest = objectStore.get(characterOneKey);
-        const characterTwoRequest = objectStore.get(characterTwoKey);
 
-                characterOneRequest.onsuccess = function () {
-            const characterOneData = characterOneRequest.result;
-            const tempCharacterOne = initializeCharacter(characterOneData); // Temporary variable
+// Get character data for both players
+const characterOneRequest = objectStore.get(characterOneKey);
+const characterTwoRequest = objectStore.get(characterTwoKey);
 
-            characterTwoRequest.onsuccess = function () {
-                const characterTwoData = characterTwoRequest.result;
-                const tempCharacterTwo = initializeCharacter(characterTwoData); // Temporary variable
+characterOneRequest.onsuccess = function () {
+    const characterOneData = characterOneRequest.result;
+    const initializedCharacterOne = initializeCharacter(characterOneData); // Initialize character
+
+    characterTwoRequest.onsuccess = function () {
+        const characterTwoData = characterTwoRequest.result;
+        const initializedCharacterTwo = initializeCharacter(characterTwoData); // Initialize character
 
                 // Clear the battle log before starting
                 document.getElementById("battleLogCenter").innerHTML = '';
@@ -583,11 +585,11 @@ function startBattle() {
                 document.getElementById("battleLogRight").innerHTML = '';
 
                 // Display the emblems inside the battle log center
-                displayEmblems(characterOneData, characterTwoData);
+                displayEmblems(initializedCharacterOne, initializedCharacterTwo);
 
                 // Display initial character stats in the battle log
-                displayCharacterStats(tempCharacterOne, "left");
-                displayCharacterStats(tempCharacterTwo, "right");
+                displayCharacterStats(initializedCharacterOne, "left");
+                displayCharacterStats(initializedCharacterTwo, "right");
 
                 // Show stop button
                 document.getElementById('stopBattleButton').style.display = 'inline-block';
@@ -673,7 +675,7 @@ function determineAttacks(attackSpeed) {
         return { guaranteed: Math.random() < 0.5 ? 1 : 0, chance: 0 };
     } else if (attackSpeed <= 30) {
         // 7-30: 1 guaranteed attack, chance for 2 attacks
-        return { guaranteed: 1, chance: (attackSpeed - 20) / 10 };
+        return { guaranteed: 1, chance: (attackSpeed - 7) / 23 };
     } else if (attackSpeed <= 70) {
         // 30-70: 2 guaranteed attacks, chance for 3 attacks
         return { guaranteed: 2, chance: (attackSpeed - 30) / 40 };
@@ -872,34 +874,30 @@ function applyDefenseBoost(defender) {
                     }, 200); // Duration of the movement animation
                 }
 
-                function displayEmblems(characterOneData, characterTwoData) {
+function displayEmblems(characterOne, characterTwo) {
     const battleLogCenter = document.getElementById("battleLogCenter");
 
-    // Determine emblem order based on character order
-    const firstEmblem = characterOne === characterOneData ? characterOneData.pixelArtImage : characterTwoData.pixelArtImage;
-    const secondEmblem = characterTwo === characterTwoData ? characterTwoData.pixelArtImage : characterOneData.pixelArtImage;
-
-    // Create the emblems and display them in the battle log center
     battleLogCenter.innerHTML = `
         <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
             <figure style="display: flex; flex-direction: column; align-items: center; margin-right: 20px;">
-                <figcaption style="text-align: center; margin-bottom: 1px;">Emblem</figcaption>
-                <img id="emblemOne" src="${firstEmblem}" alt="Character 1 Emblem">
+                <figcaption style="text-align: center; margin-bottom: 1px;">${characterOne.name}'s Emblem</figcaption>
+                <img id="emblemOne" src="${characterOne.pixelArtImage}" alt="${characterOne.name}'s Emblem">
             </figure>
             <p style="font-size: 20px; color: #e0d5c1; font-weight: bold;">VS</p>
             <figure style="display: flex; flex-direction: column; align-items: center; margin-left: 20px;">
-                <figcaption style="text-align: center; margin-bottom: 1px;">Emblem</figcaption>
-                <img id="emblemTwo" src="${secondEmblem}" alt="Character 2 Emblem">
+                <figcaption style="text-align: center; margin-bottom: 1px;">${characterTwo.name}'s Emblem</figcaption>
+                <img id="emblemTwo" src="${characterTwo.pixelArtImage}" alt="${characterTwo.name}'s Emblem">
             </figure>
         </div>
     `;
 }
 
-                                const { first, second } = determineFirstAttacker(tempCharacterOne, tempCharacterTwo);
+// Determine first attacker
+const { first, second } = determineFirstAttacker(initializedCharacterOne, initializedCharacterTwo);
 
-    // Swap character references to match determined order
-    characterOne = first;
-    characterTwo = second;
+// Update global character variables
+characterOne = first;
+characterTwo = second;
 
     logMessage(`${characterOne.name} goes first!`);
 
@@ -922,7 +920,7 @@ function applyDefenseBoost(defender) {
         turn++;
     }
 
-    const battleInterval = setInterval(battleLoop, 2000); // Run every 1 second
+    battleInterval = setInterval(battleLoop, 2000); // Run every 1 second
 };
         };
     };
