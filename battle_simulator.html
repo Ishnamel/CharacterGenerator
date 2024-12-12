@@ -673,7 +673,7 @@ function determineAttacks(attackSpeed) {
         return { guaranteed: Math.random() < 0.5 ? 1 : 0, chance: 0 };
     } else if (attackSpeed <= 30) {
         // 7-30: 1 guaranteed attack, chance for 2 attacks
-        return { guaranteed: 1, chance: (attackSpeed - 20) / 10 };
+        return { guaranteed: 1, chance: (attackSpeed - 7) / 23 };
     } else if (attackSpeed <= 70) {
         // 30-70: 2 guaranteed attacks, chance for 3 attacks
         return { guaranteed: 2, chance: (attackSpeed - 30) / 40 };
@@ -840,16 +840,16 @@ function adjustPhysicalDamage(attacker) {
     }
 }
 // Apply defense boost
-function applyDefenseBoost(defender) {
-    const magicBoost = 1.5 + (defender.stats.resolve / 100);
-    const physicalBoost = 1.5 + (defender.stats.constitution / 100);
+function applyDefenseBoost(attacker) {
+    const magicBoost = 1.5 + (attacker.stats.resolve / 100);
+    const physicalBoost = 1.5 + (attacker.stats.constitution / 100);
 
-    defender.magicResistance *= magicBoost;
-    defender.physicalResistance *= physicalBoost;
+    attacker.magicResistance *= magicBoost;
+    attacker.physicalResistance *= physicalBoost;
 
     // Set duration for the boost
-    defender.defenseBoostDuration = 1 + Math.floor(defender.stats.resolve / 100);
-    defender.boostApplied = true; // Track that boost is active
+    attacker.defenseBoostDuration = 1 + Math.floor(defender.stats.resolve / 100);
+    attacker.boostApplied = true; // Track that boost is active
 }
 
 
